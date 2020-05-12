@@ -23,9 +23,6 @@ fields:
 	query_fields: Database fields
 	query_string: Database query
 	segment_group_id: Group
-	avg_month_payment: Average monthly payment
-	avg_subscription_payment: Average payments for subscriptions
-	avg_product_payment: Average payments for products
 	criteria: Criteria
 	version: Version
 

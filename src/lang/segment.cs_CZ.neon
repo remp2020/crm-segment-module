@@ -23,9 +23,6 @@ fields:
 	query_fields: Sloupce
 	query_string: Databázový dotaz
 	segment_group_id: Skupina
-	avg_month_payment: Průměrná měsíční platba
-	avg_subscription_payment: Průměrný počet plateb za předplatné
-	avg_product_payment: Průměrný počet plateb za produkty
 	criteria: Kriteria
 	version: Verze
 required:

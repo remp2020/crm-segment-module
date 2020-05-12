@@ -86,56 +86,24 @@ class StoredSegmentsPresenter extends AdminPresenter
 
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 
-        // version 2 with user ids array
-        if ($segmentRow->table_name == 'users') {
-            $usersIds = [];
-            $tableData = [];
-            $displayFields = false;
+        $ids = [];
+        $tableData = [];
+        $displayFields = false;
 
-            $segment->process(function ($row) use (&$usersIds, $data, &$tableData, &$displayFields) {
-                $usersIds[] = $row->id;
+        $segment->process(function ($row) use (&$ids, $data, &$tableData, &$displayFields) {
+            $ids[] = $row->id;
 
-                if ($data) {
-                    if (!$displayFields) {
-                        $displayFields = array_keys((array) $row);
-                    }
-                    $tableData[] = array_values((array) $row);
+            if ($data) {
+                if (!$displayFields) {
+                    $displayFields = array_keys((array) $row);
                 }
-            }, 100000);
-
-            $this->template->fields = $displayFields;
-            $this->template->data = $tableData;
-
-            if (count($usersIds)) {
-                $usersIds = implode(',', $usersIds);
-                $query = "SELECT AVG(value) AS avg_month_payment FROM user_meta WHERE `key`='avg_month_payment' AND user_id IN (".$usersIds.")";
-                $average = $this->database->query($query)->fetch();
-                $this->template->avgMonthPayment = $average->avg_month_payment;
-
-                $query = "SELECT AVG(value) AS avg_subscription_payment FROM user_meta WHERE `key`='paid_payments' AND user_id IN (".$usersIds.")";
-                $average = $this->database->query($query)->fetch();
-                $this->template->avgSubscriptionPayments = $average->avg_subscription_payment;
-
-                $query = "SELECT AVG(value) AS avg_product_payment FROM user_meta WHERE `key`='product_payments' AND user_id IN (".$usersIds.")";
-                $average = $this->database->query($query)->fetch();
-                $this->template->avgProductPayments = $average->avg_product_payment;
+                $tableData[] = array_values((array) $row);
             }
-        } elseif (in_array($segmentRow->table_name, ['subscriptions', 'payments'])) {
-            $tableData = [];
-            $displayFields = false;
+        }, 100000);
 
-            $segment->process(function ($row) use ($data, &$tableData, &$displayFields) {
-                if ($data) {
-                    if (!$displayFields) {
-                        $displayFields = array_keys((array) $row);
-                    }
-                    $tableData[] = array_values((array) $row);
-                }
-            }, 100000);
-
-            $this->template->fields = $displayFields;
-            $this->template->data = $tableData;
-        }
+        $this->template->ids = $ids;
+        $this->template->fields = $displayFields;
+        $this->template->data = $tableData;
     }
 
     public function handleRecalculate(int $id)

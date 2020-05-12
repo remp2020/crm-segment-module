@@ -59,9 +59,7 @@
             {/if}
             {/snippet}
           </li>
-        <li n:ifset="$avgMonthPayment" class="list-group-item"><b>{_segment.fields.avg_month_payment}:</b> {$avgMonthPayment|price}</li>
-        <li n:ifset="$avgSubscriptionPayments" class="list-group-item"><b>{_segment.fields.avg_subscription_payment}:</b> {$avgSubscriptionPayments|number:2}</li>
-        <li n:ifset="$avgProductPayments" class="list-group-item"><b>{_segment.fields.avg_product_payment}:</b> {$avgProductPayments|number:2}</li>
+        {control simpleWidget 'segment.detail.statspanel.row', $ids}
       </ul>
     </div>
   </div>
