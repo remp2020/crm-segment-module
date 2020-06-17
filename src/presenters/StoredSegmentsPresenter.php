@@ -224,7 +224,7 @@ class StoredSegmentsPresenter extends AdminPresenter
 
     public function renderEmbed($id)
     {
-        $this->template->crmHost = $this->getHttpRequest()->getUrl()->getBaseUrl() . "/api/v1";
+        $this->template->crmHost = $this->getHttpRequest()->getUrl()->getBaseUrl() . "api/v1";
         $this->template->segmentAuth = 'Bearer ' . $this->accessToken->getToken($this->getHttpRequest());
 
         $segment = $this->segmentsRepository->find($id);
