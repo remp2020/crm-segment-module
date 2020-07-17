@@ -18,14 +18,13 @@ class SegmentFactory
         $this->segmentsRepository = $segmentsRepository;
     }
 
-    public function buildSegment($segmentIdentifier)
+    public function buildSegment(string $segmentIdentifier): Segment
     {
         $segmentRow = $this->segmentsRepository->findByCode($segmentIdentifier);
         if (!$segmentRow) {
             throw new UnexpectedValueException("segment does not exist: {$segmentIdentifier}");
         }
         $query = new SegmentQuery($segmentRow->query_string, $segmentRow->table_name, $segmentRow->fields);
-        $segment = new Segment($this->context, $query);
-        return $segment;
+        return new Segment($this->context, $query);
     }
 }
