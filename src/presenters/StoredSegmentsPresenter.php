@@ -13,7 +13,7 @@ use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactory;
 use Crm\UsersModule\Auth\Access\AccessToken;
-use Nette\Application\Responses\FileResponse;
+use Nette\Application\Responses\CallbackResponse;
 use Nette\Database\Context;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
@@ -162,15 +162,16 @@ class StoredSegmentsPresenter extends AdminPresenter
             throw new \Exception('');
         }
 
-        $filePath = APP_ROOT . 'content/segments/segment-'.$id.'-export-' . date('y-m-d-h-i-s').'.'.$extension;
+        $fileName = 'segment-' . $id . '-export-' . date('y-m-d-h-i-s') . '.' . $extension;
+        $this->getHttpResponse()->addHeader('Content-Encoding', 'windows-1250');
+        $this->getHttpResponse()->addHeader('Content-Type', 'application/octet-stream; charset=windows-1250');
+        $this->getHttpResponse()->addHeader('Content-Disposition', "attachment; filename=" . $fileName);
 
-        if (!is_writable(dirname($filePath))) {
-            $this->flashMessage('Cannot create segment. Problem with permissions. ('.$filePath.')', 'danger');
-            $this->redirect('show', $id);
-        }
-        $writer->save($filePath);
-        $this->sendResponse(new FileResponse($filePath));
-        $this->terminate();
+        $response = new CallbackResponse(function () use ($writer) {
+            $writer->save("php://output");
+        });
+
+        $this->sendResponse($response);
     }
 
     private function loadSegment($id)
