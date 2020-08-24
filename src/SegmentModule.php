@@ -63,6 +63,14 @@ class SegmentModule extends CrmModule
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
+                new ApiIdentifier('1', 'segments', 'list'),
+                \Crm\SegmentModule\Api\SegmentsListApiHandler::class,
+                \Crm\ApiModule\Authorization\BearerTokenAuthorization::class
+            )
+        );
+
+        $apiRoutersContainer->attachRouter(
+            new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'groups'),
                 \Crm\SegmentModule\Api\ListGroupsHandler::class,
                 \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class

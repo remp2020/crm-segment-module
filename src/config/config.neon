@@ -20,6 +20,7 @@ services:
 	- Crm\SegmentModule\Api\CreateOrUpdateSegmentHandler
 	- Crm\SegmentModule\Api\ShowSegmentHandler
 	- Crm\SegmentModule\Api\CountsHandler
+	- Crm\SegmentModule\Api\SegmentsListApiHandler
 	- Crm\SegmentModule\Criteria\Generator
 	- Crm\SegmentModule\Api\RelatedHandler
 	- Crm\SegmentModule\Seeders\SegmentsSeeder
