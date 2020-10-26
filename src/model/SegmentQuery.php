@@ -52,10 +52,19 @@ class SegmentQuery implements QueryInterface
     {
         $query = $this->query;
         $fields = $this->fields;
+
         if ($select) {
+            $fieldsArr = [];
+            foreach (explode(",", $this->fields) as $f) {
+                $fieldsArr[] = trim($f);
+            }
+            $selectArr = [];
+            foreach (explode(",", $select) as $f) {
+                $selectArr[] = trim($f);
+            }
             $fields = implode(",", array_unique(array_merge(
-                explode(",", $this->fields),
-                explode(",", $select)
+                $fieldsArr,
+                $selectArr
             )));
         }
 
