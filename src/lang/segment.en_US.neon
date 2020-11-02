@@ -4,6 +4,10 @@ menu:
 segment: Segment
 back_to_listing: back to segments listing
 back_to_detail: back to detail
+
+dashboard:
+	warning: 'You have to refresh count in segment detail in order to show actual value.'
+
 messages:
 	segment_was_created: Segment was created.
 	segment_was_updated: Segment was updated.

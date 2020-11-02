@@ -4,6 +4,10 @@ menu:
 segment: Segment
 back_to_listing: späť na zoznam
 back_to_detail: spať na detail
+
+dashboard:
+	warning: 'Pre zobrazenie správnej hodnoty musíte aktualizovať počet v detaile segmentu.'
+
 messages:
 	segment_was_created: Segment bol vytvorený.
 	segment_was_updated: Segment bol upravený.
