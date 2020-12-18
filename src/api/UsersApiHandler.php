@@ -36,6 +36,8 @@ class UsersApiHandler extends ApiHandler
      */
     public function handle(ApiAuthorizationInterface $authorization)
     {
+        ini_set('memory_limit', '512M');
+
         $paramsProcessor = new ParamsProcessor($this->params());
         $error = $paramsProcessor->isError();
         if ($error) {
