@@ -22,7 +22,7 @@ class SegmentQuery implements QueryInterface
 
     public function getCountQuery()
     {
-        return 'SELECT count(*) FROM (' . $this->buildQuery($this->pagerKey) . ') AS a';
+        return 'SELECT count(*) FROM (' . $this->buildQuery($this->pagerKey . ' AS _crm_pager_key') . ') AS a';
     }
 
     public function getNextPageQuery($lastPagerId, $count)
