@@ -10,9 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SegmentsSeeder implements ISeeder
 {
     private $segmentGroupsRepository;
-    
+
     private $segmentsRepository;
-    
+
     public function __construct(
         SegmentGroupsRepository $segmentGroupsRepository,
         SegmentsRepository $segmentsRepository
@@ -23,23 +23,24 @@ class SegmentsSeeder implements ISeeder
 
     public function seed(OutputInterface $output)
     {
-        $code = 'Default group';
-        $defaultGroup = null;
-        if ($this->segmentGroupsRepository->exists($code)) {
-            $output->writeln("  * segment group <info>$code</info> exists");
-            $defaultGroup = $this->segmentGroupsRepository->load($code);
+        $groupName = 'Default group';
+        $groupCode = 'default-group';
+        $defaultGroup = $this->segmentGroupsRepository->findByCode($groupCode);
+        if ($defaultGroup !== null) {
+            $output->writeln("  * segment group <info>{$defaultGroup->name}</info> exists");
         } else {
-            $defaultGroup = $this->segmentGroupsRepository->add($code, 1000);
-            $output->writeln("  <comment>* segment group <info>$code</info> created</comment>");
+            $defaultGroup = $this->segmentGroupsRepository->add($groupName, $groupCode, 1000);
+            $output->writeln("  <comment>* segment group <info>{$defaultGroup->name}</info> created</comment>");
         }
 
-        $code = 'System group';
-        $systemGroup = null;
-        if ($this->segmentGroupsRepository->exists($code)) {
-            $output->writeln("  * segment group <info>$code</info> exists");
+        $groupName = 'System group';
+        $groupCode = 'system-group';
+        $systemGroup = $this->segmentGroupsRepository->findByCode($groupCode);
+        if ($systemGroup !== null) {
+            $output->writeln("  * segment group <info>{$systemGroup->name}</info> exists");
         } else {
-            $this->segmentGroupsRepository->add($code, 1000);
-            $output->writeln("  <comment>* segment group <info>$code</info> created</comment>");
+            $systemGroup = $this->segmentGroupsRepository->add($groupName, $groupCode, 2000);
+            $output->writeln("  <comment>* segment group <info>{$systemGroup->name}</info> created</comment>");
         }
 
         $userFields = 'users.id,users.email,users.first_name,users.last_name';
