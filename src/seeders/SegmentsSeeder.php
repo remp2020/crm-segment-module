@@ -9,6 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SegmentsSeeder implements ISeeder
 {
+    use SegmentsTrait;
+
     private $segmentGroupsRepository;
 
     private $segmentsRepository;
@@ -23,25 +25,14 @@ class SegmentsSeeder implements ISeeder
 
     public function seed(OutputInterface $output)
     {
-        $groupName = 'Default group';
-        $groupCode = 'default-group';
-        $defaultGroup = $this->segmentGroupsRepository->findByCode($groupCode);
-        if ($defaultGroup !== null) {
-            $output->writeln("  * segment group <info>{$defaultGroup->name}</info> exists");
-        } else {
-            $defaultGroup = $this->segmentGroupsRepository->add($groupName, $groupCode, 1000);
-            $output->writeln("  <comment>* segment group <info>{$defaultGroup->name}</info> created</comment>");
-        }
+        $defaultGroup = $this->loadDefaultSegmentGroup($output);
 
-        $groupName = 'System group';
-        $groupCode = 'system-group';
-        $systemGroup = $this->segmentGroupsRepository->findByCode($groupCode);
-        if ($systemGroup !== null) {
-            $output->writeln("  * segment group <info>{$systemGroup->name}</info> exists");
-        } else {
-            $systemGroup = $this->segmentGroupsRepository->add($groupName, $groupCode, 2000);
-            $output->writeln("  <comment>* segment group <info>{$systemGroup->name}</info> created</comment>");
-        }
+        $systemGroup = $this->seedSegmentGroup(
+            $output,
+            'System group',
+            'system-group',
+            2000
+        );
 
         $userFields = 'users.id,users.email,users.first_name,users.last_name';
 
