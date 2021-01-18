@@ -71,14 +71,20 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
         }
         $params = $json + $paramsProcessor->getValues();
 
-        $group = $this->segmentGroupsRepository->find($params['group_id']);
+        if (isset($params['group_code'])) {
+            $group = $this->segmentGroupsRepository->findByCode($params['group_code']);
+            unset($params['group_code']);
+        } else {
+            // deprecated
+            $group = $this->segmentGroupsRepository->find($params['group_id']);
+            unset($params['group_id']);
+        }
         if (!$group) {
             $response = new JsonResponse(['status' => 'error', 'message' => 'Segment group not found']);
             $response->setHttpCode(Response::S404_NOT_FOUND);
             return $response;
         }
         $params['segment_group_id'] = $group->id;
-        unset($params['group_id']);
 
         try {
             $oldCriteria = $params['criteria'];
@@ -155,8 +161,8 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
         if (!isset($json['table_name'])) {
             return "missing [table_name] property in JSON payload";
         }
-        if (!isset($json['group_id'])) {
-            return "missing [group_id] property in JSON payload";
+        if (!isset($json['group_id']) && !isset($json['group_code'])) {
+            return "missing [group_id] (deprecated) and [group_code] property in JSON payload (use one)";
         }
         if (!isset($json['criteria'])) {
             return "missing [criteria] property in JSON payload";

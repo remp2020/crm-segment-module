@@ -53,7 +53,8 @@ class ShowSegmentHandler extends ApiHandler
             'table_name' => $segment->table_name,
             'fields' => explode(',', $segment->fields),
             'criteria' => $segment->criteria ? Json::decode($segment->criteria, Json::PRETTY) : null,
-            'group_id' => $segment->segment_group_id,
+            'group_id' => $segment->segment_group_id, // deprecated
+            'group_code' => $segment->segment_group->code,
         ]]);
         $response->setHttpCode(Response::S200_OK);
         return $response;

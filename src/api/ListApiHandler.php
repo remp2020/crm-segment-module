@@ -26,7 +26,8 @@ class ListApiHandler extends ApiHandler
     public function params()
     {
         return [
-            new InputParam(InputParam::TYPE_GET, 'group_id', InputParam::OPTIONAL),
+            new InputParam(InputParam::TYPE_GET, 'group_id', InputParam::OPTIONAL), // deprecated
+            new InputParam(InputParam::TYPE_GET, 'group_code', InputParam::OPTIONAL),
         ];
     }
 
@@ -45,22 +46,26 @@ class ListApiHandler extends ApiHandler
         $params = $paramsProcessor->getValues();
 
         $query = $this->segmentsRepository->all();
-        if (isset($params['group_id'])) {
+        if (isset($params['group_code'])) {
+            $query = $query->where(['segment_group.code' => $params['group_code']]);
+        } elseif (isset($params['group_id'])) {
+            // deprecated
             $query = $query->where(['segment_group_id' => $params['group_id']]);
         }
 
         $segments = [];
         /** @var ActiveRow $segment */
         foreach ($query->fetchAll() as $segment) {
-            if ($segment->table_name != 'users') {
+            if ($segment->table_name !== 'users') {
                 continue;
             }
             $segments[] = [
                 'code' => $segment->code,
                 'name' => $segment->name,
                 'group' => [
-                    'id' => $segment->segment_group->id,
+                    'id' => $segment->segment_group->id, // deprecated
                     'name' => $segment->segment_group->name,
+                    'code' => $segment->segment_group->code,
                     'sorting' => $segment->segment_group->sorting,
                 ],
             ];

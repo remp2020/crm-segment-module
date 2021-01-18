@@ -34,6 +34,7 @@ class ListGroupsHandler extends ApiHandler
             $groups[] = [
                 'id' => $row->id,
                 'name' => $row->name,
+                'code' => $row->code,
                 'sorting' => $row->sorting
             ];
         }
