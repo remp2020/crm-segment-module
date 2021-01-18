@@ -8,7 +8,6 @@ use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
 use Crm\SegmentModule\Criteria\EmptyCriteriaException;
 use Crm\SegmentModule\Criteria\Generator;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;
-use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Crm\SegmentModule\Segment;
 use Crm\SegmentModule\SegmentQuery;
 use Nette\Database\Context;
@@ -18,18 +17,14 @@ use Nette\Utils\JsonException;
 
 class CountsHandler extends ApiHandler
 {
-    private $segmentGroupsRepository;
-
     private $generator;
 
     private $context;
 
     public function __construct(
-        SegmentGroupsRepository $segmentGroupsRepository,
         Context $context,
         Generator $generator
     ) {
-        $this->segmentGroupsRepository = $segmentGroupsRepository;
         $this->context = $context;
         $this->generator = $generator;
     }
