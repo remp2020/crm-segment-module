@@ -25,8 +25,6 @@ class SegmentsSeeder implements ISeeder
 
     public function seed(OutputInterface $output)
     {
-        $defaultGroup = $this->loadDefaultSegmentGroup($output);
-
         $systemGroup = $this->seedSegmentGroup(
             $output,
             'System group',
@@ -34,70 +32,96 @@ class SegmentsSeeder implements ISeeder
             2000
         );
 
-        $userFields = 'users.id,users.email,users.first_name,users.last_name';
+        $this->seedSegment(
+            $output,
+            'All users',
+            'all_users',
+            'SELECT %fields% FROM %table% WHERE %where%'
+        );
 
-        $code = 'all_users';
-        if ($this->segmentsRepository->exists($code)) {
-            $output->writeln("  * segment <info>$code</info> exists");
-        } else {
-            $query = 'SELECT %fields% FROM %table% WHERE %where%';
-            $this->segmentsRepository->add('Všetci používatelia', 1, $code, 'users', $userFields, $query, $defaultGroup);
-            $output->writeln("  <comment>* segment <info>$code</info> created</comment>");
-        }
+        $this->seedSegment(
+            $output,
+            'Users with any subscription',
+            'users_with_any_subscriptions',
+            <<<SQL
+SELECT %fields%
+FROM %table%
+INNER JOIN subscriptions
+    ON subscriptions.user_id=%table%.id
+WHERE
+    %where%
+GROUP BY %table%.id
+SQL
+        );
 
-        $code = 'users_with_any_subscriptions';
-        if ($this->segmentsRepository->exists($code)) {
-            $output->writeln("  * segment <info>$code</info> exists");
-        } else {
-            $query = 'SELECT %fields% FROM %table% INNER JOIN subscriptions ON subscriptions.user_id=%table%.id WHERE %where% GROUP BY %table%.id';
-            $this->segmentsRepository->add('Používatelia s aspoň 1 predplatným', 1, $code, 'users', $userFields, $query, $defaultGroup);
-            $output->writeln("  <comment>* segment <info>$code</info> created</comment>");
-        }
+        $this->seedSegment(
+            $output,
+            'Users with active subscription',
+            'users_with_active_subscriptions',
+            <<<SQL
+SELECT %fields%
+FROM %table%
+INNER JOIN subscriptions
+    ON subscriptions.user_id=%table%.id
+WHERE
+    %where%
+    AND subscriptions.start_time<=NOW()
+    AND subscriptions.end_time>NOW()
+GROUP BY %table%.id
+SQL
+        );
 
-        $code = 'users_with_active_subscriptions';
-        if ($this->segmentsRepository->exists($code)) {
-            $output->writeln("  * segment <info>$code</info> exists");
-        } else {
-            $query = 'SELECT %fields% FROM %table% INNER JOIN subscriptions ON subscriptions.user_id=%table%.id WHERE %where% AND subscriptions.start_time<=NOW() AND subscriptions.end_time>NOW() GROUP BY %table%.id';
-            $this->segmentsRepository->add('Používatelia s aktuálne plynúcim predplatným', 1, $code, 'users', $userFields, $query, $defaultGroup);
-            $output->writeln("  <comment>* segment <info>$code</info> created</comment>");
-        }
+        $this->seedSegment(
+            $output,
+            'Users without active subscription',
+            'users_without_actual_subscriptions',
+            <<<SQL
+SELECT %fields% FROM %table%
+LEFT JOIN subscriptions
+    ON subscriptions.user_id=users.id
+    AND subscriptions.start_time <= NOW()
+    AND subscriptions.end_time >= NOW()
+WHERE
+    %where%
+    AND subscriptions.id IS NULL
+GROUP BY %table%.id
+SQL
+        );
 
-        $code = 'users_without_actual_subscriptions';
-        if ($this->segmentsRepository->exists($code)) {
-            $output->writeln("  * segment <info>$code</info> exists");
-        } else {
-            $query = "SELECT %fields% FROM %table% \n" .
-                "LEFT JOIN subscriptions ON subscriptions.user_id=users.id AND subscriptions.start_time <= NOW() AND subscriptions.end_time >= NOW() \n" .
-                "WHERE %where% AND subscriptions.id IS NULL \n".
-                'GROUP BY %table%.id';
-            $this->segmentsRepository->add('Používatelia bez aktuálneho predplatného', 1, $code, 'users', $userFields, $query, $defaultGroup);
-            $output->writeln("  <comment>* segment <info>$code</info> created</comment>");
-        }
+        $this->seedSegment(
+            $output,
+            'Users without any subscription',
+            'users_without_subscription_any_time',
+            <<<SQL
+SELECT %fields%
+FROM %table%
+LEFT JOIN subscriptions
+    ON subscriptions.user_id=%table%.id
+WHERE
+    %where%
+    AND subscriptions.id IS NULL
+GROUP BY %table%.id
+SQL
+        );
 
-        $code = 'users_without_subscription_any_time';
-        if ($this->segmentsRepository->exists($code)) {
-            $output->writeln("  * segment <info>$code</info> exists");
-        } else {
-            $query = "SELECT %fields% FROM %table% \n" .
-                "LEFT JOIN subscriptions ON subscriptions.user_id=%table%.id \n" .
-                "WHERE %where% AND subscriptions.id IS NULL \n" .
-                'GROUP BY %table%.id';
-            $this->segmentsRepository->add('Používatelia bez žiadneho predplatného', 1, $code, 'users', $userFields, $query, $defaultGroup);
-            $output->writeln("  <comment>* segment <info>$code</info> created</comment>");
-        }
-
-        $code = 'users_with_old_subscriptions';
-        if ($this->segmentsRepository->exists($code)) {
-            $output->writeln("  * segment <info>$code</info> exists");
-        } else {
-            $query = "SELECT %fields% FROM %table%\n" .
-                "INNER JOIN subscriptions AS old_subscriptions ON old_subscriptions.user_id=%table%.id AND old_subscriptions.end_time < NOW() \n" .
-                "LEFT JOIN subscriptions AS actual_subscriptions ON actual_subscriptions.user_id=%table%.id AND actual_subscriptions.start_time <= NOW() AND actual_subscriptions.end_time > NOW() \n" .
-                "WHERE %where% AND actual_subscriptions.id IS NULL \n" .
-                'GROUP BY %table%.id';
-            $this->segmentsRepository->add('Používatelia s predplatným v minulosti a aktualne bez', 1, $code, 'users', $userFields, $query, $defaultGroup);
-            $output->writeln("  <comment>* segment <info>$code</info> created</comment>");
-        }
+        $this->seedSegment(
+            $output,
+            'Users with inactive subscription in past',
+            'users_with_old_subscriptions',
+            <<<SQL
+SELECT %fields% FROM %table%
+INNER JOIN subscriptions AS old_subscriptions
+    ON old_subscriptions.user_id=%table%.id
+    AND old_subscriptions.end_time < NOW()
+LEFT JOIN subscriptions AS actual_subscriptions
+    ON actual_subscriptions.user_id=%table%.id
+    AND actual_subscriptions.start_time <= NOW()
+    AND actual_subscriptions.end_time > NOW()
+WHERE
+    %where%
+    AND actual_subscriptions.id IS NULL
+GROUP BY %table%.id
+SQL
+        );
     }
 }
