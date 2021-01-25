@@ -64,4 +64,58 @@ trait SegmentsTrait
 
         return $segment;
     }
+
+    /**
+     * Seed segment seeds segment if it doesn't exists, updates it if it exists.
+     *
+     * Segment is searched by `code` and therefore `code` is only property which cannot be updated.
+     */
+    public function seedOrUpdateSegment(
+        OutputInterface $output,
+        string $name,
+        string $code,
+        string $queryString,
+        ?ActiveRow $group = null,
+        string $tableName = 'users',
+        string $fields = 'users.id,users.email'
+    ): ActiveRow {
+        // if no group was specified, default will be used
+        if ($group === null) {
+            $group = $this->loadDefaultSegmentGroup($output);
+        }
+
+        $segment = $this->segmentsRepository->findByCode($code);
+        if ($segment === false) {
+            $segment = $this->segmentsRepository->add($name, 1, $code, $tableName, $fields, $queryString, $group);
+            $output->writeln("  <comment>* segment <info>{$code}</info> created</comment>");
+            return $segment;
+        }
+
+        $dataToUpdate = [];
+        if ($segment->name !== $name) {
+            $dataToUpdate['name'] = $name;
+        }
+        if ($segment->query_string !== $queryString) {
+            $dataToUpdate['query_string'] = $queryString;
+        }
+        if ($segment->segment_group_id !== $group->id) {
+            $dataToUpdate['segment_group_id'] = $group->id;
+        }
+        if ($segment->table_name !== $tableName) {
+            $dataToUpdate['table_name'] = $tableName;
+        }
+        if ($segment->fields !== $fields) {
+            $dataToUpdate['fields'] = $fields;
+        }
+
+        if (empty($dataToUpdate)) {
+            $output->writeln("  * segment <info>{$code}</info> exists (no change)");
+        } else {
+            $this->segmentsRepository->update($segment, $dataToUpdate);
+            $changed = implode(',', array_keys($dataToUpdate));
+            $output->writeln("  * segment <info>{$code}</info> updated (changed properties: [{$changed}])");
+        }
+
+        return $segment;
+    }
 }
