@@ -25,13 +25,6 @@ class SegmentsSeeder implements ISeeder
 
     public function seed(OutputInterface $output)
     {
-        $systemGroup = $this->seedSegmentGroup(
-            $output,
-            'System group',
-            'system-group',
-            2000
-        );
-
         $this->seedSegment(
             $output,
             'All users',
