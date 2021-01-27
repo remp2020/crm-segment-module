@@ -45,7 +45,7 @@ trait SegmentsTrait
         string $query,
         ?ActiveRow $group = null,
         string $table = 'users',
-        string $fields = 'users.id,users.email,users.first_name,users.last_name'
+        string $fields = 'users.id,users.email'
     ): ActiveRow {
         // try to load segment before adding it
         $segment = $this->segmentsRepository->findByCode($code);
