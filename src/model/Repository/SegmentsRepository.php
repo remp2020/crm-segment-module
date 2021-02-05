@@ -6,6 +6,7 @@ use Crm\ApplicationModule\Repository;
 use Crm\ApplicationModule\Repository\AuditLogRepository;
 use DateTime;
 use Nette\Database\Context;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\IRow;
 
 class SegmentsRepository extends Repository
@@ -56,6 +57,40 @@ class SegmentsRepository extends Repository
     {
         $data['updated_at'] = new DateTime();
         return parent::update($row, $data);
+    }
+
+    final public function upsert(
+        string $code,
+        string $name,
+        string $queryString,
+        string $tableName,
+        string $fields,
+        IRow $group
+    ): ActiveRow {
+        $segment = $this->findByCode($code);
+        if ($segment === false) {
+            return $this->add($name, 1, $code, $tableName, $fields, $queryString, $group);
+        }
+
+        $data = [];
+        if ($segment->name !== $name) {
+            $data['name'] = $name;
+        }
+        if ($segment->table_name !== $tableName) {
+            $data['table_name'] = $tableName;
+        }
+        if ($segment->fields !== $fields) {
+            $data['fields'] = $fields;
+        }
+        if ($segment->query_string !== $queryString) {
+            $data['query_string'] = $queryString;
+        }
+        if ($segment->segment_group_id !== $group['id']) {
+            $data['segment_group_id'] = $group['id'];
+        }
+        $this->update($segment, $data);
+
+        return $segment;
     }
 
     final public function exists($code)
