@@ -56,6 +56,9 @@ edit:
 	old_version_link: starou verzi
 	old_version: Toto je stará verze formuláře pro úpravu segmentů. Vyzkoušejte %link%.
 	new_version_link: novou verzi
+	messages:
+		segment_locked: Segment je zamčený. Upravování není povoleno.
+
 new:
 	header: Nový segment
 	new_version: Toto je nový vizuální editor pro vytváření segmentů. Stále je možné použít %link%.

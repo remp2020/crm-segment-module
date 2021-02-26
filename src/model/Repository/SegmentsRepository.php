@@ -55,6 +55,9 @@ class SegmentsRepository extends Repository
 
     final public function update(IRow &$row, $data)
     {
+        if ($row['locked']) {
+            throw new \Exception("Trying to update locked segment [{$row['code']}].");
+        }
         $data['updated_at'] = new DateTime();
         return parent::update($row, $data);
     }
@@ -114,5 +117,24 @@ class SegmentsRepository extends Repository
             'deleted_at' => new \DateTime(),
             'updated_at' => new \DateTime(),
         ]);
+    }
+
+    final public function setLock(ActiveRow $segment, bool $locked): ActiveRow
+    {
+        // reload; just to be sure we have current data
+        $reloadedSegment = $this->findById($segment->id);
+
+        // update only if segment's lock isn't same value as provided $locked
+        // we don't want to spam audit log with useless queries (un/locking already locked segment)
+        if ($reloadedSegment->locked !== $locked) {
+            $data = [
+                'updated_at' => new DateTime(),
+                'locked' => $locked,
+            ];
+            // calling directly parent; repository's update disallows changes to locked segment
+            parent::update($reloadedSegment, $data);
+        }
+
+        return $reloadedSegment;
     }
 }

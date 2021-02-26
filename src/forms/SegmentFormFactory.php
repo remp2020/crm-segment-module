@@ -40,9 +40,11 @@ class SegmentFormFactory
     public function create($id)
     {
         $defaults = [];
+        $locked = false;
         if (isset($id)) {
             $segment = $this->segmentsRepository->find($id);
             $defaults = $segment->toArray();
+            $locked = $segment->locked;
         }
 
         $form = new Form;
@@ -53,37 +55,47 @@ class SegmentFormFactory
 
         $form->addText('name', 'segment.fields.name')
             ->setRequired('segment.required.name')
-            ->setAttribute('placeholder', 'segment.placeholder.name');
+            ->setAttribute('placeholder', 'segment.placeholder.name')
+            ->setDisabled($locked);
 
         $form->addSelect('version', 'segment.fields.version', ['1' => '1', '2' => '2'])
-            ->setRequired('segment.required.name');
+            ->setRequired('segment.required.name')
+            ->setDisabled($locked);
 
         $form->addText('code', 'segment.fields.code')
             ->setRequired('segment.required.code')
-            ->setAttribute('placeholder', 'segment.placeholder.code');
+            ->setAttribute('placeholder', 'segment.placeholder.code')
+            ->setDisabled($locked);
 
-        $form->addSelect('segment_group_id', 'segment.fields.segment_group_id', $this->segmentGroupsRepository->all()->fetchPairs('id', 'name'));
+        $form->addSelect('segment_group_id', 'segment.fields.segment_group_id', $this->segmentGroupsRepository->all()->fetchPairs('id', 'name'))
+            ->setDisabled($locked);
 
         $form->addText('table_name', 'segment.fields.table_name')
             ->setRequired('segment.required.table_name')
-            ->setAttribute('placeholder', 'segment.placeholder.table_name');
+            ->setAttribute('placeholder', 'segment.placeholder.table_name')
+            ->setDisabled($locked);
 
         $form->addTextArea('query_string', 'segment.fields.query_string', 30, 10)
+            ->setRequired()
+            ->setDisabled($locked)
             ->getControlPrototype()
                 ->addAttributes(['class' => 'ace', 'data-lang' => 'sql']);
 
         $form->addTextArea('fields', 'segment.fields.query_fields', 30, 3)
             ->setRequired()
+            ->setDisabled($locked)
             ->getControlPrototype()
                 ->addAttributes(['class' => 'ace', 'data-lang' => 'sql']);
 
         $form->addHidden('segment_id', $id);
 
-        $form->addTextArea('criteria', 'segment.fields.criteria', 30, 8);
+        $form->addTextArea('criteria', 'segment.fields.criteria', 30, 8)
+            ->setDisabled($locked);
 
         $form->setDefaults($defaults);
 
         $form->addSubmit('send', $this->translator->translate('system.save'))
+            ->setDisabled($locked)
             ->getControlPrototype()
             ->setName('button')
             ->setHtml('<i class="fa fa-save"></i> ' . $this->translator->translate('system.save'));
@@ -110,6 +122,10 @@ class SegmentFormFactory
 
         if ($id) {
             $row = $this->segmentsRepository->find($id);
+            if ($row->locked) {
+                $form->addError($this->translator->translate('segment.edit.messages.segment_locked'));
+                return;
+            }
             $this->segmentsRepository->update($row, $values);
             $this->onUpdate->__invoke($row);
         } else {

@@ -62,6 +62,8 @@ edit:
 	old_version_link: starú verziu
 	old_version: Toto je stará verzia formuláru pre úpravu segmentov. Vyskúšajte %link%.
 	new_version_link: novú verziu
+	messages:
+		segment_locked: Segment je zamknutý. Upravovanie nie je povolené.
 
 new:
 	header: Nový segment

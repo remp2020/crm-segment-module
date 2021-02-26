@@ -62,6 +62,8 @@ edit:
 	old_version_link: old fashioned form
 	old_version: This is old version for editing segment. You can try %link%.
 	new_version_link: new visual version
+	messages:
+		segment_locked: Segment is locked. Editing is not allowed.
 
 new:
 	header: New segment

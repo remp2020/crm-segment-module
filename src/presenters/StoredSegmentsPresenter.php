@@ -74,6 +74,9 @@ class StoredSegmentsPresenter extends AdminPresenter
     public function renderEdit($id, $version = null)
     {
         $segment = $this->segmentsRepository->find($id);
+        if ($segment->locked) {
+            $this->flashMessage($this->translator->translate('segment.edit.messages.segment_locked'), 'warning');
+        }
         $this->template->segment = $segment;
         $this->template->version = $version == null ? $segment->version : $version;
     }
