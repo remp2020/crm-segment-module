@@ -3,6 +3,7 @@
 namespace Crm\SegmentModule\Repository;
 
 use Crm\ApplicationModule\Repository;
+use Crm\ApplicationModule\Repository\AuditLogRepository;
 use DateTime;
 use Nette\Database\Context;
 use Nette\Database\Table\IRow;
@@ -11,9 +12,16 @@ class SegmentsRepository extends Repository
 {
     protected $tableName = 'segments';
 
-    public function __construct(Context $database)
-    {
+    protected $auditLogExcluded = [
+        'cache_count'
+    ];
+
+    public function __construct(
+        Context $database,
+        AuditLogRepository $auditLogRepository
+    ) {
         parent::__construct($database);
+        $this->auditLogRepository = $auditLogRepository;
     }
 
     final public function all()
