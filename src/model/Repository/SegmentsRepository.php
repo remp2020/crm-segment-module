@@ -17,6 +17,11 @@ class SegmentsRepository extends Repository
         'cache_count'
     ];
 
+    private const LOCK_WHITELIST = [
+        'updated_at',
+        'cache_count'
+    ];
+
     public function __construct(
         Context $database,
         AuditLogRepository $auditLogRepository
@@ -55,9 +60,15 @@ class SegmentsRepository extends Repository
 
     final public function update(IRow &$row, $data)
     {
+        //if segment is locked, allow to change only whitelisted fields (eg. field holding cached count)
         if ($row['locked']) {
-            throw new \Exception("Trying to update locked segment [{$row['code']}].");
+            foreach ($data as $key => $value) {
+                if (!in_array($key, self::LOCK_WHITELIST)) {
+                    throw new \Exception("Trying to update locked segment [{$row['code']}].");
+                }
+            }
         }
+
         $data['updated_at'] = new DateTime();
         return parent::update($row, $data);
     }

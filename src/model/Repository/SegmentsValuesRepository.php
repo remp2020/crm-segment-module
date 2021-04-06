@@ -48,10 +48,7 @@ class SegmentsValuesRepository extends Repository
 
     final public function cacheSegmentCount(ActiveRow $segment, int $count)
     {
-        $segment = $this->segmentsRepository->setLock($segment, false);
         $this->segmentsRepository->update($segment, ['cache_count' => $count]);
-        $segment = $this->segmentsRepository->setLock($segment, true);
-
         $this->add($segment, new DateTime(), $count);
     }
 }
