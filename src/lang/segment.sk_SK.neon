@@ -35,7 +35,6 @@ required:
 	code: Identifikátor je nutné vyplniť
 	table_name: Zdrojovú tabuľku je nutné vyplniť
 
-
 placeholder:
 	name: napríklad Používatelia s mesačným predplatným
 	code: napríklad users_with_month_subscription
@@ -44,6 +43,7 @@ placeholder:
 default:
 	header: Segmenty
 	deleted_segments: Zmazané segmenty
+	copy: Kopírovať
 
 show:
 	header: Segment %name%
@@ -71,3 +71,8 @@ new:
 	old_version_link: starú verziu
 	old_version: Toto je stará verzia formuláru pre vytváranie segmentov. Vyskúšajte %link%.
 	new_version_link: novú verziu
+
+copy:
+	title: Kopírovať segment
+	validation:
+		name: "Segment s rovnakým názvom už existuje"

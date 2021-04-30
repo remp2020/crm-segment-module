@@ -44,6 +44,7 @@ placeholder:
 default:
 	header: Segments
 	deleted_segments: Deleted segments
+	copy: Copy
 
 show:
 	header: Segment %name%
@@ -71,3 +72,9 @@ new:
 	old_version_link: old fashioned form
 	old_version: This is old version for creating segment. You can try %link%.
 	new_version_link: new visual version
+
+copy:
+	title: Copy segment
+	validation:
+		name: Segment with same name already exists
+

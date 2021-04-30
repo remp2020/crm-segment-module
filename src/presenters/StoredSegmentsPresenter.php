@@ -14,10 +14,14 @@ use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactory;
 use Crm\UsersModule\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
+use Nette\Application\UI\Form;
 use Nette\Database\Context;
+use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Strings;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Tomaj\Form\Renderer\BootstrapRenderer;
 
 class StoredSegmentsPresenter extends AdminPresenter
 {
@@ -242,5 +246,52 @@ class StoredSegmentsPresenter extends AdminPresenter
 
         $this->flashMessage($this->translator->translate('segment.messages.segment_was_deleted'));
         $this->redirect('default');
+    }
+
+    protected function createComponentCopySegmentForm(): Form
+    {
+        $form = new Form;
+
+        $form->setTranslator($this->translator);
+        $form->setRenderer(new BootstrapRenderer());
+        $form->getElementPrototype()->addClass('ajax');
+
+        $form->addText('name', 'segment.fields.name')
+            ->setRequired('segment.required.name')
+            ->addRule(function (TextInput $control) {
+                return $this->segmentsRepository->findByCode(Strings::webalize($control->getValue())) === false;
+            }, 'segment.copy.validation.name');
+
+        $form->addHidden('segment_id');
+
+        $form->addSubmit('send', 'system.save')
+            ->getControlPrototype()
+            ->setName('button')
+            ->setHtml('<i class="fa fa-save"></i> ' . $this->translator->translate('system.save'));
+
+        $form->onSubmit[] = function (Form $form) {
+            $this->redrawControl('copySegmentModal');
+        };
+
+        $form->onSuccess[] = function (Form $form) {
+            $values = $form->getValues();
+
+            $segment = $this->segmentsRepository->find($values['segment_id']);
+
+            $newSegment = $this->segmentsRepository->add(
+                $values['name'],
+                $segment->version,
+                Strings::webalize($values['name']),
+                $segment->table_name,
+                $segment->fields,
+                $segment->query_string,
+                $segment->segment_group,
+                $segment->criteria,
+            );
+
+            $this->redirect('edit', $newSegment->id);
+        };
+
+        return $form;
     }
 }
