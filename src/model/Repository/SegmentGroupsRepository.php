@@ -11,6 +11,10 @@ class SegmentGroupsRepository extends Repository
 {
     protected $tableName = 'segment_groups';
 
+    protected $slugs = [
+        'code',
+    ];
+
     final public function all()
     {
         return $this->getTable()->order('sorting ASC');

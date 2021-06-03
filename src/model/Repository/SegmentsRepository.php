@@ -13,6 +13,10 @@ class SegmentsRepository extends Repository
 {
     protected $tableName = 'segments';
 
+    protected $slugs = [
+        'code',
+    ];
+
     protected $auditLogExcluded = [
         'cache_count'
     ];
