@@ -7,7 +7,8 @@ services:
 	segmentGroupsRepository: Crm\SegmentModule\Repository\SegmentGroupsRepository
 	segmentsValuesRepository: Crm\SegmentModule\Repository\SegmentsValuesRepository
 
-	- Crm\SegmentModule\SegmentFactory
+	segmentFactory:
+		factory: Crm\SegmentModule\SegmentFactory
 	- Crm\SegmentModule\Commands\UpdateCountsCommand
 	- Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand
 	- Crm\SegmentModule\Commands\CompressSegmentsValues

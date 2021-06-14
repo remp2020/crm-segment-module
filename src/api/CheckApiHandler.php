@@ -9,6 +9,7 @@ use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
 use Crm\SegmentModule\Segment;
 use Crm\SegmentModule\SegmentFactory;
+use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\UsersModule\Repository\UsersRepository;
 use Nette\Http\Response;
 use Nette\UnexpectedValueException;
@@ -19,7 +20,7 @@ class CheckApiHandler extends ApiHandler
 
     private $usersRepository;
 
-    public function __construct(SegmentFactory $segmentFactory, UsersRepository $usersRepository)
+    public function __construct(SegmentFactoryInterface $segmentFactory, UsersRepository $usersRepository)
     {
         $this->segmentFactory = $segmentFactory;
         $this->usersRepository = $usersRepository;

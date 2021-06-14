@@ -5,6 +5,7 @@ namespace Crm\SegmentModule\Commands;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactory;
+use Crm\SegmentModule\SegmentFactoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,7 +13,7 @@ use Tracy\Debugger;
 
 class UpdateCountsCommand extends Command
 {
-    /** @var SegmentFactory */
+    /** @var SegmentFactoryInterface */
     private $segmentFactory;
 
     /** @var SegmentsRepository */
@@ -22,7 +23,7 @@ class UpdateCountsCommand extends Command
     private $segmentsValuesRepository;
 
     public function __construct(
-        SegmentFactory $segmentFactory,
+        SegmentFactoryInterface $segmentFactory,
         SegmentsRepository $segmentsRepository,
         SegmentsValuesRepository $segmentsValuesRepository
     ) {

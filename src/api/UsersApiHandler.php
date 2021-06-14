@@ -8,6 +8,7 @@ use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
 use Crm\SegmentModule\SegmentFactory;
+use Crm\SegmentModule\SegmentFactoryInterface;
 use Nette\Http\Response;
 use Nette\UnexpectedValueException;
 
@@ -15,7 +16,7 @@ class UsersApiHandler extends ApiHandler
 {
     private $segmentFactory;
 
-    public function __construct(SegmentFactory $segmentFactory)
+    public function __construct(SegmentFactoryInterface $segmentFactory)
     {
         $this->segmentFactory = $segmentFactory;
     }

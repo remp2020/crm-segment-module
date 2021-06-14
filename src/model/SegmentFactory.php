@@ -6,7 +6,7 @@ use Crm\SegmentModule\Repository\SegmentsRepository;
 use Nette\Database\Context;
 use Nette\UnexpectedValueException;
 
-class SegmentFactory
+class SegmentFactory implements SegmentFactoryInterface
 {
     private $segmentsRepository;
 
@@ -18,7 +18,7 @@ class SegmentFactory
         $this->segmentsRepository = $segmentsRepository;
     }
 
-    public function buildSegment(string $segmentIdentifier): Segment
+    public function buildSegment(string $segmentIdentifier): SegmentInterface
     {
         $segmentRow = $this->segmentsRepository->findByCode($segmentIdentifier);
         if (!$segmentRow) {
