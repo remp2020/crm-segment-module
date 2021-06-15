@@ -11,14 +11,17 @@ use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
-use Crm\SegmentModule\SegmentFactory;
 use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\UsersModule\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
+use Nette\Application\UI\Form;
 use Nette\Database\Context;
+use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Strings;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Tomaj\Form\Renderer\BootstrapRenderer;
 
 class StoredSegmentsPresenter extends AdminPresenter
 {
