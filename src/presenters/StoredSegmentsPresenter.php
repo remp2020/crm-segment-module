@@ -11,7 +11,7 @@ use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
-use Crm\SegmentModule\SegmentFactory;
+use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\UsersModule\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\UI\Form;
@@ -44,7 +44,7 @@ class StoredSegmentsPresenter extends AdminPresenter
     public function __construct(
         SegmentsRepository $segmentsRepository,
         SegmentsValuesRepository $segmentsValuesRepository,
-        SegmentFactory $segmentFactory,
+        SegmentFactoryInterface $segmentFactory,
         SegmentFormFactory $segmentFormFactory,
         ExcelFactory $excelFactory,
         SegmentGroupsRepository $segmentGroupsRepository,

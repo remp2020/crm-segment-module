@@ -7,7 +7,7 @@ use Crm\ApplicationModule\Widget\BaseWidget;
 use Crm\ApplicationModule\Widget\WidgetManager;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
-use Crm\SegmentModule\SegmentFactory;
+use Crm\SegmentModule\SegmentFactoryInterface;
 use Nette\Utils\DateTime;
 use ReflectionClass;
 
@@ -33,7 +33,7 @@ abstract class DashboardSegmentValueBaseWidget extends BaseWidget
     public function __construct(
         SegmentsRepository $segmentsRepository,
         SegmentsValuesRepository $segmentsValuesRepository,
-        SegmentFactory $segmentFactory,
+        SegmentFactoryInterface $segmentFactory,
         CacheRepository $cacheRepository,
         WidgetManager $widgetManager
     ) {

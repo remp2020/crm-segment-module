@@ -47,7 +47,7 @@ class Generator
     private function processNodes(array $tableCriteria, string $table, array $nodes, int $prefix)
     {
         foreach ($nodes as $i => $param) {
-            if ($param['type'] == 'criteria') {
+            if ($param['type'] === 'criteria') {
                 if (!isset($param['key'])) {
                     throw new InvalidCriteriaException("Missing [key] property in one of the criteria");
                 }
@@ -71,12 +71,14 @@ class Generator
                     $whereCondition = "IS NULL";
                 }
 
+                $primaryField = $this->criteriaStorage->getPrimaryField($table);
+
                 return [
-                    'where' => "t{$prefix}.id {$whereCondition}",
-                    'join' => ["LEFT JOIN ({$join}) AS t{$prefix} ON t{$prefix}.id = %table%.id"],
+                    'where' => "t{$prefix}." . $primaryField . " {$whereCondition}",
+                    'join' => ["LEFT JOIN ({$join}) AS t{$prefix} ON t{$prefix}." . $primaryField . " = %table%." . $primaryField . ""],
                     'fields' => $fields,
                 ];
-            } elseif ($param['type'] == 'operator') {
+            } elseif ($param['type'] === 'operator') {
                 $wheres = [];
                 $joins = [];
                 $fields = [];
@@ -86,13 +88,13 @@ class Generator
                     $joins = array_merge($joins, $output['join']);
                     $fields = array_merge($fields, $output['fields']);
                 }
-                if (strtoupper($param['operator']) == 'AND') {
+                if (strtoupper($param['operator']) === 'AND') {
                     return [
                         'where' => count($wheres) ? '(' . implode(' AND ', $wheres) . ')' : '',
                         'join' => $joins,
                         'fields' => $fields,
                     ];
-                } elseif (strtoupper($param['operator']) == 'OR') {
+                } elseif (strtoupper($param['operator']) === 'OR') {
                     return [
                         'where' => count($wheres) ? '(' . implode(' OR ', $wheres) . ')' : '',
                         'join' => $joins,
@@ -130,7 +132,7 @@ class Generator
             "SELECT %fields%\n" .
             "FROM %table%\n" . $join . "\n" .
             "WHERE %where%\n" . $where . "\n" .
-            "GROUP BY %table%.id";
+            "GROUP BY %table%." . $this->criteriaStorage->getPrimaryField($table);
         return $blueprint;
     }
 

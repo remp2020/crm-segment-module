@@ -7,17 +7,28 @@ use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
-use Crm\SegmentModule\SegmentFactory;
+use Crm\ApplicationModule\Criteria\CriteriaStorage;
+use Crm\SegmentModule\Criteria\InvalidCriteriaException;
+use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\SegmentFactoryInterface;
 use Nette\Http\Response;
-use Nette\UnexpectedValueException;
 
 class UsersApiHandler extends ApiHandler
 {
     private $segmentFactory;
 
-    public function __construct(SegmentFactory $segmentFactory)
-    {
+    private $criteriaStorage;
+
+    private $segmentsRepository;
+
+    public function __construct(
+        SegmentFactoryInterface $segmentFactory,
+        CriteriaStorage $criteriaStorage,
+        SegmentsRepository $segmentsRepository
+    ) {
         $this->segmentFactory = $segmentFactory;
+        $this->criteriaStorage = $criteriaStorage;
+        $this->segmentsRepository = $segmentsRepository;
     }
 
     /**
@@ -39,25 +50,40 @@ class UsersApiHandler extends ApiHandler
         $paramsProcessor = new ParamsProcessor($this->params());
         $error = $paramsProcessor->isError();
         if ($error) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Invalid params']);
+            $response = new JsonResponse([
+                'status' => 'error',
+                'code' => 'invalid_params',
+                'message' => 'Invalid params: ' . $error,
+            ]);
             $response->setHttpCode(Response::S400_BAD_REQUEST);
             return $response;
         }
         $params = $paramsProcessor->getValues();
 
-        try {
-            $segment = $this->segmentFactory->buildSegment($params['code']);
-        } catch (UnexpectedValueException $e) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Segment does not exist']);
+        $segmentRow = $this->segmentsRepository->findByCode($params['code']);
+        if (!$segmentRow) {
+            $response = new JsonResponse([
+                'status' => 'error',
+                'code' => 'segment_not_found',
+                'message' => 'Segment does not exist: ' . $params['code'],
+            ]);
             $response->setHttpCode(Response::S404_NOT_FOUND);
             return $response;
         }
 
+        $segment = $this->segmentFactory->buildSegment($params['code']);
+
         $users = [];
-        $segment->process(function ($row) use (&$users) {
+        $segment->process(function ($row) use (&$users, $segmentRow) {
+            $primaryField = $this->criteriaStorage->getPrimaryField($segmentRow['table_name']);
+            if (!isset($row[$primaryField])) {
+                throw new InvalidCriteriaException(
+                    "Selected segment '{$segmentRow->code}' does not select the primary field '$primaryField' defined for table '{$segmentRow['table_name']}"
+                );
+            }
             $users[] = [
-                 'id' => strval($row->id),
-                 'email' => $row->email,
+                 'id' => (string) $row[$primaryField],
+                 'email' => $row['email'],
              ];
         }, 0);
 
