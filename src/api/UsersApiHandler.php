@@ -7,6 +7,8 @@ use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
+use Crm\ApplicationModule\Criteria\CriteriaStorage;
+use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\SegmentFactory;
 use Crm\SegmentModule\SegmentFactoryInterface;
 use Nette\Http\Response;
@@ -16,9 +18,18 @@ class UsersApiHandler extends ApiHandler
 {
     private $segmentFactory;
 
-    public function __construct(SegmentFactoryInterface $segmentFactory)
-    {
+    private $criteriaStorage;
+
+    private $segmentsRepository;
+
+    public function __construct(
+        SegmentFactoryInterface $segmentFactory,
+        CriteriaStorage $criteriaStorage,
+        SegmentsRepository $segmentsRepository
+    ) {
         $this->segmentFactory = $segmentFactory;
+        $this->criteriaStorage = $criteriaStorage;
+        $this->segmentsRepository = $segmentsRepository;
     }
 
     /**
@@ -48,6 +59,10 @@ class UsersApiHandler extends ApiHandler
 
         try {
             $segment = $this->segmentFactory->buildSegment($params['code']);
+            $segmentRow = $this->segmentsRepository->findByCode($params['code']);
+            if (!$segmentRow) {
+                throw new UnexpectedValueException("segment does not exist: {$params['code']}");
+            }
         } catch (UnexpectedValueException $e) {
             $response = new JsonResponse(['status' => 'error', 'message' => 'Segment does not exist']);
             $response->setHttpCode(Response::S404_NOT_FOUND);
@@ -55,10 +70,10 @@ class UsersApiHandler extends ApiHandler
         }
 
         $users = [];
-        $segment->process(function ($row) use (&$users) {
+        $segment->process(function ($row) use (&$users, $segmentRow) {
             $users[] = [
-                 'id' => strval($row->id),
-                 'email' => $row->email,
+                 'id' => strval($row[$this->criteriaStorage->getPrimaryField($segmentRow['table_name'])]),
+                 'email' => $row['email'],
              ];
         }, 0);
 

@@ -7,9 +7,8 @@ use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
-use Crm\SegmentModule\Segment;
-use Crm\SegmentModule\SegmentFactory;
 use Crm\SegmentModule\SegmentFactoryInterface;
+use Crm\SegmentModule\SegmentInterface;
 use Crm\UsersModule\Repository\UsersRepository;
 use Nette\Http\Response;
 use Nette\UnexpectedValueException;
@@ -90,7 +89,7 @@ class CheckApiHandler extends ApiHandler
      * @param $id
      * @return bool
      */
-    private function checkId(Segment $segment, $id)
+    private function checkId(SegmentInterface $segment, $id)
     {
         $user = $this->usersRepository->find($id);
         if (!$user) {
@@ -106,7 +105,7 @@ class CheckApiHandler extends ApiHandler
      * @param $email
      * @return bool
      */
-    private function checkEmail(Segment $segment, $email)
+    private function checkEmail(SegmentInterface $segment, $email)
     {
         $user = $this->usersRepository->findBy('email', $email);
         if (!$user) {

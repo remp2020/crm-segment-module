@@ -72,8 +72,8 @@ class Generator
                 }
 
                 return [
-                    'where' => "t{$prefix}.id {$whereCondition}",
-                    'join' => ["LEFT JOIN ({$join}) AS t{$prefix} ON t{$prefix}.id = %table%.id"],
+                    'where' => "t{$prefix}." . $this->criteriaStorage->getPrimaryField($table) . " {$whereCondition}",
+                    'join' => ["LEFT JOIN ({$join}) AS t{$prefix} ON t{$prefix}." . $this->criteriaStorage->getPrimaryField($table) . " = %table%." . $this->criteriaStorage->getPrimaryField($table) . ""],
                     'fields' => $fields,
                 ];
             } elseif ($param['type'] == 'operator') {
@@ -130,7 +130,7 @@ class Generator
             "SELECT %fields%\n" .
             "FROM %table%\n" . $join . "\n" .
             "WHERE %where%\n" . $where . "\n" .
-            "GROUP BY %table%.id";
+            "GROUP BY %table%." . $this->criteriaStorage->getPrimaryField($table);
         return $blueprint;
     }
 
