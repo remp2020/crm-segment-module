@@ -55,7 +55,7 @@ class SegmentFormFactory
 
         $form->addText('name', 'segment.fields.name')
             ->setRequired('segment.required.name')
-            ->setAttribute('placeholder', 'segment.placeholder.name')
+            ->setHtmlAttribute('placeholder', 'segment.placeholder.name')
             ->setDisabled($locked);
 
         $form->addSelect('version', 'segment.fields.version', ['1' => '1', '2' => '2'])
@@ -64,7 +64,7 @@ class SegmentFormFactory
 
         $form->addText('code', 'segment.fields.code')
             ->setRequired('segment.required.code')
-            ->setAttribute('placeholder', 'segment.placeholder.code')
+            ->setHtmlAttribute('placeholder', 'segment.placeholder.code')
             ->setDisabled($locked);
 
         $form->addSelect('segment_group_id', 'segment.fields.segment_group_id', $this->segmentGroupsRepository->all()->fetchPairs('id', 'name'))
@@ -72,7 +72,7 @@ class SegmentFormFactory
 
         $form->addText('table_name', 'segment.fields.table_name')
             ->setRequired('segment.required.table_name')
-            ->setAttribute('placeholder', 'segment.placeholder.table_name')
+            ->setHtmlAttribute('placeholder', 'segment.placeholder.table_name')
             ->setDisabled($locked);
 
         $form->addTextArea('query_string', 'segment.fields.query_string', 30, 10)
