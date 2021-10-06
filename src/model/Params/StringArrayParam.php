@@ -6,9 +6,9 @@ class StringArrayParam extends BaseParam
 {
     protected $type = 'string_array';
 
-    private $options = false;
+    private $options;
 
-    public function __construct(string $key, string $label, string $help, bool $required = false, $default = null, string $group = null, array $options = null)
+    public function __construct(string $key, string $label, string $help, bool $required = false, $default = null, string $group = null, ?array $options = null)
     {
         parent::__construct($key, $label, $help, $required, $default, $group);
         $this->options = $options;
@@ -39,10 +39,10 @@ class StringArrayParam extends BaseParam
     {
         $values = [];
         foreach ($this->data as $value) {
-            if ($this->options == null) {
+            if ($this->options === null) {
                 $values[] = "'" . addslashes($value) . "'";
             } else {
-                if (in_array($value, $this->options)) {
+                if (in_array($value, $this->options, true)) {
                     $values[] = "'$value'";
                 }
             }
