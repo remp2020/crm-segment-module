@@ -6,16 +6,19 @@ class NumberArrayParam extends BaseParam
 {
     protected $type = 'number_array';
 
-    private $options = false;
+    private $options;
 
     public function __construct(string $key, string $label, string $help, bool $required = false, $default = null, $group = null, $options = null)
     {
         parent::__construct($key, $label, $help, $required, $default, $group);
-        $newOptions = [];
-        foreach ($options as $key => $value) {
-            $newOptions[intval($key)] = $value;
+
+        if (is_iterable($options)) {
+            $newOptions = [];
+            foreach ($options as $key => $value) {
+                $newOptions[intval($key)] = $value;
+            }
+            $this->options = $newOptions;
         }
-        $this->options = $newOptions;
     }
 
     public function options(): array
