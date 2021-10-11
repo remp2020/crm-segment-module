@@ -105,7 +105,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
         }
 
         $params['fields'] = implode(',', $fields);
-        $params['criteria'] = JSON::encode($params['criteria']);
+        $params['criteria'] = Json::encode($params['criteria']);
 
         if (isset($params['id'])) {
             $segment = $this->segmentsRepository->findById($params['id']);
