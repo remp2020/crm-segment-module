@@ -125,6 +125,6 @@ class SegmentModule extends CrmModule
 
     public function registerAssets(AssetsManager $assetsManager)
     {
-        $assetsManager->copyAssets(__DIR__ . '/../assets/segmenter', 'layouts/admin/segmenter');
+        $assetsManager->copyAssets(__DIR__ . '/assets/segmenter', 'layouts/admin/segmenter');
     }
 }
