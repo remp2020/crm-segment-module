@@ -39,7 +39,7 @@ class CheckApiHandler extends ApiHandler
 
     /**
      * @param ApiAuthorizationInterface $authorization
-     * @return \Nette\Application\IResponse
+     * @return \Nette\Application\Response
      * @throws \Exception
      */
     public function handle(ApiAuthorizationInterface $authorization)
