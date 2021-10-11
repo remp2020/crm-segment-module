@@ -3,7 +3,7 @@
 namespace Crm\SegmentModule\Repository;
 
 use Crm\ApplicationModule\Repository;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\IRow;
 use Nette\Utils\DateTime;
@@ -15,7 +15,7 @@ class SegmentsValuesRepository extends Repository
     private $segmentsRepository;
 
     public function __construct(
-        Context $database,
+        Explorer $database,
         SegmentsRepository $segmentsRepository
     ) {
         parent::__construct($database);

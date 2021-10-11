@@ -5,7 +5,7 @@ namespace Crm\SegmentModule\Repository;
 use Crm\ApplicationModule\Repository;
 use Crm\ApplicationModule\Repository\AuditLogRepository;
 use DateTime;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\IRow;
 
@@ -30,7 +30,7 @@ class SegmentsRepository extends Repository
     ];
 
     public function __construct(
-        Context $database,
+        Explorer $database,
         AuditLogRepository $auditLogRepository
     ) {
         parent::__construct($database);

@@ -16,7 +16,7 @@ use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\UsersModule\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\UI\Form;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Strings;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
@@ -54,7 +54,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         SegmentGroupsRepository $segmentGroupsRepository,
         ApplicationConfig $applicationConfig,
         AccessToken $accessToken,
-        Context $database
+        Explorer $database
     ) {
         parent::__construct();
 

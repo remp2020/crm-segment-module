@@ -3,18 +3,18 @@
 namespace Crm\SegmentModule;
 
 use Crm\SegmentModule\Repository\SegmentsRepository;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\UnexpectedValueException;
 
 class SegmentFactory implements SegmentFactoryInterface
 {
     private $segmentsRepository;
 
-    private $context;
+    private $database;
 
-    public function __construct(Context $context, SegmentsRepository $segmentsRepository)
+    public function __construct(Explorer $database, SegmentsRepository $segmentsRepository)
     {
-        $this->context = $context;
+        $this->database = $database;
         $this->segmentsRepository = $segmentsRepository;
     }
 
@@ -25,6 +25,6 @@ class SegmentFactory implements SegmentFactoryInterface
             throw new UnexpectedValueException("segment does not exist: {$segmentIdentifier}");
         }
         $query = new SegmentQuery($segmentRow->query_string, $segmentRow->table_name, $segmentRow->fields);
-        return new Segment($this->context, $query);
+        return new Segment($this->database, $query);
     }
 }

@@ -3,24 +3,24 @@
 namespace Crm\SegmentModule;
 
 use Closure;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 
 class Segment implements SegmentInterface
 {
-    private $context;
+    private $database;
 
     private $query;
 
-    public function __construct(Context $context, QueryInterface $query)
+    public function __construct(Explorer $database, QueryInterface $query)
     {
-        $this->context = $context;
+        $this->database = $database;
         $this->query = $query;
     }
 
     public function totalCount()
     {
         $countQuery = $this->query->getCountQuery();
-        $result = $this->context->query($countQuery);
+        $result = $this->database->query($countQuery);
         $count = 0;
         foreach ($result as $row) {
             $count = intval($row['count(*)']);
@@ -32,7 +32,7 @@ class Segment implements SegmentInterface
     public function isIn($field, $value)
     {
         $isInQuery = $this->query->getIsInQuery($field, $value);
-        $result = $this->context->query($isInQuery);
+        $result = $this->database->query($isInQuery);
         $isIn = false;
         foreach ($result as $row) {
             if (intval($row['count(*)']) > 0) {
@@ -56,7 +56,7 @@ class Segment implements SegmentInterface
         $lastId = 0;
         while (true) {
             $fetchQuery = $this->query->getNextPageQuery($lastId, $step);
-            $rows = $this->context->query($fetchQuery);
+            $rows = $this->database->query($fetchQuery);
             $fetchedRows = 0;
             foreach ($rows as $row) {
                 $rowCallback($row);

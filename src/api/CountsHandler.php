@@ -10,7 +10,7 @@ use Crm\SegmentModule\Criteria\Generator;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Segment;
 use Crm\SegmentModule\SegmentQuery;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Http\Response;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -19,13 +19,13 @@ class CountsHandler extends ApiHandler
 {
     private $generator;
 
-    private $context;
+    private $database;
 
     public function __construct(
-        Context $context,
+        Explorer  $database,
         Generator $generator
     ) {
-        $this->context = $context;
+        $this->database = $database;
         $this->generator = $generator;
     }
 
@@ -75,7 +75,7 @@ class CountsHandler extends ApiHandler
         }
 
         $query = new SegmentQuery($queryString, $params['table_name'], $params['table_name'] . '.id');
-        $segment = new Segment($this->context, $query);
+        $segment = new Segment($this->database, $query);
         $count = $segment->totalCount();
 
         $response = new JsonResponse(['status' => 'ok', 'count' => $count]);
