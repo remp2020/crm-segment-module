@@ -3,10 +3,10 @@
 namespace Crm\SegmentsModule\Widget;
 
 use Crm\ApplicationModule\Cache\CacheRepository;
-use Crm\SegmentModule\Repository\SegmentsRepository;
-use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\ApplicationModule\Widget\BaseWidget;
 use Crm\ApplicationModule\Widget\WidgetManager;
+use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactory;
 use Nette\Utils\DateTime;
 use ReflectionClass;
