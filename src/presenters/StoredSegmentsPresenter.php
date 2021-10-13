@@ -63,6 +63,9 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->database = $database;
     }
 
+    /**
+     * @admin-access-level read
+     */
     public function renderDefault()
     {
         $this->template->segmentGroups = $this->segmentGroupsRepository->all();
@@ -70,11 +73,17 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->deletedSegments = $this->segmentsRepository->deleted();
     }
 
+    /**
+     * @admin-access-level write
+     */
     public function renderNew($version = 2)
     {
         $this->template->version = $version;
     }
 
+    /**
+     * @admin-access-level write
+     */
     public function renderEdit($id, $version = null)
     {
         $segment = $this->segmentsRepository->find($id);
@@ -85,6 +94,9 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->version = $version == null ? $segment->version : $version;
     }
 
+    /**
+     * @admin-access-level read
+     */
     public function renderShow($id, $data = false)
     {
         $segmentRow = $this->loadSegment($id);
@@ -113,6 +125,9 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->data = $tableData;
     }
 
+    /**
+     * @admin-access-level write
+     */
     public function handleRecalculate(int $id)
     {
         // load segment
@@ -135,6 +150,9 @@ class StoredSegmentsPresenter extends AdminPresenter
         }
     }
 
+    /**
+     * @admin-access-level read
+     */
     public function renderDownload($id, $format, $extension)
     {
         $segmentRow = $this->loadSegment($id);
@@ -230,6 +248,9 @@ class StoredSegmentsPresenter extends AdminPresenter
         return $control;
     }
 
+    /**
+     * @admin-access-level write
+     */
     public function renderEmbed($id)
     {
         $this->template->crmHost = $this->getHttpRequest()->getUrl()->getBaseUrl() . "api/v1";
@@ -239,6 +260,9 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->segment = $segment;
     }
 
+    /**
+     * @admin-access-level write
+     */
     public function handleDelete($segmentId)
     {
         $segment = $this->segmentsRepository->find($segmentId);
