@@ -5,7 +5,6 @@ namespace Crm\SegmentModule\Repository;
 use Crm\ApplicationModule\Repository;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\IRow;
 use Nette\Utils\DateTime;
 
 class SegmentsValuesRepository extends Repository
@@ -22,7 +21,7 @@ class SegmentsValuesRepository extends Repository
         $this->segmentsRepository = $segmentsRepository;
     }
 
-    final public function add(IRow $segment, $date, $value)
+    final public function add(ActiveRow $segment, $date, $value)
     {
         return $this->insert([
             'segment_id' => $segment->id,

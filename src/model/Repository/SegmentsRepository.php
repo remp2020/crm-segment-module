@@ -7,7 +7,6 @@ use Crm\ApplicationModule\Repository\AuditLogRepository;
 use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\IRow;
 
 class SegmentsRepository extends Repository
 {
@@ -47,7 +46,7 @@ class SegmentsRepository extends Repository
         return $this->getTable()->where('deleted_at IS NOT NULL')->order('name ASC');
     }
 
-    final public function add($name, $version, $code, $tableName, $fields, $queryString, IRow $group, $criteria = null)
+    final public function add($name, $version, $code, $tableName, $fields, $queryString, ActiveRow $group, $criteria = null)
     {
         $id = $this->insert([
             'name' => $name,
@@ -65,7 +64,7 @@ class SegmentsRepository extends Repository
         return $this->find($id);
     }
 
-    final public function update(IRow &$row, $data)
+    final public function update(ActiveRow &$row, $data)
     {
         //if segment is locked, allow to change only whitelisted fields (eg. field holding cached count)
         if ($row['locked']) {
@@ -86,7 +85,7 @@ class SegmentsRepository extends Repository
         string $queryString,
         string $tableName,
         string $fields,
-        IRow $group
+        ActiveRow $group
     ): ActiveRow {
         $segment = $this->findByCode($code);
         if (!$segment) {
@@ -129,7 +128,7 @@ class SegmentsRepository extends Repository
         return $this->all()->where('code', $code)->limit(1)->fetch();
     }
 
-    final public function softDelete(IRow $segment)
+    final public function softDelete(ActiveRow $segment)
     {
         $this->update($segment, [
             'deleted_at' => new \DateTime(),
