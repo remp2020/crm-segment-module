@@ -20,11 +20,13 @@ class SegmentsRepository extends Repository
     protected $auditLogExcluded = [
         'cache_count',
         'updated_at',
+        'cache_count_time',
     ];
 
     private const LOCK_WHITELIST = [
         'updated_at',
-        'cache_count'
+        'cache_count',
+        'cache_count_time',
     ];
 
     public function __construct(
