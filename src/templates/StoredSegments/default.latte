@@ -24,6 +24,7 @@
           <th>{_segment.fields.version}</th>
           <th>{_segment.fields.created}</th>
           <th>{_segment.fields.rows} {_('segment.fields.rows_help')|helpIcon|noescape}</th>
+          <th>{_segment.fields.time}</th>
           <th>{_system.actions}</th>
         </tr>
         </thead>
@@ -40,6 +41,13 @@
               <td><span class="label label-default">{$segment->version}</span></td>
               <td>{$segment->created_at|userDate}</td>
               <td>~{$segment->cache_count}</td>
+              <td>
+                {if isset($segment->cache_count_time)}
+                  <span {if isset($segmentSlowRecalculateThreshold) && $segment->cache_count_time > $segmentSlowRecalculateThreshold}style="color: red;"{/if}>
+                    {$segment->cache_count_time}&nbsp;s
+                  </span>
+                {/if}
+              </td>
               <td>
                 <p class="text-nowrap">
                   <a n:href="show $segment->id" class="btn btn-sm btn-info" title="{_system.show}"><i class="fa fa-eye"></i> </a>

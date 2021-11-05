@@ -11,6 +11,7 @@ use Crm\ApplicationModule\CrmModule;
 use Crm\ApplicationModule\Menu\MenuContainerInterface;
 use Crm\ApplicationModule\Menu\MenuItem;
 use Crm\ApplicationModule\SeederManager;
+use Crm\SegmentModule\Seeders\ConfigSeeder;
 use Crm\SegmentModule\Seeders\SegmentsSeeder;
 
 class SegmentModule extends CrmModule
@@ -121,6 +122,7 @@ class SegmentModule extends CrmModule
     public function registerSeeders(SeederManager $seederManager)
     {
         $seederManager->addSeeder($this->getInstance(SegmentsSeeder::class));
+        $seederManager->addSeeder($this->getInstance(ConfigSeeder::class));
     }
 
     public function registerAssets(AssetsManager $assetsManager)

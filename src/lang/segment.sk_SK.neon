@@ -23,6 +23,7 @@ fields:
 	deleted: Zmazaný
 	table_name: Zdrojová tabuľka
 	rows: "Počet (približne)"
+	time: "Čas prepočtu"
 	rows_help: "Nezobrazuje presné dáta. Číslo sa aktualizuje v pravidelných intervaloch."
 	query_fields: Stĺpce
 	query_string: Databázový dotaz
@@ -76,3 +77,9 @@ copy:
 	title: Kopírovať segment
 	validation:
 		name: "Segment s rovnakým názvom už existuje"
+
+config:
+	category: Segmenty
+	segment_slow_recalculate_threshold:
+		name: 'Časový limit prepočitavania (sekúnd)'
+		description: 'Reprezentuje limit v sekundách ktorý ak prepočítavanie prekročí, systém upozorní administrátorov.'

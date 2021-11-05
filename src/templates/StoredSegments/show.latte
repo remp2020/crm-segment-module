@@ -48,6 +48,11 @@
           <li class="list-group-item">
             {snippet segmentCount}
             <b>{_segment.fields.rows}:</b> ~{$segment->cache_count} {_('segment.fields.rows_help')|helpIcon|noescape}
+            {if $segment->cache_count_time}
+              <span {if isset($segmentSlowRecalculateThreshold) && $segment->cache_count_time > $segmentSlowRecalculateThreshold}style="color: red;"{/if}>
+                ({_segment.fields.time}: {$segment->cache_count_time}&nbsp;s)
+              </span>
+            {/if}
             {if !isset($recalculated) || !$recalculated}
               <a n:href="recalculate! $segment->id" class="ajax btn btn-sm btn-default">
                 <i class="fa fa-sync-alt"></i>&nbsp;{_segment.show.recalculate_total_count}

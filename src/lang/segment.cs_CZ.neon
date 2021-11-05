@@ -23,6 +23,7 @@ fields:
 	deleted: Smazaný
 	table_name: Zdrojová tabulka
 	rows: "Počet (přibližně)"
+	time: "Čas přepočtu"
 	rows_help: Nezobrazuje přesná data. Číslo se aktualizuje v pravidelných intervalech.
 	query_fields: Sloupce
 	query_string: Databázový dotaz
@@ -72,3 +73,8 @@ copy:
 	validation:
 		name: Segment se stejným názvem již existuje
 
+config:
+	category: Segmenty
+	segment_slow_recalculate_threshold:
+		name: 'Časový limit přepočtení (vteřin)'
+		description: 'Reprezentuje limit v sekundách který pokud přepočítávání překročí, systém upozorní administrátory.'

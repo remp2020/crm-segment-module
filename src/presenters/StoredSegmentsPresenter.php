@@ -4,6 +4,7 @@ namespace Crm\SegmentModule\Presenters;
 
 use Crm\AdminModule\Presenters\AdminPresenter;
 use Crm\ApplicationModule\Components\Graphs\GoogleLineGraphGroupControlFactoryInterface;
+use Crm\ApplicationModule\Config\ApplicationConfig;
 use Crm\ApplicationModule\ExcelFactory;
 use Crm\ApplicationModule\Graphs\Criteria;
 use Crm\ApplicationModule\Graphs\GraphDataItem;
@@ -22,6 +23,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tomaj\Form\Renderer\BootstrapRenderer;
+use Tracy\Debugger;
 
 class StoredSegmentsPresenter extends AdminPresenter
 {
@@ -37,6 +39,8 @@ class StoredSegmentsPresenter extends AdminPresenter
 
     private $segmentGroupsRepository;
 
+    public $applicationConfig;
+
     private $accessToken;
 
     private $database;
@@ -48,6 +52,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         SegmentFormFactory $segmentFormFactory,
         ExcelFactory $excelFactory,
         SegmentGroupsRepository $segmentGroupsRepository,
+        ApplicationConfig $applicationConfig,
         AccessToken $accessToken,
         Context $database
     ) {
@@ -59,6 +64,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->segmentFormFactory = $segmentFormFactory;
         $this->excelFactory = $excelFactory;
         $this->segmentGroupsRepository = $segmentGroupsRepository;
+        $this->applicationConfig = $applicationConfig;
         $this->accessToken = $accessToken;
         $this->database = $database;
     }
@@ -71,6 +77,16 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->segmentGroups = $this->segmentGroupsRepository->all();
         $this->template->segments = $this->segmentsRepository->all();
         $this->template->deletedSegments = $this->segmentsRepository->deleted();
+
+        $segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
+        if (!is_numeric($segmentSlowRecalculateThreshold) || $segmentSlowRecalculateThreshold < 0) {
+            Debugger::log(
+                'Bad value in configuration for `segment_slow_recalculate_threshold`. Value must be positive number.',
+                Debugger::WARNING
+            );
+        } else {
+            $this->template->segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
+        }
     }
 
     /**
@@ -103,6 +119,16 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->segment = $segmentRow;
         $this->template->showData = $data;
 
+        $segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
+        if (!is_numeric($segmentSlowRecalculateThreshold) || $segmentSlowRecalculateThreshold < 0) {
+            Debugger::log(
+                'Bad value in configuration for `segment_slow_recalculate_threshold`. Value must be positive number.',
+                Debugger::WARNING
+            );
+        } else {
+            $this->template->segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
+        }
+
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 
         $ids = [];
@@ -130,13 +156,15 @@ class StoredSegmentsPresenter extends AdminPresenter
      */
     public function handleRecalculate(int $id)
     {
+        Debugger::timer('recalculate_segment');
         // load segment
         $segmentRow = $this->loadSegment($id);
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 
         // store cached count
         $count = $segment->totalCount();
-        $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count);
+        $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
+        $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count, $recalculateTime);
 
         $this->presenter->flashMessage($this->translator->translate('segment.messages.segment_count_recalculated'));
 

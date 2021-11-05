@@ -53,23 +53,22 @@ class UpdateCountsCommand extends Command
         $output->writeln('');
 
         foreach ($this->segmentsRepository->all() as $segmentRow) {
-            $startTime = microtime(true);
-            $endTime = null;
+            Debugger::timer('recalculate_segment');
             try {
                 $output->write("Updating count for segment <info>{$segmentRow->code}</info>: ");
                 $segment = $this->segmentFactory->buildSegment($segmentRow->code);
                 $count = $segment->totalCount();
-                $endTime = microtime(true);
+                $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
 
-                $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count);
+                $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count, $recalculateTime);
 
-                $output->writeln("OK (" . round($endTime - $startTime, 2) . "s)");
+                $output->writeln("OK (" . $recalculateTime . "s)");
             } catch (\Exception $e) {
-                if (!isset($endTime)) {
-                    $endTime = microtime(true);
+                if (!isset($recalculateTime)) {
+                    $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
                 }
                 Debugger::log($e, Debugger::EXCEPTION);
-                $output->writeln("ERR (" . round($endTime - $startTime, 2) . "s): " . $e->getMessage());
+                $output->writeln("ERR (" . $recalculateTime . "s): " . $e->getMessage());
             }
         }
 

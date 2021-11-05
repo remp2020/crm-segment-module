@@ -26,3 +26,4 @@ services:
 	- Crm\SegmentModule\Criteria\Generator
 	- Crm\SegmentModule\Api\RelatedHandler
 	- Crm\SegmentModule\Seeders\SegmentsSeeder
+	- Crm\SegmentModule\Seeders\ConfigSeeder

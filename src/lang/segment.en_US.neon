@@ -23,6 +23,7 @@ fields:
 	deleted: Deleted
 	table_name: Source table
 	rows: "Count (approx)"
+	time: "Recalculation time"
 	rows_help: "Doesn't contain accurate data. Actualized in periodical intervals."
 	query_fields: Database fields
 	query_string: Database query
@@ -78,3 +79,8 @@ copy:
 	validation:
 		name: Segment with same name already exists
 
+config:
+	category: Segments
+	segment_slow_recalculate_threshold:
+		name: 'Recalculate time limit (seconds)'
+		description: 'Represents the limit in seconds that if the recalculation exceeds, admins will be notified.'

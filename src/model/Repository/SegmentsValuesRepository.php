@@ -46,9 +46,12 @@ class SegmentsValuesRepository extends Repository
             ->fetch();
     }
 
-    final public function cacheSegmentCount(ActiveRow $segment, int $count)
+    final public function cacheSegmentCount(ActiveRow $segment, int $count, float $time)
     {
-        $this->segmentsRepository->update($segment, ['cache_count' => $count]);
+        $this->segmentsRepository->update($segment, [
+            'cache_count' => $count,
+            'cache_count_time' => $time,
+        ]);
         $this->add($segment, new DateTime(), $count);
     }
 }
