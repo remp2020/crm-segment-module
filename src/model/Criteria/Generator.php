@@ -132,7 +132,7 @@ class Generator
             "SELECT %fields%\n" .
             "FROM %table%\n" . $join . "\n" .
             "WHERE %where%\n" . $where . "\n" .
-            "GROUP BY %table%." . $this->criteriaStorage->getPrimaryField($table);
+            "GROUP BY %group_by%";
         return $blueprint;
     }
 

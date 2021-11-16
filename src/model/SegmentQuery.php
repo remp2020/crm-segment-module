@@ -51,25 +51,33 @@ class SegmentQuery implements QueryInterface
     private function buildQuery($select = '', $where = '')
     {
         $query = $this->query;
-        $fields = $this->fields;
 
-        if ($select) {
-            $fieldsArr = [];
+        $fieldsArr = [];
+        $selectArr = [];
+        $groupByArr = [];
+
+        if ($this->fields) {
             foreach (explode(",", $this->fields) as $f) {
                 $fieldsArr[] = trim($f);
+                $groupByArr[] = trim(explode(' as ', mb_strtolower($f))[0]);
             }
-            $selectArr = [];
+        }
+        if ($select) {
             foreach (explode(",", $select) as $f) {
                 $selectArr[] = trim($f);
+                $groupByArr[] = trim(explode(' as ', mb_strtolower($f))[0]);
             }
-            $fields = implode(",", array_unique(array_merge(
-                $fieldsArr,
-                $selectArr
-            )));
         }
+
+        $fields = implode(", ", array_unique(array_merge(
+            $fieldsArr,
+            $selectArr
+        )));
+        $groupBy = implode(', ', array_unique($groupByArr));
 
         $query = str_replace('%table%', $this->tableName, $query);
         $query = str_replace('%fields%', $fields, $query);
+        $query = str_replace('%group_by%', $groupBy, $query);
         if (!$where) {
             $where = ' 1=1 ';
         }
