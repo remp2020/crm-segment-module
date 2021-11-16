@@ -2,6 +2,7 @@
 
 namespace Crm\SegmentModule\Commands;
 
+use Crm\ApplicationModule\Commands\DecoratedCommandTrait;
 use Crm\SegmentModule\Criteria\Generator;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Nette\Utils\Json;
@@ -11,6 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProcessCriteriaSegmentsCommand extends Command
 {
+    use DecoratedCommandTrait;
+
     private $segmentsRepository;
 
     private $generator;
@@ -34,10 +37,12 @@ class ProcessCriteriaSegmentsCommand extends Command
     {
         $segments = $this->segmentsRepository->all()->where(['version' => 2]);
         foreach ($segments as $segment) {
+            $output->write("Processing <comment>{$segment->code}</comment>: ");
             $query = $this->generator->process($segment->table_name, Json::decode($segment->criteria, Json::FORCE_ARRAY));
             if ($query) {
                 $this->segmentsRepository->update($segment, ['query_string' => $query]);
             }
+            $output->writeln("OK");
         }
 
         $output->writeln("Done");
