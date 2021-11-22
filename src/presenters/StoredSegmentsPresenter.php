@@ -315,7 +315,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $form->addText('name', 'segment.fields.name')
             ->setRequired('segment.required.name')
             ->addRule(function (TextInput $control) {
-                return $this->segmentsRepository->findByCode(Strings::webalize($control->getValue())) === false;
+                return $this->segmentsRepository->findByCode(Strings::webalize($control->getValue())) === null;
             }, 'segment.copy.validation.name');
 
         $form->addHidden('segment_id');

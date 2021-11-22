@@ -89,7 +89,7 @@ class SegmentsRepository extends Repository
         IRow $group
     ): ActiveRow {
         $segment = $this->findByCode($code);
-        if ($segment === false) {
+        if (!$segment) {
             return $this->add($name, 1, $code, $tableName, $fields, $queryString, $group);
         }
 

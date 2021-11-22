@@ -49,7 +49,7 @@ trait SegmentsTrait
     ): ActiveRow {
         // try to load segment before adding it
         $segment = $this->segmentsRepository->findByCode($code);
-        if ($segment !== false) {
+        if ($segment) {
             $output->writeln("  * segment <info>{$code}</info> exists");
             return $segment;
         }
@@ -85,7 +85,7 @@ trait SegmentsTrait
         }
 
         $segment = $this->segmentsRepository->findByCode($code);
-        if ($segment === false) {
+        if (!$segment) {
             $segment = $this->segmentsRepository->add($name, 1, $code, $tableName, $fields, $queryString, $group);
             $output->writeln("  <comment>* segment <info>{$code}</info> created</comment>");
             return $segment;

@@ -126,7 +126,7 @@ abstract class DashboardSegmentValueBaseWidget extends BaseWidget
             }
         } else {
             $segmentValues = $this->segmentsValuesRepository->mostRecentValues($segmentCode);
-            if ($segmentValues === false) {
+            if (!$segmentValues) {
                 $wasCalculated = false;
                 $count = 0;
             } else {
