@@ -135,17 +135,21 @@ class StoredSegmentsPresenter extends AdminPresenter
         $tableData = [];
         $displayFields = false;
 
-        $segment->process(function ($row) use (&$ids, $data, &$tableData, &$displayFields) {
-            $ids[] = $row->id;
+        // don't try to evaluate the segment again for component redraws
+        if (!$this->isAjax()) {
+            $segment->process(function ($row) use (&$ids, $data, &$tableData, &$displayFields) {
+                $ids[] = $row->id;
 
-            if ($data) {
-                if (!$displayFields) {
-                    $displayFields = array_keys((array) $row);
+                if ($data) {
+                    if (!$displayFields) {
+                        $displayFields = array_keys((array) $row);
+                    }
+                    $tableData[] = array_values((array) $row);
                 }
-                $tableData[] = array_values((array) $row);
-            }
-        }, 100000);
+            }, PHP_INT_MAX);
+        }
 
+        // TODO: get rid of IDs after we have alternative way of displaying AVG values provided by widgets
         $this->template->ids = $ids;
         $this->template->fields = $displayFields;
         $this->template->data = $tableData;
