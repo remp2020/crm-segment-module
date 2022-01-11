@@ -17,7 +17,7 @@ class ListGroupsHandler extends ApiHandler
         $this->segmentGroupsRepository = $segmentGroupsRepository;
     }
 
-    public function params()
+    public function params(): array
     {
         return [];
     }

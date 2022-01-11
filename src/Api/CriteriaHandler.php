@@ -17,7 +17,7 @@ class CriteriaHandler extends ApiHandler
         $this->criteriaStorage = $criteriaStorage;
     }
 
-    public function params()
+    public function params(): array
     {
         return [];
     }

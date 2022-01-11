@@ -37,7 +37,7 @@ class RelatedHandler extends ApiHandler
     /**
      * @inheritdoc
      */
-    public function params()
+    public function params(): array
     {
         return [];
     }

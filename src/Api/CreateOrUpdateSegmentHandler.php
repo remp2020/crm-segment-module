@@ -35,7 +35,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
         $this->generator = $generator;
     }
 
-    public function params()
+    public function params(): array
     {
         return [
             new InputParam(InputParam::TYPE_GET, 'id', InputParam::OPTIONAL),

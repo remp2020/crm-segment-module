@@ -29,7 +29,7 @@ class CountsHandler extends ApiHandler
         $this->generator = $generator;
     }
 
-    public function params()
+    public function params(): array
     {
         return [];
     }

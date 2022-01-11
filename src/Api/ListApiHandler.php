@@ -23,7 +23,7 @@ class ListApiHandler extends ApiHandler
     /**
      * @inheritdoc
      */
-    public function params()
+    public function params(): array
     {
         return [
             new InputParam(InputParam::TYPE_GET, 'group_id', InputParam::OPTIONAL), // deprecated
