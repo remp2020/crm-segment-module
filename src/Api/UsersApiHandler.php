@@ -4,9 +4,9 @@ namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
 use Crm\ApiModule\Api\JsonResponse;
-use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
+use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Repository\SegmentsRepository;
@@ -41,11 +41,8 @@ class UsersApiHandler extends ApiHandler
         ];
     }
 
-    /**
-     * @param ApiAuthorizationInterface $authorization
-     * @return \Nette\Application\Response
-     */
-    public function handle(ApiAuthorizationInterface $authorization)
+
+    public function handle(array $params): ApiResponseInterface
     {
         $paramsProcessor = new ParamsProcessor($this->params());
         $error = $paramsProcessor->isError();

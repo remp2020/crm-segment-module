@@ -4,7 +4,7 @@ namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
 use Crm\ApiModule\Api\JsonResponse;
-use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
+use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Nette\Http\Response;
 
@@ -22,11 +22,8 @@ class ListGroupsHandler extends ApiHandler
         return [];
     }
 
-    /**
-     * @param ApiAuthorizationInterface $authorization
-     * @return \Nette\Application\Response
-     */
-    public function handle(ApiAuthorizationInterface $authorization)
+
+    public function handle(array $params): ApiResponseInterface
     {
         $groupsRows = $this->segmentGroupsRepository->all();
         $groups = [];

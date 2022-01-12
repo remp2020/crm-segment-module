@@ -4,7 +4,7 @@ namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
 use Crm\ApiModule\Api\JsonResponse;
-use Crm\ApiModule\Authorization\ApiAuthorizationInterface;
+use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
 use Nette\Http\Response;
 
@@ -22,7 +22,7 @@ class CriteriaHandler extends ApiHandler
         return [];
     }
 
-    public function handle(ApiAuthorizationInterface $authorization)
+    public function handle(array $params): ApiResponseInterface
     {
         $criteriaArray = $this->criteriaStorage->getCriteria();
         $result = [];
