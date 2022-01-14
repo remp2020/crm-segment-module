@@ -20,8 +20,6 @@ class RelatedHandler extends ApiHandler
 {
     private $segmentsRepository;
 
-    private $linkGenerator;
-
     private $generator;
 
     public function __construct(
