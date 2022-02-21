@@ -54,7 +54,7 @@ show:
 	show_data: Show data
 	recalculate_total_count: Refresh count
 	export: Export
-	no_data: Segment doens't contains any data
+	no_data: "Segment doesn't contains any data"
 	stats: Stats
 
 edit:
