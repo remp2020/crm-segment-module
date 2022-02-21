@@ -30,18 +30,22 @@ fields:
 	segment_group_id: Skupina
 	criteria: Kriteria
 	version: Verze
+
 required:
 	name: Název je nutné vyplnit
 	code: Identifikátor je nutné vyplnit
 	table_name: Zdrojovou tabulku je nutné vyplnit
+
 placeholder:
 	name: například Uživatelé s měsíčním předplatným
 	code: například users_with_month_subscription
 	table_name: například users
+
 default:
 	header: Segmenty
 	deleted_segments: Smazané segmenty
 	copy: Kopírovat
+
 show:
 	header: Segment %name%
 	edit: Uprav segment
@@ -51,6 +55,7 @@ show:
 	export: Export
 	no_data: Segment neobsahuje žádná data
 	stats: Statistiky
+
 edit:
 	title: Uprav segment %name%
 	header: Uprav segment
