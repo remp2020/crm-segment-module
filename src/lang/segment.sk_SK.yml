@@ -13,8 +13,8 @@ messages:
     segment_was_updated: Segment bol upravený.
     segment_was_deleted: Segment bol zmazaný.
     segment_not_found: Segment sa nenašiel.
-    segment_count_recalculated: Segment bol prepočítaný
-    segment_recalculation_settings_saved: Nastavenia prepočtu segmentu boli úspešne uložené
+    segment_count_recalculated: Segment bol prepočítaný.
+    segment_recalculation_settings_saved: Nastavenia prepočtu segmentu boli úspešne uložené.
 
 fields:
     name: Názov
