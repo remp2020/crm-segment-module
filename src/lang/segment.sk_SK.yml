@@ -1,0 +1,85 @@
+menu:
+    segments: Segmenty
+    stored_segments: Uložené segmenty
+segment: Segment
+back_to_listing: späť na zoznam
+back_to_detail: spať na detail
+
+dashboard:
+    warning: 'Pre zobrazenie správnej hodnoty musíte aktualizovať počet v detaile segmentu.'
+
+messages:
+    segment_was_created: Segment bol vytvorený.
+    segment_was_updated: Segment bol upravený.
+    segment_was_deleted: Segment bol zmazaný.
+    segment_not_found: Segment sa nenašiel.
+    segment_count_recalculated: Segment bol prepočítaný
+
+fields:
+    name: Názov
+    code: Identifikátor
+    created: Vytvorený
+    updated: Upravený
+    deleted: Zmazaný
+    table_name: Zdrojová tabuľka
+    rows: "Počet (približne)"
+    time: "Čas prepočtu"
+    rows_help: "Nezobrazuje presné dáta. Číslo sa aktualizuje v pravidelných intervaloch."
+    query_fields: Stĺpce
+    query_string: Databázový dotaz
+    segment_group_id: Skupina
+    criteria: Kritériá
+    version: Verzia
+
+required:
+    name: Názov je nutné vyplniť
+    code: Identifikátor je nutné vyplniť
+    table_name: Zdrojovú tabuľku je nutné vyplniť
+
+placeholder:
+    name: napríklad Používatelia s mesačným predplatným
+    code: napríklad users_with_month_subscription
+    table_name: napríklad users
+
+default:
+    header: Segmenty
+    deleted_segments: Zmazané segmenty
+    copy: Kopírovať
+
+show:
+    header: Segment %name%
+    edit: Uprav segment
+    basic_info: Základne info
+    show_data: Zobraz data
+    recalculate_total_count: Aktualizovať počet
+    export: Export
+    no_data: Segment neobsahuje žiadne dáta
+    stats: Štatistiky
+
+edit:
+    title: Uprav segment %name%
+    header: Uprav segment
+    new_version: Toto je nový vizuálny editor pre úpravu segmentov. Stále je možné použiť %link%.
+    old_version_link: starú verziu
+    old_version: Toto je stará verzia formuláru pre úpravu segmentov. Vyskúšajte %link%.
+    new_version_link: novú verziu
+    messages:
+        segment_locked: Segment je zamknutý. Upravovanie nie je povolené.
+
+new:
+    header: Nový segment
+    new_version: Toto je nový vizuálny editor pre vytvárnie segmentov. Stále je možné použiť %link%.
+    old_version_link: starú verziu
+    old_version: Toto je stará verzia formuláru pre vytváranie segmentov. Vyskúšajte %link%.
+    new_version_link: novú verziu
+
+copy:
+    title: Kopírovať segment
+    validation:
+        name: "Segment s rovnakým názvom už existuje"
+
+config:
+    category: Segmenty
+    segment_slow_recalculate_threshold:
+        name: 'Časový limit prepočitavania (sekúnd)'
+        description: 'Reprezentuje limit v sekundách ktorý ak prepočítavanie prekročí, systém upozorní administrátorov.'
