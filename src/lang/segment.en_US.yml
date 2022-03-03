@@ -13,8 +13,8 @@ messages:
     segment_was_updated: Segment was updated.
     segment_was_deleted: Segment was deleted.
     segment_not_found: Segment not found.
-    segment_count_recalculated: Segment count was recalculated
-    segment_recalculation_settings_saved: Segment recalculation settings were saved successfully
+    segment_count_recalculated: Segment count was recalculated.
+    segment_recalculation_settings_saved: Segment recalculation settings were saved successfully.
 
 fields:
     name: Name
