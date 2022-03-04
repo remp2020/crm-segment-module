@@ -51,6 +51,7 @@ class SegmentsValuesRepository extends Repository
         $this->segmentsRepository->update($segment, [
             'cache_count' => $count,
             'cache_count_time' => $time,
+            'cache_count_updated_at' => new DateTime(),
         ]);
         $this->add($segment, new DateTime(), $count);
     }

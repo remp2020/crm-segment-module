@@ -14,6 +14,7 @@ messages:
     segment_was_deleted: Segment was deleted.
     segment_not_found: Segment not found.
     segment_count_recalculated: Segment count was recalculated
+    segment_recalculation_settings_saved: Segment recalculation settings were saved successfully
 
 fields:
     name: Name
@@ -24,6 +25,9 @@ fields:
     table_name: Source table
     rows: "Count (approx)"
     time: "Recalculation time"
+    periodicity: "Recalculation periodicity"
+    periodicity_default: "Default"
+    periodicity_default_title: "6 hours"
     rows_help: "Doesn't contain accurate data. Actualized in periodical intervals."
     query_fields: Database fields
     query_string: Database query
@@ -52,9 +56,21 @@ show:
     basic_info: Basic info
     show_data: Show data
     recalculate_total_count: Refresh count
+    recalculation_settings: Recalculation settings
     export: Export
     no_data: "Segment doesn't contains any data"
     stats: Stats
+
+recalculation_settings:
+    title: Segment recalculation settings
+    interval: Recalculate between
+    interval_and: and
+    period: Recalculate every
+    default_period: The default periodicity is every 6 hours.
+    save: Save
+    minutes: Minutes
+    hours: Hours
+    days: Days
 
 edit:
     title: Edit segment %name%

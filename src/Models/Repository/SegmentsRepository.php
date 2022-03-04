@@ -21,12 +21,15 @@ class SegmentsRepository extends Repository
         'cache_count',
         'updated_at',
         'cache_count_time',
+        'cache_count_updated_at',
     ];
 
     private const LOCK_WHITELIST = [
         'updated_at',
         'cache_count',
         'cache_count_time',
+        'cache_count_periodicity',
+        'cache_count_updated_at',
     ];
 
     public function __construct(

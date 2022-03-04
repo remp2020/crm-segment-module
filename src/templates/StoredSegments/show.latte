@@ -48,11 +48,24 @@
           <li class="list-group-item">
             {snippet segmentCount}
             <b>{_segment.fields.rows}:</b> ~{$segment->cache_count} {_('segment.fields.rows_help')|helpIcon|noescape}
+
+            ({_segment.fields.periodicity}:
+            {if $segment->cache_count_periodicity}
+              <span>
+                {var $periodicity = json_decode($segment->cache_count_periodicity)}
+                {$periodicity->amount} {_"segment.recalculation_settings.{$periodicity->unit}"},
+              </span>
+            {else}
+              <abbr title="{_segment.fields.periodicity_default_title}">{_segment.fields.periodicity_default}</abbr>,
+            {/if}
+
             {if $segment->cache_count_time}
               <span {if isset($segmentSlowRecalculateThreshold) && $segment->cache_count_time > $segmentSlowRecalculateThreshold}style="color: red;"{/if}>
-                ({_segment.fields.time}: {$segment->cache_count_time}&nbsp;s)
+                {_segment.fields.time}: {$segment->cache_count_time}&nbsp;s
               </span>
-            {/if}
+            {/if})
+
+            <div style="margin-top: 10px;">
             {if !isset($recalculated) || !$recalculated}
               <a n:href="recalculate! $segment->id" class="ajax btn btn-sm btn-default">
                 <i class="fa fa-sync-alt"></i>&nbsp;{_segment.show.recalculate_total_count}
@@ -62,7 +75,9 @@
                 <i class="fa fa-sync-alt"></i>&nbsp;{_segment.messages.segment_count_recalculated}
               </a>
             {/if}
+              <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-recalculation-settings-modal"><i class="fas fa-cog"></i> {_segment.show.recalculation_settings}</a>
             {/snippet}
+            </div>
           </li>
         {control simpleWidget 'segment.detail.statspanel.row', $ids}
       </ul>
@@ -128,6 +143,58 @@
 
     <div n:if="!$data" class="well text-muted">
       {_segment.show.no_data}
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-recalculation-settings-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">{_segment.recalculation_settings.title}</h4>
+      </div>
+      <div class="modal-body">
+        {form segmentRecalculationSettingsForm}
+          <div class="form-group" style="margin-bottom: 0;">
+            <div class="col-sm-3 control-label">
+              <label class="required">{_segment.recalculation_settings.period}:</label>
+            </div>
+
+            <div class="col-sm-9">
+              <div class="row">
+                <div class="col-sm-3">
+                  {input amount}
+                </div>
+                <div class="col-sm-9">
+                  {input unit}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {if !$segment->cache_count_periodicity}
+          <div class="form-group">
+            <div class="col-sm-3 control-label"></div>
+            <div class="col-sm-9">
+              Predvolená periodicita je každých 6 hodín.
+            </div>
+          </div>
+          {/if}
+
+          <div class="form-group">
+            <div class="col-sm-3 control-label"></div>
+
+            <div class="col-sm-9">
+              {input segment_id}
+              <button type="submit" name="send" class="btn btn-primary" value="{_segment.recalculation_settings.save}">
+                <i class="fa fa-save"></i> {_segment.recalculation_settings.save}</button>
+            </div>
+          </div>
+        {/form}
+      </div>
     </div>
   </div>
 </div>

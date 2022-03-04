@@ -14,6 +14,7 @@ messages:
     segment_was_deleted: Segment byl smazaný.
     segment_not_found: Segment nebyl nalezen.
     segment_count_recalculated: Segment byl přepočítan
+    segment_recalculation_settings_saved: Nastavení přepočtu segmentu byla úspěšně uložena
 
 fields:
     name: Název
@@ -24,6 +25,9 @@ fields:
     table_name: Zdrojová tabulka
     rows: "Počet (přibližně)"
     time: "Čas přepočtu"
+    periodicity: "Periodicita přepočtu"
+    periodicity_default: "Výchozí"
+    periodicity_default_title: "6 hodin"
     rows_help: Nezobrazuje přesná data. Číslo se aktualizuje v pravidelných intervalech.
     query_fields: Sloupce
     query_string: Databázový dotaz
@@ -52,9 +56,21 @@ show:
     basic_info: Základní info
     show_data: Zobraz data
     recalculate_total_count: Aktualizovat počet
+    recalculation_settings: Nastavit přepočet
     export: Export
     no_data: Segment neobsahuje žádná data
     stats: Statistiky
+
+recalculation_settings:
+    title: Nastavit přepočet segmentu
+    interval: Přepočítávat mezi
+    interval_and: a
+    period: Přepočítávat každých
+    default_period: Předvolená periodicita je každých 6 hodin.
+    save: Uložit
+    minutes: Minut
+    hours: Hodin
+    days: Dnů
 
 edit:
     title: Uprav segment %name%

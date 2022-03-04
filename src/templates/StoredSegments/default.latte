@@ -25,6 +25,7 @@
           <th>{_segment.fields.created}</th>
           <th>{_segment.fields.rows} {_('segment.fields.rows_help')|helpIcon|noescape}</th>
           <th>{_segment.fields.time}</th>
+          <th>{_segment.fields.periodicity}</th>
           <th>{_system.actions}</th>
         </tr>
         </thead>
@@ -46,6 +47,16 @@
                   <span {if isset($segmentSlowRecalculateThreshold) && $segment->cache_count_time > $segmentSlowRecalculateThreshold}style="color: red;"{/if}>
                     {$segment->cache_count_time}&nbsp;s
                   </span>
+                {/if}
+              </td>
+              <td>
+                {if isset($segment->cache_count_periodicity)}
+                  <span>
+                    {var $periodicity = json_decode($segment->cache_count_periodicity)}
+                    {$periodicity->amount} {_"segment.recalculation_settings.{$periodicity->unit}"}
+                  </span>
+                {else}
+                  <abbr title="{_segment.fields.periodicity_default_title}">{_segment.fields.periodicity_default}</abbr>
                 {/if}
               </td>
               <td>
