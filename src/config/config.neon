@@ -10,10 +10,14 @@ services:
 	segmentFactory:
 		factory: Crm\SegmentModule\SegmentFactory
 
+	segmentRecalculationConfig:
+		class: Crm\SegmentModule\DI\SegmentRecalculationConfig
+
 	- Crm\SegmentModule\Commands\UpdateCountsCommand
 	- Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand
 	- Crm\SegmentModule\Commands\CompressSegmentsValues
 	- Crm\SegmentModule\Forms\SegmentFormFactory
+	- Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory
 	- Crm\SegmentModule\Api\ListApiHandler
 	- Crm\SegmentModule\Api\UsersApiHandler
 	- Crm\SegmentModule\Api\CheckApiHandler

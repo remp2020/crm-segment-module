@@ -9,6 +9,7 @@ use Crm\ApplicationModule\ExcelFactory;
 use Crm\ApplicationModule\Graphs\Criteria;
 use Crm\ApplicationModule\Graphs\GraphDataItem;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
+use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
@@ -290,6 +291,27 @@ class StoredSegmentsPresenter extends AdminPresenter
 
         $segment = $this->segmentsRepository->find($id);
         $this->template->segment = $segment;
+    }
+
+    protected function createComponentSegmentRecalculationSettingsForm(
+        SegmentRecalculationSettingsFormFactory $segmentPeriodicityFormFactory
+    ) {
+        $id = null;
+        if (isset($this->params['id'])) {
+            $id = (int) $this->params['id'];
+        }
+
+        $form = $segmentPeriodicityFormFactory->create($id);
+
+        $segmentPeriodicityFormFactory->onSave = function ($segment) {
+            $this->flashMessage($this->translator->translate('segment.messages.segment_recalculation_settings_saved'));
+            $this->redirect('show', $segment->id);
+        };
+        $segmentPeriodicityFormFactory->onUpdate = function ($segment) {
+            $this->flashMessage($this->translator->translate('segment.messages.segment_recalculation_settings_saved'));
+            $this->redirect('show', $segment->id);
+        };
+        return $form;
     }
 
     /**
