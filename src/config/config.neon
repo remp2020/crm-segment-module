@@ -11,7 +11,7 @@ services:
 		factory: Crm\SegmentModule\SegmentFactory
 
 	segmentRecalculationConfig:
-		class: Crm\SegmentModule\DI\SegmentRecalculationConfig
+		factory: Crm\SegmentModule\DI\SegmentRecalculationConfig
 
 	- Crm\SegmentModule\Commands\UpdateCountsCommand
 	- Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand
