@@ -3,15 +3,15 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
-use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\SegmentFactoryInterface;
 use Nette\Http\Response;
+use Tomaj\NetteApi\Response\JsonApiResponse;
+use Tomaj\NetteApi\Response\ResponseInterface;
 
 class UsersApiHandler extends ApiHandler
 {
@@ -42,29 +42,27 @@ class UsersApiHandler extends ApiHandler
     }
 
 
-    public function handle(array $params): ApiResponseInterface
+    public function handle(array $params): ResponseInterface
     {
         $paramsProcessor = new ParamsProcessor($this->params());
         $error = $paramsProcessor->hasError();
         if ($error) {
-            $response = new JsonResponse([
+            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, [
                 'status' => 'error',
                 'code' => 'invalid_params',
                 'message' => 'Invalid params: ' . $error,
             ]);
-            $response->setHttpCode(Response::S400_BAD_REQUEST);
             return $response;
         }
         $params = $paramsProcessor->getValues();
 
         $segmentRow = $this->segmentsRepository->findByCode($params['code']);
         if (!$segmentRow) {
-            $response = new JsonResponse([
+            $response = new JsonApiResponse(Response::S404_NOT_FOUND, [
                 'status' => 'error',
                 'code' => 'segment_not_found',
                 'message' => 'Segment does not exist: ' . $params['code'],
             ]);
-            $response->setHttpCode(Response::S404_NOT_FOUND);
             return $response;
         }
 
@@ -84,8 +82,7 @@ class UsersApiHandler extends ApiHandler
              ];
         }, 0);
 
-        $response = new JsonResponse(['status' => 'ok', 'users' => $users, 'memory' => memory_get_usage(true)]);
-        $response->setHttpCode(Response::S200_OK);
+        $response = new JsonApiResponse(Response::S200_OK, ['status' => 'ok', 'users' => $users, 'memory' => memory_get_usage(true)]);
 
         return $response;
     }

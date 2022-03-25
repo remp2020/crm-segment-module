@@ -3,10 +3,10 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Api\JsonResponse;
-use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
 use Nette\Http\Response;
+use Tomaj\NetteApi\Response\JsonApiResponse;
+use Tomaj\NetteApi\Response\ResponseInterface;
 
 class CriteriaHandler extends ApiHandler
 {
@@ -22,7 +22,7 @@ class CriteriaHandler extends ApiHandler
         return [];
     }
 
-    public function handle(array $params): ApiResponseInterface
+    public function handle(array $params): ResponseInterface
     {
         $criteriaArray = $this->criteriaStorage->getCriteria();
         $result = [];
@@ -52,8 +52,7 @@ class CriteriaHandler extends ApiHandler
             ];
         }
 
-        $response = new JsonResponse(['blueprint' => $resultData]);
-        $response->setHttpCode(Response::S200_OK);
+        $response = new JsonApiResponse(Response::S200_OK, ['blueprint' => $resultData]);
 
         return $response;
     }

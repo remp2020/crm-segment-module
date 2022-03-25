@@ -3,12 +3,12 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
-use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Nette\Http\Response;
+use Tomaj\NetteApi\Response\JsonApiResponse;
+use Tomaj\NetteApi\Response\ResponseInterface;
 
 class SegmentsListApiHandler extends ApiHandler
 {
@@ -27,12 +27,11 @@ class SegmentsListApiHandler extends ApiHandler
         ];
     }
 
-    public function handle(array $params): ApiResponseInterface
+    public function handle(array $params): ResponseInterface
     {
         $paramsProcessor = new ParamsProcessor($this->params());
         if ($paramsProcessor->hasError()) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Invalid params']);
-            $response->setHttpCode(Response::S400_BAD_REQUEST);
+            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params']);
             return $response;
         }
         $params = $paramsProcessor->getValues();
@@ -67,11 +66,10 @@ class SegmentsListApiHandler extends ApiHandler
             ];
         }
 
-        $response = new JsonResponse([
+        $response = new JsonApiResponse(Response::S200_OK, [
             'status' => 'ok',
             'result' => $result,
         ]);
-        $response->setHttpCode(Response::S200_OK);
 
         return $response;
     }

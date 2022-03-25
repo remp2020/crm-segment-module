@@ -3,13 +3,13 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
-use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Nette\Http\Response;
 use Nette\Utils\Json;
+use Tomaj\NetteApi\Response\JsonApiResponse;
+use Tomaj\NetteApi\Response\ResponseInterface;
 
 class ShowSegmentHandler extends ApiHandler
 {
@@ -28,24 +28,22 @@ class ShowSegmentHandler extends ApiHandler
         ];
     }
 
-    public function handle(array $params): ApiResponseInterface
+    public function handle(array $params): ResponseInterface
     {
         $paramsProcessor = new ParamsProcessor($this->params());
         if ($paramsProcessor->hasError()) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Invalid params']);
-            $response->setHttpCode(Response::S400_BAD_REQUEST);
+            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params']);
             return $response;
         }
         $params = $paramsProcessor->getValues();
 
         $segment = $this->segmentsRepository->find($params['id']);
         if (!$segment || $segment->deleted_at !== null) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Segment not found']);
-            $response->setHttpCode(Response::S404_NOT_FOUND);
+            $response = new JsonApiResponse(Response::S404_NOT_FOUND, ['status' => 'error', 'message' => 'Segment not found']);
             return $response;
         }
 
-        $response = new JsonResponse(['status' => 'ok', 'segment' => [
+        $response = new JsonApiResponse(Response::S200_OK, ['status' => 'ok', 'segment' => [
             'id' => $segment->id,
             'version' => $segment->version,
             'name' => $segment->name,
@@ -57,7 +55,6 @@ class ShowSegmentHandler extends ApiHandler
             'group_id' => $segment->segment_group_id, // deprecated
             'group_code' => $segment->segment_group->code,
         ]]);
-        $response->setHttpCode(Response::S200_OK);
         return $response;
     }
 }

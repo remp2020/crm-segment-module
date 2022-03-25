@@ -3,10 +3,10 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Api\JsonResponse;
-use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Nette\Http\Response;
+use Tomaj\NetteApi\Response\JsonApiResponse;
+use Tomaj\NetteApi\Response\ResponseInterface;
 
 class ListGroupsHandler extends ApiHandler
 {
@@ -23,7 +23,7 @@ class ListGroupsHandler extends ApiHandler
     }
 
 
-    public function handle(array $params): ApiResponseInterface
+    public function handle(array $params): ResponseInterface
     {
         $groupsRows = $this->segmentGroupsRepository->all();
         $groups = [];
@@ -36,8 +36,7 @@ class ListGroupsHandler extends ApiHandler
             ];
         }
 
-        $response = new JsonResponse(['status' => 'ok', 'groups' => $groups]);
-        $response->setHttpCode(Response::S200_OK);
+        $response = new JsonApiResponse(Response::S200_OK, ['status' => 'ok', 'groups' => $groups]);
 
         return $response;
     }

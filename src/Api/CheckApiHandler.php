@@ -3,15 +3,15 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Api\JsonResponse;
 use Crm\ApiModule\Params\InputParam;
 use Crm\ApiModule\Params\ParamsProcessor;
-use Crm\ApiModule\Response\ApiResponseInterface;
 use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\SegmentModule\SegmentInterface;
 use Crm\UsersModule\Repository\UsersRepository;
 use Nette\Http\Response;
 use Nette\UnexpectedValueException;
+use Tomaj\NetteApi\Response\JsonApiResponse;
+use Tomaj\NetteApi\Response\ResponseInterface;
 
 class CheckApiHandler extends ApiHandler
 {
@@ -38,16 +38,13 @@ class CheckApiHandler extends ApiHandler
     }
 
     /**
-     * @param ApiAuthorizationInterface $authorization
-     * @return \Nette\Application\Response
      * @throws \Exception
      */
-    public function handle(array $params): ApiResponseInterface
+    public function handle(array $params): ResponseInterface
     {
         $paramsProcessor = new ParamsProcessor($this->params());
         if ($paramsProcessor->hasError()) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Invalid params']);
-            $response->setHttpCode(Response::S400_BAD_REQUEST);
+            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params']);
             return $response;
         }
         $params = $paramsProcessor->getValues();
@@ -55,8 +52,7 @@ class CheckApiHandler extends ApiHandler
         try {
             $segment = $this->segmentFactory->buildSegment($params['code']);
         } catch (UnexpectedValueException $e) {
-            $response = new JsonResponse(['status' => 'error', 'message' => 'Segment does not exist']);
-            $response->setHttpCode(Response::S404_NOT_FOUND);
+            $response = new JsonApiResponse(Response::S404_NOT_FOUND, ['status' => 'error', 'message' => 'Segment does not exist']);
             return $response;
         }
 
@@ -76,8 +72,7 @@ class CheckApiHandler extends ApiHandler
                 throw new \Exception('InputParam value validator was supposed to filter invalid values');
         }
 
-        $response = new JsonResponse(['status' => 'ok', 'check' => $in]);
-        $response->setHttpCode(Response::S200_OK);
+        $response = new JsonApiResponse(Response::S200_OK, ['status' => 'ok', 'check' => $in]);
 
         return $response;
     }
