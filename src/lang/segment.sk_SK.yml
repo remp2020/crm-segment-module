@@ -55,7 +55,7 @@ show:
     edit: Uprav segment
     basic_info: Základne info
     show_data: Zobraz data
-    recalculate_total_count: Aktualizovať počet
+    recalculate_total_count: Aktualizovať
     recalculation_settings: Nastaviť prepočet
     export: Export
     no_data: Segment neobsahuje žiadne dáta

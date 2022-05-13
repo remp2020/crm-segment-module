@@ -55,7 +55,7 @@ show:
     edit: Edit segment
     basic_info: Basic info
     show_data: Show data
-    recalculate_total_count: Refresh count
+    recalculate_total_count: Refresh
     recalculation_settings: Recalculation settings
     export: Export
     no_data: "Segment doesn't contains any data"

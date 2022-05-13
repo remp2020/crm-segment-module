@@ -29,6 +29,12 @@ class Segment implements SegmentInterface
         return $count;
     }
 
+    public function getIds()
+    {
+        $idsQuery = $this->query->getIdsQuery();
+        return $this->database->query($idsQuery)->fetchPairs(null, 'id');
+    }
+
     public function isIn($field, $value)
     {
         $isInQuery = $this->query->getIsInQuery($field, $value);

@@ -8,12 +8,14 @@ use Crm\ApplicationModule\Config\ApplicationConfig;
 use Crm\ApplicationModule\ExcelFactory;
 use Crm\ApplicationModule\Graphs\Criteria;
 use Crm\ApplicationModule\Graphs\GraphDataItem;
+use Crm\ApplicationModule\Widget\WidgetManager;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactoryInterface;
+use Crm\SegmentModule\SegmentWidgetInterface;
 use Crm\UsersModule\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\UI\Form;
@@ -28,6 +30,8 @@ use Tracy\Debugger;
 
 class StoredSegmentsPresenter extends AdminPresenter
 {
+    public const SHOW_STATS_PANEL_WIDGET_PLACEHOLDER = 'segment.detail.statspanel.row';
+
     private $segmentsRepository;
 
     private $segmentsValuesRepository;
@@ -46,6 +50,8 @@ class StoredSegmentsPresenter extends AdminPresenter
 
     private $database;
 
+    private WidgetManager $widgetManager;
+
     public function __construct(
         SegmentsRepository $segmentsRepository,
         SegmentsValuesRepository $segmentsValuesRepository,
@@ -55,7 +61,8 @@ class StoredSegmentsPresenter extends AdminPresenter
         SegmentGroupsRepository $segmentGroupsRepository,
         ApplicationConfig $applicationConfig,
         AccessToken $accessToken,
-        Explorer $database
+        Explorer $database,
+        WidgetManager $widgetManager
     ) {
         parent::__construct();
 
@@ -68,6 +75,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->applicationConfig = $applicationConfig;
         $this->accessToken = $accessToken;
         $this->database = $database;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -132,26 +140,19 @@ class StoredSegmentsPresenter extends AdminPresenter
 
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 
-        $ids = [];
         $tableData = [];
         $displayFields = false;
 
-        // don't try to evaluate the segment again for component redraws
-        if (!$this->isAjax()) {
-            $segment->process(function ($row) use (&$ids, $data, &$tableData, &$displayFields) {
-                $ids[] = $row->id;
-
-                if ($data) {
-                    if (!$displayFields) {
-                        $displayFields = array_keys((array) $row);
-                    }
-                    $tableData[] = array_values((array) $row);
+        if ($data) {
+            $segment->process(function ($row) use (&$tableData, &$displayFields) {
+                if (!$displayFields) {
+                    $displayFields = array_keys((array)$row);
                 }
+                $tableData[] = array_values((array)$row);
             }, PHP_INT_MAX);
         }
 
-        // TODO: get rid of IDs after we have alternative way of displaying AVG values provided by widgets
-        $this->template->ids = $ids;
+        $this->template->statsPanelWidgetPlaceholder = self::SHOW_STATS_PANEL_WIDGET_PLACEHOLDER;
         $this->template->fields = $displayFields;
         $this->template->data = $tableData;
     }
@@ -167,9 +168,18 @@ class StoredSegmentsPresenter extends AdminPresenter
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 
         // store cached count
-        $count = $segment->totalCount();
+        $ids = $segment->getIds();
         $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
+        $count = count($ids);
         $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count, $recalculateTime);
+
+        $widgets = $this->widgetManager->getWidgets(self::SHOW_STATS_PANEL_WIDGET_PLACEHOLDER);
+        foreach ($widgets as $widget) {
+            if (!($widget instanceof SegmentWidgetInterface)) {
+                throw new \Exception(sprintf("registered widget instance doesn't implement SegmentWidgetInterface: %s", gettype($widget)));
+            }
+            $widget->recalculate($segmentRow, $ids);
+        }
 
         $this->presenter->flashMessage($this->translator->translate('segment.messages.segment_count_recalculated'));
 

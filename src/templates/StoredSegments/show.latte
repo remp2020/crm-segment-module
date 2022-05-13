@@ -41,12 +41,23 @@
      </div>
   </div>
 
+  {snippet segmentCount}
   <div class="col-md-6">
     <div class="panel panel-default">
-      <div class="panel-heading">{_segment.show.stats}</div>
+      <div class="panel-heading" style="display: flex; align-items: center">
+        {_segment.show.stats}
+        {if !isset($recalculated) || !$recalculated}
+          <a n:href="recalculate! $segment->id" class="ajax btn btn-sm btn-default" style="margin-left: auto">
+            <i class="fa fa-sync-alt"></i>&nbsp;{_segment.show.recalculate_total_count}
+          </a>
+        {else}
+          <a class="ajax btn btn-sm btn-default pull-right" disabled="disabled" style="margin-left: auto">
+            <i class="fa fa-sync-alt"></i>&nbsp;{_segment.messages.segment_count_recalculated}
+          </a>
+        {/if}
+      </div>
       <ul class="list-group">
           <li class="list-group-item">
-            {snippet segmentCount}
             <b>{_segment.fields.rows}:</b> ~{$segment->cache_count} {_('segment.fields.rows_help')|helpIcon|noescape}
 
             ({_segment.fields.periodicity}:
@@ -66,23 +77,15 @@
             {/if})
 
             <div style="margin-top: 10px;">
-            {if !isset($recalculated) || !$recalculated}
-              <a n:href="recalculate! $segment->id" class="ajax btn btn-sm btn-default">
-                <i class="fa fa-sync-alt"></i>&nbsp;{_segment.show.recalculate_total_count}
-              </a>
-            {else}
-              <a class="ajax btn btn-sm btn-default" disabled="disabled">
-                <i class="fa fa-sync-alt"></i>&nbsp;{_segment.messages.segment_count_recalculated}
-              </a>
-            {/if}
               <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-recalculation-settings-modal"><i class="fas fa-cog"></i> {_segment.show.recalculation_settings}</a>
-            {/snippet}
+
             </div>
           </li>
-        {control simpleWidget 'segment.detail.statspanel.row', $ids}
+          {control simpleWidget $statsPanelWidgetPlaceholder, $segment}
       </ul>
     </div>
   </div>
+  {/snippet}
 
   <!--
   <div class="col-md-6">
