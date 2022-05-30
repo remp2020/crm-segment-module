@@ -1,4 +1,4 @@
-{block #title}{_segment.default.header}{/block}
+{block #title}{_'segment.default.header'}{/block}
 
 {block #content}
 
@@ -6,8 +6,8 @@
 
   <div class="col-md-12">
     <h1>
-      {_segment.default.header}
-      <a n:href="new" class="btn btn-success btn-lg pull-right"><i class="fa fa-sliders-h"></i>  {_segment.new.header}</a>
+      {_'segment.default.header'}
+      <a n:href="new" class="btn btn-success btn-lg pull-right"><i class="fa fa-sliders-h"></i>  {_'segment.new.header'}</a>
     </h1>
     <hr>
   </div>
@@ -18,15 +18,15 @@
       <table class="table table-striped table-hover table-bordered">
         <thead>
         <tr>
-          <th>{_segment.fields.name}</th>
-          <th>{_segment.fields.code}</th>
-          <th>{_segment.fields.table_name}</th>
-          <th>{_segment.fields.version}</th>
-          <th>{_segment.fields.created}</th>
-          <th>{_segment.fields.rows} {_('segment.fields.rows_help')|helpIcon|noescape}</th>
-          <th>{_segment.fields.time}</th>
-          <th>{_segment.fields.periodicity}</th>
-          <th>{_system.actions}</th>
+          <th>{_'segment.fields.name'}</th>
+          <th>{_'segment.fields.code'}</th>
+          <th>{_'segment.fields.table_name'}</th>
+          <th>{_'segment.fields.version'}</th>
+          <th>{_'segment.fields.created'}</th>
+          <th>{_'segment.fields.rows'} {_'segment.fields.rows_help'|helpIcon|noescape}</th>
+          <th>{_'segment.fields.time'}</th>
+          <th>{_'segment.fields.periodicity'}</th>
+          <th>{_'system.actions'}</th>
         </tr>
         </thead>
         <tbody>
@@ -56,15 +56,15 @@
                     {$periodicity->amount} {_"segment.recalculation_settings.{$periodicity->unit}"}
                   </span>
                 {else}
-                  <abbr title="{_segment.fields.periodicity_default_title}">{_segment.fields.periodicity_default}</abbr>
+                  <abbr title="{_'segment.fields.periodicity_default_title'}">{_'segment.fields.periodicity_default'}</abbr>
                 {/if}
               </td>
               <td>
                 <p class="text-nowrap">
-                  <a n:href="show $segment->id" class="btn btn-sm btn-info" title="{_system.show}"><i class="fa fa-eye"></i> </a>
-                  <a n:href="edit $segment->id" class="btn btn-sm btn-primary" title="{_system.edit}"><i class="fa fa-edit"></i> </a>
-                  <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#copyModal" data-segment-id="{$segment->id}" title="{_segment.default.copy}"><i class="fa fa-copy"></i> </a>
-                  <a n:href="delete! $segment->id" class="btn btn-sm btn-danger" title="{_system.delete}"><i class="fa fa-trash"></i> </a>
+                  <a n:href="show $segment->id" class="btn btn-sm btn-info" title="{_'system.show'}"><i class="fa fa-eye"></i> </a>
+                  <a n:href="edit $segment->id" class="btn btn-sm btn-primary" title="{_'system.edit'}"><i class="fa fa-edit"></i> </a>
+                  <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#copyModal" data-segment-id="{$segment->id}" title="{_'segment.default.copy'}"><i class="fa fa-copy"></i> </a>
+                  <a n:href="delete! $segment->id" class="btn btn-sm btn-danger" title="{_'system.delete'}"><i class="fa fa-trash"></i> </a>
                 </p>
               </td>
             </tr>
@@ -76,16 +76,16 @@
 
   {if count($deletedSegments) > 0}
   <div class="col-md-12">
-    <h3>{_segment.default.deleted_segments}</h3>
+    <h3>{_'segment.default.deleted_segments'}</h3>
     <table class="table table-striped table-hover table-bordered">
       <thead>
       <tr>
-        <th>{_segment.fields.name}</th>
-        <th>{_segment.fields.code}</th>
-        <th>{_segment.fields.table_name}</th>
-        <th>{_segment.fields.version}</th>
-        <th>{_segment.fields.created}</th>
-        <th>{_segment.fields.deleted}</th>
+        <th>{_'segment.fields.name'}</th>
+        <th>{_'segment.fields.code'}</th>
+        <th>{_'segment.fields.table_name'}</th>
+        <th>{_'segment.fields.version'}</th>
+        <th>{_'segment.fields.created'}</th>
+        <th>{_'segment.fields.deleted'}</th>
       </tr>
       </thead>
       <tbody>
@@ -110,7 +110,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">{_segment.copy.title}</h4>
+        <h4 class="modal-title">{_'segment.copy.title'}</h4>
       </div>
       {snippet copySegmentModal}
         <div class="modal-body">
