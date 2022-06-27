@@ -71,9 +71,13 @@ class UpdateCountsCommand extends Command
 
         // start recount
         $minRecountInterval = $this->segmentRecalculationConfig->getDefaultRecalculationPeriodicityInterval();
+        $segmentWithMinInterval = null;
         foreach ($segments as $segmentRow) {
             $recountInterval = $this->segmentPeriodicityInterval($segmentRow);
-            $minRecountInterval = $this->shorterInterval($recountInterval, $minRecountInterval);
+            if ($this->isShorterInterval($recountInterval, $minRecountInterval)) {
+                $minRecountInterval = $recountInterval;
+                $segmentWithMinInterval = $segmentRow;
+            }
 
             Debugger::timer('recalculate_segment');
             try {
@@ -97,20 +101,24 @@ class UpdateCountsCommand extends Command
             }
         }
 
-        $this->checkCommandRunPeriodicity($minRecountInterval);
+        $this->checkCommandRunPeriodicity($minRecountInterval, $segmentWithMinInterval);
         return Command::SUCCESS;
     }
 
-    private function shorterInterval(\DateInterval $a, \DateInterval $b): \DateInterval
+    /**
+     * Is $a shorter than $b?
+     * @param \DateInterval $a
+     * @param \DateInterval $b
+     *
+     * @return bool
+     */
+    private function isShorterInterval(\DateInterval $a, \DateInterval $b): bool
     {
         $now = new \DateTime();
         $timeA = (clone $now)->add($a);
         $timeB = (clone $now)->add($b);
 
-        if ($timeA < $timeB) {
-            return $a;
-        }
-        return $b;
+        return $timeA < $timeB;
     }
 
     private function getSegmentsToRecount(): array
@@ -193,18 +201,45 @@ class UpdateCountsCommand extends Command
         });
     }
 
-    private function checkCommandRunPeriodicity(\DateInterval $shortestRecalculationPeriod): void
+    private function checkCommandRunPeriodicity(\DateInterval $shortestRecalculationPeriod, ?ActiveRow $associatedSegment): void
     {
         $commandRunTime = $this->redis()->get(self::CACHE_TIME_KEY);
         if ($commandRunTime) {
-            $warningThreshold = (clone $this->now)->sub($shortestRecalculationPeriod)->sub($shortestRecalculationPeriod);
-            if ((new DateTime($commandRunTime)) < $warningThreshold) {
-                Debugger::log(
-                    'Update segment counts command is running less than double of smallest segment recalculation period.',
-                    ILogger::WARNING
-                );
+            $warningThreshold = (clone $this->now)
+                // 2x
+                ->sub($shortestRecalculationPeriod)
+                ->sub($shortestRecalculationPeriod);
+            $lastCommandRunTime = new DateTime($commandRunTime);
+
+            if ($lastCommandRunTime < $warningThreshold) {
+                $commandsRunDiffInterval = $lastCommandRunTime->diff($this->now);
+
+                if ($associatedSegment) {
+                    Debugger::log(
+                        "UpdateCountsCommand - command run frequency is too low. " .
+                        "Segment ID={$associatedSegment->id} has recalculation period set to " . $this->dateIntervalString($shortestRecalculationPeriod) .
+                        ", but the command last run was at " .
+                        (new DateTime($commandRunTime))->format(DATE_RFC3339) .
+                        " ( " . $this->dateIntervalString($commandsRunDiffInterval) . " ago).",
+                        ILogger::WARNING
+                    );
+                } else {
+                    Debugger::log(
+                        "UpdateCountsCommand - command run frequency is too low. " .
+                        "Default recalculation period set to " . $this->dateIntervalString($shortestRecalculationPeriod) .
+                        ", but the command last run was at " .
+                        (new DateTime($commandRunTime))->format(DATE_RFC3339) .
+                        " ( " . $this->dateIntervalString($commandsRunDiffInterval) . " ago).",
+                        ILogger::WARNING
+                    );
+                }
             }
         }
         $this->redis()->set(self::CACHE_TIME_KEY, $this->now);
+    }
+
+    private function dateIntervalString(\DateInterval $dateInterval): string
+    {
+        return $dateInterval->format("%m month(s), %d day(s), %i min(s), %s sec(s)");
     }
 }
