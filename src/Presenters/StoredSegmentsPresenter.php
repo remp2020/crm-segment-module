@@ -8,6 +8,7 @@ use Crm\ApplicationModule\Config\ApplicationConfig;
 use Crm\ApplicationModule\ExcelFactory;
 use Crm\ApplicationModule\Graphs\Criteria;
 use Crm\ApplicationModule\Graphs\GraphDataItem;
+use Crm\ApplicationModule\Widget\LazyWidgetManager;
 use Crm\ApplicationModule\Widget\WidgetManager;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
@@ -19,7 +20,6 @@ use Crm\SegmentModule\SegmentWidgetInterface;
 use Crm\UsersModule\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\UI\Form;
-use Nette\Database\Explorer;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Strings;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
@@ -48,9 +48,9 @@ class StoredSegmentsPresenter extends AdminPresenter
 
     private $accessToken;
 
-    private $database;
-
     private WidgetManager $widgetManager;
+
+    private LazyWidgetManager $lazyWidgetManager;
 
     public function __construct(
         SegmentsRepository $segmentsRepository,
@@ -61,8 +61,8 @@ class StoredSegmentsPresenter extends AdminPresenter
         SegmentGroupsRepository $segmentGroupsRepository,
         ApplicationConfig $applicationConfig,
         AccessToken $accessToken,
-        Explorer $database,
-        WidgetManager $widgetManager
+        WidgetManager $widgetManager,
+        LazyWidgetManager $lazyWidgetManager
     ) {
         parent::__construct();
 
@@ -74,8 +74,8 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->segmentGroupsRepository = $segmentGroupsRepository;
         $this->applicationConfig = $applicationConfig;
         $this->accessToken = $accessToken;
-        $this->database = $database;
         $this->widgetManager = $widgetManager;
+        $this->lazyWidgetManager = $lazyWidgetManager;
     }
 
     /**

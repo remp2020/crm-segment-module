@@ -3,8 +3,8 @@
 namespace Crm\SegmentsModule\Widget;
 
 use Crm\ApplicationModule\Cache\CacheRepository;
-use Crm\ApplicationModule\Widget\BaseWidget;
-use Crm\ApplicationModule\Widget\WidgetManager;
+use Crm\ApplicationModule\Widget\BaseLazyWidget;
+use Crm\ApplicationModule\Widget\LazyWidgetManager;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactoryInterface;
@@ -16,7 +16,7 @@ use ReflectionClass;
  * when extending, provide segment code value (and optionally segmentCodeToCompare)
  * widget also expects 'dashboard_segment_value_widget.latte' template in widget directory (can be overridden by extending getConfigOptions())
  */
-abstract class DashboardSegmentValueBaseWidget extends BaseWidget
+abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
 {
     private $segmentsRepository;
 
@@ -35,9 +35,9 @@ abstract class DashboardSegmentValueBaseWidget extends BaseWidget
         SegmentsValuesRepository $segmentsValuesRepository,
         SegmentFactoryInterface $segmentFactory,
         CacheRepository $cacheRepository,
-        WidgetManager $widgetManager
+        LazyWidgetManager $lazyWidgetManager
     ) {
-        parent::__construct($widgetManager);
+        parent::__construct($lazyWidgetManager);
         $this->segmentsRepository = $segmentsRepository;
         $this->segmentsValuesRepository = $segmentsValuesRepository;
         $this->segmentFactory = $segmentFactory;
