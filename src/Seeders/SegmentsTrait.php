@@ -48,7 +48,7 @@ trait SegmentsTrait
         string $fields = 'users.id,users.email'
     ): ActiveRow {
         // try to load segment before adding it
-        $segment = $this->segmentsRepository->findByCode($code);
+        $segment = $this->segmentsRepository->findBy('code', $code);
         if ($segment) {
             $output->writeln("  * segment <info>{$code}</info> exists");
             return $segment;
