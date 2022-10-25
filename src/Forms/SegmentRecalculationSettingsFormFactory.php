@@ -48,9 +48,9 @@ class SegmentRecalculationSettingsFormFactory
             ->addAttributes(['class' => 'form-control']);
 
         $form->addSelect('unit', '', [
-            'minutes' => $this->translator->trans('segment.recalculation_settings.minutes'),
-            'hours' => $this->translator->trans('segment.recalculation_settings.hours'),
-            'days' => $this->translator->trans('segment.recalculation_settings.days'),
+            'minutes' => $this->translator->translate('segment.recalculation_settings.minutes'),
+            'hours' => $this->translator->translate('segment.recalculation_settings.hours'),
+            'days' => $this->translator->translate('segment.recalculation_settings.days'),
         ])
             ->getControlPrototype()
             ->addAttributes(['class' => 'form-control']);
