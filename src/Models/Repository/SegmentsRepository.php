@@ -7,6 +7,7 @@ use Crm\ApplicationModule\Repository\AuditLogRepository;
 use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\UniqueConstraintViolationException;
 
 class SegmentsRepository extends Repository
 {
@@ -49,22 +50,29 @@ class SegmentsRepository extends Repository
         return $this->getTable()->where('deleted_at IS NOT NULL')->order('name ASC');
     }
 
+    /**
+     * @throws SegmentAlreadyExistsException
+     */
     final public function add($name, $version, $code, $tableName, $fields, $queryString, ActiveRow $group, $criteria = null)
     {
-        $id = $this->insert([
-            'name' => $name,
-            'code' => $code,
-            'version' => $version,
-            'fields' => $fields,
-            'query_string' => $queryString,
-            'table_name' => $tableName,
-            'created_at' => new DateTime(),
-            'updated_at' => new DateTime(),
-            'cache_count' => 0,
-            'segment_group_id' => $group->id,
-            'criteria' => $criteria,
-        ]);
-        return $this->find($id);
+        try {
+            $id = $this->insert([
+                'name' => $name,
+                'code' => $code,
+                'version' => $version,
+                'fields' => $fields,
+                'query_string' => $queryString,
+                'table_name' => $tableName,
+                'created_at' => new DateTime(),
+                'updated_at' => new DateTime(),
+                'cache_count' => 0,
+                'segment_group_id' => $group->id,
+                'criteria' => $criteria,
+            ]);
+            return $this->find($id);
+        } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
+            throw new SegmentAlreadyExistsException('Segment already exists: '. $code);
+        }
     }
 
     final public function update(ActiveRow &$row, $data)
@@ -136,6 +144,7 @@ class SegmentsRepository extends Repository
         $this->update($segment, [
             'deleted_at' => new \DateTime(),
             'updated_at' => new \DateTime(),
+            'code' => $segment->code . uniqid("_deleted_", false)
         ]);
     }
 

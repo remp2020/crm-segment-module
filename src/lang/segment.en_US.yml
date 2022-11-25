@@ -92,7 +92,8 @@ new:
 copy:
     title: Copy segment
     validation:
-        name: Segment with same name already exists
+        name: Segment with the same name already exists
+        code: Segment with the same identifier already exists
 
 config:
     category: Segments

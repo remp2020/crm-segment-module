@@ -93,6 +93,7 @@ copy:
     title: kopírovat segment
     validation:
         name: Segment se stejným názvem již existuje
+        code: Segment se stejným identifikátorem již existuje
 
 config:
     category: Segmenty

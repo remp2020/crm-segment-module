@@ -7,6 +7,7 @@ use Crm\SegmentModule\Criteria\Generator;
 use Crm\SegmentModule\Repository\SegmentGroupsRepository;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Tomaj\Form\Renderer\BootstrapRenderer;
@@ -65,7 +66,10 @@ class SegmentFormFactory
         $form->addText('code', 'segment.fields.code')
             ->setRequired('segment.required.code')
             ->setHtmlAttribute('placeholder', 'segment.placeholder.code')
-            ->setDisabled($locked);
+            ->setDisabled($locked)
+            ->addRule(function (TextInput $control) {
+                return $this->segmentsRepository->findByCode($control->getValue()) === null;
+            }, 'segment.copy.validation.code');
 
         $form->addSelect('segment_group_id', 'segment.fields.segment_group_id', $this->segmentGroupsRepository->all()->fetchPairs('id', 'name'))
             ->setDisabled($locked);
