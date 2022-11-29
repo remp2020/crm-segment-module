@@ -14,31 +14,19 @@ use Tomaj\Form\Renderer\BootstrapRenderer;
 
 class SegmentFormFactory
 {
-    private $segmentsRepository;
-
-    private $segmentGroupsRepository;
-
     public $onUpdate;
 
     public $onSave;
 
-    private $generator;
-
-    private $translator;
-
     public function __construct(
-        SegmentsRepository $segmentsRepository,
-        SegmentGroupsRepository $segmentGroupsRepository,
-        Generator $generator,
-        Translator $translator
+        private SegmentsRepository $segmentsRepository,
+        private SegmentGroupsRepository $segmentGroupsRepository,
+        private Generator $generator,
+        private Translator $translator
     ) {
-        $this->segmentsRepository = $segmentsRepository;
-        $this->segmentGroupsRepository = $segmentGroupsRepository;
-        $this->generator = $generator;
-        $this->translator = $translator;
     }
 
-    public function create($id)
+    public function create($id): Form
     {
         $defaults = [];
         $locked = false;
@@ -67,7 +55,11 @@ class SegmentFormFactory
             ->setRequired('segment.required.code')
             ->setHtmlAttribute('placeholder', 'segment.placeholder.code')
             ->setDisabled($locked)
-            ->addRule(function (TextInput $control) {
+            ->addRule(function (TextInput $control) use (&$segment) {
+                $newValue = $control->getValue();
+                if ($segment && $segment->code === $newValue) {
+                    return true;
+                }
                 return $this->segmentsRepository->findByCode($control->getValue()) === null;
             }, 'segment.copy.validation.code');
 
