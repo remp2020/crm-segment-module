@@ -67,7 +67,7 @@ class Generator
                 }
 
                 $whereCondition = "IS NOT NULL";
-                if (isset($param['negation']) && $param['negation'] == true) {
+                if (isset($param['negation']) && $param['negation'] === true) {
                     $whereCondition = "IS NULL";
                 }
 
@@ -75,7 +75,7 @@ class Generator
 
                 return [
                     'where' => "t{$prefix}." . $primaryField . " {$whereCondition}",
-                    'join' => ["LEFT JOIN ({$join}) AS t{$prefix} ON t{$prefix}." . $primaryField . " = %table%." . $primaryField . ""],
+                    'join' => ["LEFT JOIN ({$join}) AS t{$prefix} ON t{$prefix}." . $primaryField . " = %table%." . $primaryField],
                     'fields' => $fields,
                 ];
             } elseif ($param['type'] === 'operator') {
