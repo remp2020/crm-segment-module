@@ -3,8 +3,6 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Params\InputParam;
-use Crm\ApiModule\Params\ParamsProcessor;
 use Crm\SegmentModule\Criteria\EmptyCriteriaException;
 use Crm\SegmentModule\Criteria\Generator;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;
@@ -14,31 +12,24 @@ use Nette\Http\Response;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Strings;
+use Tomaj\NetteApi\Params\GetInputParam;
 use Tomaj\NetteApi\Response\JsonApiResponse;
 use Tomaj\NetteApi\Response\ResponseInterface;
 
 class CreateOrUpdateSegmentHandler extends ApiHandler
 {
-    private $segmentsRepository;
-
-    private $segmentGroupsRepository;
-
-    private $generator;
-
     public function __construct(
-        SegmentsRepository $segmentsRepository,
-        SegmentGroupsRepository $segmentGroupsRepository,
-        Generator $generator
+        private SegmentsRepository $segmentsRepository,
+        private SegmentGroupsRepository $segmentGroupsRepository,
+        private Generator $generator
     ) {
-        $this->segmentsRepository = $segmentsRepository;
-        $this->segmentGroupsRepository = $segmentGroupsRepository;
-        $this->generator = $generator;
+        parent::__construct();
     }
 
     public function params(): array
     {
         return [
-            new InputParam(InputParam::TYPE_GET, 'id', InputParam::OPTIONAL),
+            (new GetInputParam('id')),
         ];
     }
 
@@ -55,17 +46,11 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => "Malformed JSON: " . $e->getMessage()]);
             return $response;
         }
-
-        $paramsProcessor = new ParamsProcessor($this->params());
-        if ($paramsProcessor->hasError()) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params']);
-            return $response;
-        }
         if ($err = $this->hasError($json)) {
             $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params: ' . $err]);
             return $response;
         }
-        $params = $json + $paramsProcessor->getValues();
+        $params = $json + $params;
 
         if (isset($params['group_code'])) {
             $group = $this->segmentGroupsRepository->findByCode($params['group_code']);

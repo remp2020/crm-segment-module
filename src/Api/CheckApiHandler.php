@@ -3,26 +3,22 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Params\InputParam;
-use Crm\ApiModule\Params\ParamsProcessor;
 use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\SegmentModule\SegmentInterface;
 use Crm\UsersModule\Repository\UsersRepository;
 use Nette\Http\Response;
 use Nette\UnexpectedValueException;
+use Tomaj\NetteApi\Params\GetInputParam;
 use Tomaj\NetteApi\Response\JsonApiResponse;
 use Tomaj\NetteApi\Response\ResponseInterface;
 
 class CheckApiHandler extends ApiHandler
 {
-    private $segmentFactory;
-
-    private $usersRepository;
-
-    public function __construct(SegmentFactoryInterface $segmentFactory, UsersRepository $usersRepository)
-    {
-        $this->segmentFactory = $segmentFactory;
-        $this->usersRepository = $usersRepository;
+    public function __construct(
+        private SegmentFactoryInterface $segmentFactory,
+        private UsersRepository $usersRepository
+    ) {
+        parent::__construct();
     }
 
     /**
@@ -31,9 +27,9 @@ class CheckApiHandler extends ApiHandler
     public function params(): array
     {
         return [
-            new InputParam(InputParam::TYPE_GET, 'code', InputParam::REQUIRED),
-            new InputParam(InputParam::TYPE_GET, 'resolver_type', InputParam::REQUIRED, ['id', 'email']),
-            new InputParam(InputParam::TYPE_GET, 'resolver_value', InputParam::REQUIRED),
+            (new GetInputParam('code'))->setRequired(),
+            (new GetInputParam('resolver_type'))->setRequired()->setAvailableValues(['id', 'email']),
+            (new GetInputParam('resolver_value'))->setRequired(),
         ];
     }
 
@@ -42,13 +38,6 @@ class CheckApiHandler extends ApiHandler
      */
     public function handle(array $params): ResponseInterface
     {
-        $paramsProcessor = new ParamsProcessor($this->params());
-        if ($paramsProcessor->hasError()) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params']);
-            return $response;
-        }
-        $params = $paramsProcessor->getValues();
-
         try {
             $segment = $this->segmentFactory->buildSegment($params['code']);
         } catch (UnexpectedValueException $e) {
