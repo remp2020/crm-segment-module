@@ -80,7 +80,7 @@ class SegmentsRepository extends Repository
         //if segment is locked, allow to change only whitelisted fields (eg. field holding cached count)
         if ($row['locked']) {
             foreach ($data as $key => $value) {
-                if (!in_array($key, self::LOCK_WHITELIST)) {
+                if (!in_array($key, self::LOCK_WHITELIST, true)) {
                     throw new \Exception("Trying to update locked segment [{$row['code']}].");
                 }
             }

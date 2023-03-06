@@ -58,7 +58,7 @@ class StringArrayParam extends BaseParam
 
         if ($this->options()) {
             foreach ($data as $value) {
-                if (!in_array($value, $this->options())) {
+                if (!in_array($value, $this->options(), true)) {
                     return new Validation("Out of options value - '{$value}'");
                 }
             }

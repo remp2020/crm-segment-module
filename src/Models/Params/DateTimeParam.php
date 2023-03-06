@@ -172,7 +172,7 @@ class DateTimeParam extends BaseParam
             return new Validation("Missing array data in absolute key for datetime param");
         }
         foreach ($data as $key => $value) {
-            if (!in_array($key, ['eq', 'gt', 'gte', 'lt', 'lte'])) {
+            if (!in_array($key, ['eq', 'gt', 'gte', 'lt', 'lte'], true)) {
                 return new Validation("Unknown operator '{$key}'");
             }
             if (!$this->validDateFormat($value)) {
@@ -188,7 +188,7 @@ class DateTimeParam extends BaseParam
             return new Validation("Missing interval definition for datetime param");
         }
         foreach ($data as $key => $value) {
-            if (!in_array($key, ['eq', 'gt', 'gte', 'lt', 'lte'])) {
+            if (!in_array($key, ['eq', 'gt', 'gte', 'lt', 'lte'], true)) {
                 return new Validation("Unknown operator '{$key}'");
             }
             if (!is_array($value)) {
@@ -197,7 +197,7 @@ class DateTimeParam extends BaseParam
             if (!isset($value['unit'])) {
                 return new Validation("Invalid structure for interval datetime. Missing 'unit'");
             }
-            if (!in_array($value['unit'], ['now', 'hour', 'day', 'month'])) {
+            if (!in_array($value['unit'], ['now', 'hour', 'day', 'month'], true)) {
                 return new Validation("Invalid structure for interval datetime. Invalid 'unit'");
             }
             if ($value['unit'] != 'now') {

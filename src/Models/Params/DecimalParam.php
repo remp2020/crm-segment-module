@@ -55,7 +55,7 @@ class DecimalParam extends BaseParam
             return new Validation('No value provided for ['. $this->key() . '], object with keys [gt, gte, lt, lte, eq] expected');
         }
         foreach ($data as $operator => $value) {
-            if (!in_array($operator, ['gt', 'gte', 'lt', 'lte', 'eq'])) {
+            if (!in_array($operator, ['gt', 'gte', 'lt', 'lte', 'eq'], true)) {
                 return new Validation("Invalid operator '{$operator}'");
             }
             if (!is_double($value) && !is_int($value)) {
