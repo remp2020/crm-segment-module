@@ -8,6 +8,7 @@ use DateTime;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\UniqueConstraintViolationException;
+use Nette\Utils\Random;
 
 class SegmentsRepository extends Repository
 {
@@ -144,7 +145,7 @@ class SegmentsRepository extends Repository
         $this->update($segment, [
             'deleted_at' => new \DateTime(),
             'updated_at' => new \DateTime(),
-            'code' => $segment->code . uniqid("_deleted_", false)
+            'code' => $segment->code . '_deleted_' . Random::generate(),
         ]);
     }
 
