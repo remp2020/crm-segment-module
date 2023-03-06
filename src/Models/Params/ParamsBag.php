@@ -4,7 +4,7 @@ namespace Crm\SegmentModule\Params;
 
 class ParamsBag
 {
-    private $params = [];
+    private array $params = [];
 
     public function addParam(BaseParam $param)
     {
@@ -32,36 +32,64 @@ class ParamsBag
 
     public function boolean($key): BooleanParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof BooleanParam) {
+            throw new \Exception("Requested param '{$key}' is not BooleanParam: " . get_class($param));
+        }
+        return $param;
     }
 
     public function stringArray($key): StringArrayParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof StringArrayParam) {
+            throw new \Exception("Requested param '{$key}' is not StringArrayParam: " . get_class($param));
+        }
+        return $param;
     }
 
     public function datetime($key): DateTimeParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof DateTimeParam) {
+            throw new \Exception("Requested param '{$key}' is not DateTimeParam: " . get_class($param));
+        }
+        return $param;
     }
 
     public function numberArray($key): NumberArrayParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof NumberArrayParam) {
+            throw new \Exception("Requested param '{$key}' is not NumberArrayParam: " . get_class($param));
+        }
+        return $param;
     }
 
     public function number($key): NumberParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof NumberParam) {
+            throw new \Exception("Requested param '{$key}' is not NumberParam: " . get_class($param));
+        }
+        return $param;
     }
 
     public function decimal($key): DecimalParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof DecimalParam) {
+            throw new \Exception("Requested param '{$key}' is not DecimalParam: " . get_class($param));
+        }
+        return $param;
     }
 
     public function string($key): StringParam
     {
-        return $this->get($key);
+        $param = $this->get($key);
+        if (!$param instanceof StringParam) {
+            throw new \Exception("Requested param '{$key}' is not StringParam: " . get_class($param));
+        }
+        return $param;
     }
 }

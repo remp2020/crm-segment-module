@@ -55,7 +55,7 @@ class CheckApiHandler extends ApiHandler
                     $in = false;
                     break;
                 }
-                $in = $this->checkId($segment, $params['resolver_value']);
+                $in = $this->checkId($segment, $id);
                 break;
             default:
                 throw new \Exception('InputParam value validator was supposed to filter invalid values');
@@ -68,12 +68,8 @@ class CheckApiHandler extends ApiHandler
 
     /**
      * checkId verifies whether user with given ID is member of provided segment.
-     *
-     * @param Segment $segment
-     * @param $id
-     * @return bool
      */
-    private function checkId(SegmentInterface $segment, $id)
+    private function checkId(SegmentInterface $segment, int $id): bool
     {
         $user = $this->usersRepository->find($id);
         if (!$user) {
@@ -84,12 +80,8 @@ class CheckApiHandler extends ApiHandler
 
     /**
      * checkEmail verifies whether user with given email is member of provided segment.
-     *
-     * @param Segment $segment
-     * @param $email
-     * @return bool
      */
-    private function checkEmail(SegmentInterface $segment, $email)
+    private function checkEmail(SegmentInterface $segment, string $email): bool
     {
         $user = $this->usersRepository->findBy('email', $email);
         if (!$user) {
