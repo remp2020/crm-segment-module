@@ -2,7 +2,6 @@
 
 namespace Crm\SegmentModule\Commands;
 
-use Crm\ApplicationModule\ActiveRow;
 use Crm\ApplicationModule\Commands\DecoratedCommandTrait;
 use Crm\ApplicationModule\RedisClientFactory;
 use Crm\ApplicationModule\RedisClientTrait;
@@ -10,6 +9,7 @@ use Crm\SegmentModule\DI\SegmentRecalculationConfig;
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Crm\SegmentModule\Repository\SegmentsValuesRepository;
 use Crm\SegmentModule\SegmentFactoryInterface;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\DateTime;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
@@ -28,26 +28,14 @@ class UpdateCountsCommand extends Command
 
     private DateTime $now;
 
-    private SegmentFactoryInterface $segmentFactory;
-
-    private SegmentsRepository $segmentsRepository;
-
-    private SegmentsValuesRepository $segmentsValuesRepository;
-
-    private SegmentRecalculationConfig $segmentRecalculationConfig;
-
     public function __construct(
-        SegmentFactoryInterface $segmentFactory,
-        SegmentsRepository $segmentsRepository,
-        SegmentsValuesRepository $segmentsValuesRepository,
-        SegmentRecalculationConfig $segmentRecalculationConfig,
+        private SegmentFactoryInterface $segmentFactory,
+        private SegmentsRepository $segmentsRepository,
+        private SegmentsValuesRepository $segmentsValuesRepository,
+        private SegmentRecalculationConfig $segmentRecalculationConfig,
         RedisClientFactory $redisClientFactory
     ) {
         parent::__construct();
-        $this->segmentsRepository = $segmentsRepository;
-        $this->segmentFactory = $segmentFactory;
-        $this->segmentsValuesRepository = $segmentsValuesRepository;
-        $this->segmentRecalculationConfig = $segmentRecalculationConfig;
         $this->redisClientFactory = $redisClientFactory;
     }
 
@@ -137,7 +125,7 @@ class UpdateCountsCommand extends Command
         }
 
         $query = $this->segmentsRepository->all();
-        if ($segmentRecountLocks && count($segmentRecountLocks) > 0) {
+        if (count($segmentIdsBeingRecounted) > 0) {
             $query->where('id NOT IN (?)', $segmentIdsBeingRecounted);
         }
         $segments = $query->fetchAll();
