@@ -32,7 +32,11 @@ class Segment implements SegmentInterface
     public function getIds()
     {
         $idsQuery = $this->query->getIdsQuery();
-        return $this->database->query($idsQuery)->fetchPairs(null, 'id');
+        $ids = [];
+        foreach ($this->database->query($idsQuery) as $row) {
+            $ids[] = $row->id;
+        };
+        return $ids;
     }
 
     public function isIn($field, $value)
