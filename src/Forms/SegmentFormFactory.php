@@ -88,6 +88,9 @@ class SegmentFormFactory
         $form->addTextArea('criteria', 'segment.fields.criteria', 30, 8)
             ->setDisabled($locked);
 
+        $form->addTextArea('note', 'segment.fields.note', 30, 8)
+            ->setDisabled($locked);
+
         $form->setDefaults($defaults);
 
         $form->addSubmit('send', $this->translator->translate('system.save'))
@@ -126,7 +129,7 @@ class SegmentFormFactory
             $this->onUpdate->__invoke($row);
         } else {
             $group = $this->segmentGroupsRepository->find($values['segment_group_id']);
-            $row = $this->segmentsRepository->add($values['name'], $values['version'], $values['code'], $values['table_name'], $values['fields'], $values['query_string'], $group, $values['criteria'] ? $values['criteria'] : null);
+            $row = $this->segmentsRepository->add($values['name'], $values['version'], $values['code'], $values['table_name'], $values['fields'], $values['query_string'], $group, $values['criteria'] ? $values['criteria'] : null, $values['note']);
             $this->onSave->__invoke($row);
         }
     }

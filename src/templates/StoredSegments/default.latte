@@ -20,6 +20,7 @@
         <tr>
           <th>{_'segment.fields.name'}</th>
           <th>{_'segment.fields.code'}</th>
+          <th>{_'segment.fields.note'}</th>
           <th>{_'segment.fields.table_name'}</th>
           <th>{_'segment.fields.version'}</th>
           <th>{_'segment.fields.created'}</th>
@@ -38,6 +39,7 @@
                 </a>
               </td>
               <td><code>{$segment->code}</code></td>
+              <td>{$segment->note|breaklines}</td>
               <td>{$segment->table_name}</td>
               <td><span class="label label-default">{$segment->version}</span></td>
               <td>{$segment->created_at|userDate}</td>

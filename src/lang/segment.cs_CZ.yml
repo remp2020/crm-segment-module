@@ -34,6 +34,7 @@ fields:
     segment_group_id: Skupina
     criteria: Kriteria
     version: Verze
+    note: Poznámka
 
 required:
     name: Název je nutné vyplnit

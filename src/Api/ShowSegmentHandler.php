@@ -47,6 +47,7 @@ class ShowSegmentHandler extends ApiHandler
             'id' => $segment->id,
             'version' => $segment->version,
             'name' => $segment->name,
+            'note' => $segment->note,
             'code' => $segment->code,
             'table_name' => $segment->table_name,
             'fields' => explode(',', $segment->fields),

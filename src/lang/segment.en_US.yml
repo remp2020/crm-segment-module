@@ -34,6 +34,7 @@ fields:
     segment_group_id: Group
     criteria: Criteria
     version: Version
+    note: Note
 
 required:
     name: Name field is required
