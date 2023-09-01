@@ -148,7 +148,7 @@ class StoredSegmentsPresenter extends AdminPresenter
                 if (!$displayFields) {
                     $displayFields = array_keys((array)$row);
                 }
-                $tableData[] = array_values((array)$row);
+                $tableData[] = (array) $row;
             }, PHP_INT_MAX);
         }
 
