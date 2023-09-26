@@ -131,12 +131,18 @@
       <tbody>
         <tr n:foreach="$data as $row">
           <td n:foreach="$row as $key => $value">
-            {if $key == 'id'} {* hack pre userov - zatial ine segmenty nemame *}
-              {if $segment->table_name == 'users'}
-                <a n:href=":Users:UsersAdmin:show id => $value">{$value}</a>
-               {else}
-                {$value}
-              {/if}
+            {if $key == 'id'}
+              {* TODO: this link should be provided by segment itself (or some dataprovider)? *}
+              {switch $segment->table_name}
+                {case 'users'}
+                  <a n:href=":Users:UsersAdmin:show id => $value">{$value}</a>
+                {case 'subscriptions'}
+                  <a n:href=":Subscriptions:SubscriptionsAdmin:show id => $value">{$value}</a>
+                {case 'payments'}
+                  <a n:href=":Payments:PaymentsAdmin:show id => $value">{$value}</a>
+                {default}
+                  {$value}
+              {/switch}
             {else}
               {$value}
             {/if}
