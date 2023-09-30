@@ -44,25 +44,25 @@ class CompressSegmentsValues extends Command
         $output->writeln('');
 
         $fromString = $input->getOption('from');
-        if (! $fromString) {
+        if (!$fromString) {
             $output->writeln('Required option --from=DATE is missing');
-            return;
+            return Command::FAILURE;
         }
         $from = DateTime::createFromFormat('Y-m-d', $fromString)->setTime(0, 0, 0, 0);
-        if (! $from) {
+        if (!$from) {
             $output->writeln("$fromString is not a valid date, accepted format is YYYY-MM-DD.");
-            return 1;
+            return Command::FAILURE;
         }
 
         $toString = $input->getOption('to');
-        if (! $toString) {
+        if (!$toString) {
             $output->writeln('Required option --to=DATE is missing');
-            return 1;
+            return Command::FAILURE;
         }
         $to = DateTime::createFromFormat('Y-m-d', $toString)->setTime(0, 0, 0, 0);
-        if (! $to) {
+        if (!$to) {
             $output->writeln("$toString is not a valid date, accepted format is YYYY-MM-DD.");
-            return 1;
+            return Command::FAILURE;
         }
 
         $oneDay = DateInterval::createFromDateString('1 day');
@@ -78,7 +78,7 @@ class CompressSegmentsValues extends Command
 
         $output->writeln("Compressing finished, $totalDeleted record(s) deleted.");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function compress(DateTime $day, OutputInterface $output): int
