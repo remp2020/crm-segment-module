@@ -1,26 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+{*    <meta name="viewport" content="width=device-width, initial-scale=1.0">*}
+    <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+            rel="stylesheet"
+    />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <title>Segmenter</title>
+    <script type="module" crossorigin src="/layouts/admin/segmenter/index-6a0neXDM.js"></script>
+    <link rel="stylesheet" crossorigin href="/layouts/admin/segmenter/index-MkJFSK9V.css">
+</head>
+<body>
+
 {var $cancelPath = '/segment/stored-segments/'}
 {if $segment}
     {var $cancelPath = '/segment/stored-segments/show/' . $segment->id}
 {/if}
-
-<script src="/layouts/default/js/iframeResizer.contentWindow.min.js"></script>
-
 <script type="text/javascript">
-window.Segments = {
-    config: {
-        AUTH_TOKEN: {$segmentAuth},
-        API_HOST: {$crmHost},
-        CANCEL_PATH: {$cancelPath},
-        SEGMENT_ID: {if $segment}{$segment->id}{else}null{/if},
-        TIME_ZONE: {date_default_timezone_get()}
-    }
-};
+    window.Segments = {
+        config: {
+            AUTH_TOKEN: {$segmentAuth},
+            API_HOST: {$crmHost},
+            CANCEL_PATH: {$cancelPath},
+            SEGMENT_ID: {if $segment}{$segment->id}{else}null{/if},
+            TIME_ZONE: {date_default_timezone_get()}
+        }
+    };
 </script>
-
 <div id="app"></div>
 
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel=stylesheet>
-<link rel="stylesheet" href="/layouts/admin/segmenter/css/chunk-vendors.4163e63d.css">
-<link rel="stylesheet" href="/layouts/admin/segmenter/css/app.f67685ab.css">
-<script type="text/javascript" src="/layouts/admin/segmenter/js/chunk-vendors.270b2058.js"></script>
-<script type="text/javascript" src="/layouts/admin/segmenter/js/app.f9c4b2f6.js"></script>
+<script type="text/javascript" src="/layouts/default/js/iframeResizer.contentWindow.min.js"></script>
+
+</body>
+</html>
