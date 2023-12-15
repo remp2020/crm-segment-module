@@ -3,11 +3,12 @@
 namespace Crm\SegmentsModule\Tests;
 
 use Crm\SegmentModule\SegmentQuery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SegmentQueryTest extends TestCase
 {
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             'Select_MultipleFieldAliases_ShouldBePreserved' => [
@@ -23,7 +24,7 @@ class SegmentQueryTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProvider */
+    #[DataProvider('dataProvider')]
     public function testQueries($fields, $query, $result)
     {
         $segment = new SegmentQuery($query, '_table', $fields);
