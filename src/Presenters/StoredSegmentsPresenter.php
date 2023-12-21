@@ -4,7 +4,6 @@ namespace Crm\SegmentModule\Presenters;
 
 use Crm\AdminModule\Presenters\AdminPresenter;
 use Crm\ApplicationModule\Components\Graphs\GoogleLineGraphGroupControlFactoryInterface;
-use Crm\ApplicationModule\Config\ApplicationConfig;
 use Crm\ApplicationModule\ExcelFactory;
 use Crm\ApplicationModule\Graphs\Criteria;
 use Crm\ApplicationModule\Graphs\GraphDataItem;
@@ -44,8 +43,6 @@ class StoredSegmentsPresenter extends AdminPresenter
 
     private $segmentGroupsRepository;
 
-    public $applicationConfig;
-
     private $accessToken;
 
     private WidgetManager $widgetManager;
@@ -59,7 +56,6 @@ class StoredSegmentsPresenter extends AdminPresenter
         SegmentFormFactory $segmentFormFactory,
         ExcelFactory $excelFactory,
         SegmentGroupsRepository $segmentGroupsRepository,
-        ApplicationConfig $applicationConfig,
         AccessToken $accessToken,
         WidgetManager $widgetManager,
         LazyWidgetManager $lazyWidgetManager
@@ -72,7 +68,6 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->segmentFormFactory = $segmentFormFactory;
         $this->excelFactory = $excelFactory;
         $this->segmentGroupsRepository = $segmentGroupsRepository;
-        $this->applicationConfig = $applicationConfig;
         $this->accessToken = $accessToken;
         $this->widgetManager = $widgetManager;
         $this->lazyWidgetManager = $lazyWidgetManager;
