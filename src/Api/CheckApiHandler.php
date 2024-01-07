@@ -2,7 +2,7 @@
 
 namespace Crm\SegmentModule\Api;
 
-use Crm\ApiModule\Api\ApiHandler;
+use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\SegmentModule\SegmentFactoryInterface;
 use Crm\SegmentModule\SegmentInterface;
 use Crm\UsersModule\Repository\UsersRepository;

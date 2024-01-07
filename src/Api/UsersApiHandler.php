@@ -2,9 +2,9 @@
 
 namespace Crm\SegmentModule\Api;
 
-use Crm\ApiModule\Api\ApiHandler;
-use Crm\ApiModule\Params\InputParam;
-use Crm\ApiModule\Params\ParamsProcessor;
+use Crm\ApiModule\Models\Api\ApiHandler;
+use Crm\ApiModule\Models\Params\InputParam;
+use Crm\ApiModule\Models\Params\ParamsProcessor;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Repository\SegmentsRepository;

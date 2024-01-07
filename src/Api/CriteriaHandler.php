@@ -2,7 +2,7 @@
 
 namespace Crm\SegmentModule\Api;
 
-use Crm\ApiModule\Api\ApiHandler;
+use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
 use Nette\Http\Response;
 use Tomaj\NetteApi\Response\JsonApiResponse;
