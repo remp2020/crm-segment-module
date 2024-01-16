@@ -2,6 +2,7 @@
 
 namespace Crm\SegmentModule\Params;
 
+use Crm\SegmentModule\Criteria\InvalidCriteriaException;
 use Nette\Utils\DateTime;
 
 class DateTimeParam extends BaseParam
@@ -132,7 +133,7 @@ class DateTimeParam extends BaseParam
      * requested in params data.
      *
      * @return DateTimeParam
-     * @throws \Crm\SegmentModule\Criteria\InvalidCriteriaException
+     * @throws InvalidCriteriaException
      */
     public function inverse(): DateTimeParam
     {

@@ -3,6 +3,8 @@
 namespace Crm\SegmentModule;
 
 use Crm\ApiModule\Api\ApiRoutersContainerInterface;
+use Crm\ApiModule\Authorization\AdminLoggedAuthorization;
+use Crm\ApiModule\Authorization\BearerTokenAuthorization;
 use Crm\ApiModule\Router\ApiIdentifier;
 use Crm\ApiModule\Router\ApiRoute;
 use Crm\ApplicationModule\AssetsManager;
@@ -11,6 +13,19 @@ use Crm\ApplicationModule\CrmModule;
 use Crm\ApplicationModule\Menu\MenuContainerInterface;
 use Crm\ApplicationModule\Menu\MenuItem;
 use Crm\ApplicationModule\SeederManager;
+use Crm\SegmentModule\Api\CheckApiHandler;
+use Crm\SegmentModule\Api\CountsHandler;
+use Crm\SegmentModule\Api\CreateOrUpdateSegmentHandler;
+use Crm\SegmentModule\Api\CriteriaHandler;
+use Crm\SegmentModule\Api\ListApiHandler;
+use Crm\SegmentModule\Api\ListGroupsHandler;
+use Crm\SegmentModule\Api\RelatedHandler;
+use Crm\SegmentModule\Api\SegmentsListApiHandler;
+use Crm\SegmentModule\Api\ShowSegmentHandler;
+use Crm\SegmentModule\Api\UsersApiHandler;
+use Crm\SegmentModule\Commands\CompressSegmentsValues;
+use Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand;
+use Crm\SegmentModule\Commands\UpdateCountsCommand;
 use Crm\SegmentModule\Seeders\ConfigSeeder;
 use Crm\SegmentModule\Seeders\SegmentsSeeder;
 
@@ -31,9 +46,9 @@ class SegmentModule extends CrmModule
 
     public function registerCommands(CommandsContainerInterface $commandsContainer)
     {
-        $commandsContainer->registerCommand($this->getInstance(\Crm\SegmentModule\Commands\UpdateCountsCommand::class));
-        $commandsContainer->registerCommand($this->getInstance(\Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand::class));
-        $commandsContainer->registerCommand($this->getInstance(\Crm\SegmentModule\Commands\CompressSegmentsValues::class));
+        $commandsContainer->registerCommand($this->getInstance(UpdateCountsCommand::class));
+        $commandsContainer->registerCommand($this->getInstance(ProcessCriteriaSegmentsCommand::class));
+        $commandsContainer->registerCommand($this->getInstance(CompressSegmentsValues::class));
     }
 
     public function registerApiCalls(ApiRoutersContainerInterface $apiRoutersContainer)
@@ -41,80 +56,80 @@ class SegmentModule extends CrmModule
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'user-segments', 'list'),
-                \Crm\SegmentModule\Api\ListApiHandler::class,
-                \Crm\ApiModule\Authorization\BearerTokenAuthorization::class
+                ListApiHandler::class,
+                BearerTokenAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'user-segments', 'users'),
-                \Crm\SegmentModule\Api\UsersApiHandler::class,
-                \Crm\ApiModule\Authorization\BearerTokenAuthorization::class
+                UsersApiHandler::class,
+                BearerTokenAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'user-segments', 'check'),
-                \Crm\SegmentModule\Api\CheckApiHandler::class,
-                \Crm\ApiModule\Authorization\BearerTokenAuthorization::class
+                CheckApiHandler::class,
+                BearerTokenAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'list'),
-                \Crm\SegmentModule\Api\SegmentsListApiHandler::class,
-                \Crm\ApiModule\Authorization\BearerTokenAuthorization::class
+                SegmentsListApiHandler::class,
+                BearerTokenAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'groups'),
-                \Crm\SegmentModule\Api\ListGroupsHandler::class,
-                \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class
+                ListGroupsHandler::class,
+                AdminLoggedAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'criteria'),
-                \Crm\SegmentModule\Api\CriteriaHandler::class,
-                \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class
+                CriteriaHandler::class,
+                AdminLoggedAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'detail'),
-                \Crm\SegmentModule\Api\CreateOrUpdateSegmentHandler::class,
-                \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class
+                CreateOrUpdateSegmentHandler::class,
+                AdminLoggedAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'show'),
-                \Crm\SegmentModule\Api\ShowSegmentHandler::class,
-                \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class
+                ShowSegmentHandler::class,
+                AdminLoggedAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'counts'),
-                \Crm\SegmentModule\Api\CountsHandler::class,
-                \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class
+                CountsHandler::class,
+                AdminLoggedAuthorization::class
             )
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'related'),
-                \Crm\SegmentModule\Api\RelatedHandler::class,
-                \Crm\ApiModule\Authorization\AdminLoggedAuthorization::class
+                RelatedHandler::class,
+                AdminLoggedAuthorization::class
             )
         );
     }
