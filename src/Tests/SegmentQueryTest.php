@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentsModule\Tests;
+namespace Crm\SegmentModule\Tests;
 
 use Crm\SegmentModule\SegmentQuery;
 use PHPUnit\Framework\Attributes\DataProvider;

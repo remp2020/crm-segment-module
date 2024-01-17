@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule\Repository;
+namespace Crm\SegmentModule\Repositories;
 
 use Crm\ApplicationModule\Repository;
 use Crm\ApplicationModule\Repository\AuditLogRepository;

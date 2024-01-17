@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule\Repository;
+namespace Crm\SegmentModule\Repositories;
 
 class SegmentAlreadyExistsException extends \Exception
 {

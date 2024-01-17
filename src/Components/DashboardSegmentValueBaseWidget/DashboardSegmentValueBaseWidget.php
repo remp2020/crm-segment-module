@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentsModule\Widget;
+namespace Crm\SegmentModule\Components\DashboardSegmentValueBaseWidget;
 
 use Crm\ApplicationModule\Cache\CacheRepository;
 use Crm\ApplicationModule\Widget\BaseLazyWidget;

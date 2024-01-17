@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule;
+namespace Crm\SegmentModule\Models;
 
 use Closure;
 

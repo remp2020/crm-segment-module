@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule\Criteria;
+namespace Crm\SegmentModule\Models\Criteria;
 
 class EmptyCriteriaException extends \Exception
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule\Params;
+namespace Crm\SegmentModule\Models\Params;
 
 class NumberArrayParam extends BaseParam
 {

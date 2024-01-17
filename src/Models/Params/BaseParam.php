@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule\Params;
+namespace Crm\SegmentModule\Models\Params;
 
 use Crm\ApplicationModule\Criteria\CriteriaParam;
 use Crm\SegmentModule\Criteria\InvalidCriteriaException;

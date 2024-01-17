@@ -1,6 +1,6 @@
 <?php
 
-namespace Crm\SegmentModule\Criteria;
+namespace Crm\SegmentModule\Models\Criteria;
 
 use Crm\ApplicationModule\Criteria\CriteriaInterface;
 use Crm\ApplicationModule\Criteria\CriteriaStorage;
