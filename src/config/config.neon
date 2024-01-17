@@ -3,12 +3,12 @@ services:
 		setup:
 			- addModule(Crm\SegmentModule\SegmentModule())
 
-	segmentsRepository: Crm\SegmentModule\Repository\SegmentsRepository
-	segmentGroupsRepository: Crm\SegmentModule\Repository\SegmentGroupsRepository
-	segmentsValuesRepository: Crm\SegmentModule\Repository\SegmentsValuesRepository
+	segmentsRepository: Crm\SegmentModule\Repositories\SegmentsRepository
+	segmentGroupsRepository: Crm\SegmentModule\Repositories\SegmentGroupsRepository
+	segmentsValuesRepository: Crm\SegmentModule\Repositories\SegmentsValuesRepository
 
 	segmentFactory:
-		factory: Crm\SegmentModule\SegmentFactory
+		factory: Crm\SegmentModule\Models\SegmentFactory
 
 	segmentRecalculationConfig:
 		factory: Crm\SegmentModule\DI\SegmentRecalculationConfig
@@ -27,7 +27,7 @@ services:
 	- Crm\SegmentModule\Api\ShowSegmentHandler
 	- Crm\SegmentModule\Api\CountsHandler
 	- Crm\SegmentModule\Api\SegmentsListApiHandler
-	- Crm\SegmentModule\Criteria\Generator
+	- Crm\SegmentModule\Models\Criteria\Generator
 	- Crm\SegmentModule\Api\RelatedHandler
 	- Crm\SegmentModule\Seeders\SegmentsSeeder
 	- Crm\SegmentModule\Seeders\ConfigSeeder

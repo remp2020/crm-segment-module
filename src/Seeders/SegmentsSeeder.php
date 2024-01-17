@@ -3,8 +3,8 @@
 namespace Crm\SegmentModule\Seeders;
 
 use Crm\ApplicationModule\Seeders\ISeeder;
-use Crm\SegmentModule\Repository\SegmentGroupsRepository;
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SegmentsSeeder implements ISeeder

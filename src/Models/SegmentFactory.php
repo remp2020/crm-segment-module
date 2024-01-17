@@ -2,7 +2,7 @@
 
 namespace Crm\SegmentModule\Models;
 
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\UnexpectedValueException;

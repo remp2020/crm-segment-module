@@ -3,11 +3,11 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
-use Crm\SegmentModule\Criteria\EmptyCriteriaException;
-use Crm\SegmentModule\Criteria\Generator;
-use Crm\SegmentModule\Criteria\InvalidCriteriaException;
-use Crm\SegmentModule\Segment;
-use Crm\SegmentModule\SegmentQuery;
+use Crm\SegmentModule\Models\Criteria\EmptyCriteriaException;
+use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
+use Crm\SegmentModule\Models\Segment;
+use Crm\SegmentModule\Models\SegmentQuery;
 use Nette\Database\Explorer;
 use Nette\Http\Response;
 use Nette\Utils\Json;

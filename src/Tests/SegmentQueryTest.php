@@ -2,7 +2,7 @@
 
 namespace Crm\SegmentModule\Tests;
 
-use Crm\SegmentModule\SegmentQuery;
+use Crm\SegmentModule\Models\SegmentQuery;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

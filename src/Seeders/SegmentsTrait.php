@@ -2,8 +2,8 @@
 
 namespace Crm\SegmentModule\Seeders;
 
-use Crm\SegmentModule\Repository\SegmentGroupsRepository;
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Table\ActiveRow;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -3,9 +3,9 @@
 namespace Crm\SegmentModule\Forms;
 
 use Contributte\Translation\Translator;
-use Crm\SegmentModule\Criteria\Generator;
-use Crm\SegmentModule\Repository\SegmentGroupsRepository;
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Json;

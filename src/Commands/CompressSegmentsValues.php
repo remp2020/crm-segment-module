@@ -2,7 +2,7 @@
 
 namespace Crm\SegmentModule\Commands;
 
-use Crm\SegmentModule\Repository\SegmentsValuesRepository;
+use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
 use DateInterval;
 use Nette\Utils\DateTime;
 use Symfony\Component\Console\Command\Command;

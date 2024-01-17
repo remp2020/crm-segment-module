@@ -3,7 +3,7 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
-use Crm\SegmentModule\Repository\SegmentGroupsRepository;
+use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Nette\Http\Response;
 use Tomaj\NetteApi\Response\JsonApiResponse;
 use Tomaj\NetteApi\Response\ResponseInterface;

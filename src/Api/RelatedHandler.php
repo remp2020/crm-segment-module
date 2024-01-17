@@ -3,10 +3,10 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
-use Crm\SegmentModule\Criteria\Generator;
-use Crm\SegmentModule\Criteria\InvalidCriteriaException;
-use Crm\SegmentModule\Params\BaseParam;
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
+use Crm\SegmentModule\Models\Params\BaseParam;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Application\LinkGenerator;
 use Nette\Http\Response;
 use Nette\Utils\Json;

@@ -5,9 +5,9 @@ namespace Crm\SegmentModule\Components\DashboardSegmentValueBaseWidget;
 use Crm\ApplicationModule\Cache\CacheRepository;
 use Crm\ApplicationModule\Widget\BaseLazyWidget;
 use Crm\ApplicationModule\Widget\LazyWidgetManager;
-use Crm\SegmentModule\Repository\SegmentsRepository;
-use Crm\SegmentModule\Repository\SegmentsValuesRepository;
-use Crm\SegmentModule\SegmentFactoryInterface;
+use Crm\SegmentModule\Models\SegmentFactoryInterface;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
+use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
 use Nette\Utils\DateTime;
 use ReflectionClass;
 

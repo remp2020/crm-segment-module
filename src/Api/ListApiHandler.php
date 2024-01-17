@@ -5,7 +5,7 @@ namespace Crm\SegmentModule\Api;
 use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\ApiModule\Models\Params\InputParam;
 use Crm\ApiModule\Models\Params\ParamsProcessor;
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Table\ActiveRow;
 use Nette\Http\Response;
 use Tomaj\NetteApi\Response\JsonApiResponse;

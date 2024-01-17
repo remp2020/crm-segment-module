@@ -3,8 +3,8 @@
 namespace Crm\SegmentModule\Commands;
 
 use Crm\ApplicationModule\Commands\DecoratedCommandTrait;
-use Crm\SegmentModule\Criteria\Generator;
-use Crm\SegmentModule\Repository\SegmentsRepository;
+use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
