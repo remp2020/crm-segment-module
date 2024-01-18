@@ -5,7 +5,7 @@ namespace Crm\SegmentModule\Api;
 use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Models\SegmentInterface;
-use Crm\UsersModule\Repository\UsersRepository;
+use Crm\UsersModule\Repositories\UsersRepository;
 use Nette\Http\Response;
 use Nette\UnexpectedValueException;
 use Tomaj\NetteApi\Params\GetInputParam;

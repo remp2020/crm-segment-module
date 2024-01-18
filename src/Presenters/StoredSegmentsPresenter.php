@@ -16,7 +16,7 @@ use Crm\SegmentModule\Models\SegmentWidgetInterface;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
-use Crm\UsersModule\Auth\Access\AccessToken;
+use Crm\UsersModule\Models\Auth\Access\AccessToken;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
