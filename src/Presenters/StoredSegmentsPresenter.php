@@ -3,12 +3,12 @@
 namespace Crm\SegmentModule\Presenters;
 
 use Crm\AdminModule\Presenters\AdminPresenter;
-use Crm\ApplicationModule\Components\Graphs\GoogleLineGraphGroupControlFactoryInterface;
-use Crm\ApplicationModule\ExcelFactory;
-use Crm\ApplicationModule\Graphs\Criteria;
-use Crm\ApplicationModule\Graphs\GraphDataItem;
-use Crm\ApplicationModule\Widget\LazyWidgetManager;
-use Crm\ApplicationModule\Widget\WidgetManager;
+use Crm\ApplicationModule\Components\Graphs\GoogleLineGraphGroup\GoogleLineGraphGroupControlFactoryInterface;
+use Crm\ApplicationModule\Models\Exports\ExcelFactory;
+use Crm\ApplicationModule\Models\Graphs\Criteria;
+use Crm\ApplicationModule\Models\Graphs\GraphDataItem;
+use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
+use Crm\ApplicationModule\Models\Widget\WidgetManager;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;

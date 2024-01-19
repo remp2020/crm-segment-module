@@ -2,8 +2,8 @@
 
 namespace Crm\SegmentModule\Models\Criteria;
 
-use Crm\ApplicationModule\Criteria\CriteriaInterface;
-use Crm\ApplicationModule\Criteria\CriteriaStorage;
+use Crm\ApplicationModule\Models\Criteria\CriteriaInterface;
+use Crm\ApplicationModule\Models\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Models\Params\ParamsBag;
 use Nette\Utils\Strings;
 

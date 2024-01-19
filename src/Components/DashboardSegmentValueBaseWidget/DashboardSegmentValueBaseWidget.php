@@ -2,9 +2,9 @@
 
 namespace Crm\SegmentModule\Components\DashboardSegmentValueBaseWidget;
 
-use Crm\ApplicationModule\Cache\CacheRepository;
-use Crm\ApplicationModule\Widget\BaseLazyWidget;
-use Crm\ApplicationModule\Widget\LazyWidgetManager;
+use Crm\ApplicationModule\Models\Widget\BaseLazyWidget;
+use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
+use Crm\ApplicationModule\Repositories\CacheRepository;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Crm\SegmentModule\Repositories\SegmentsValuesRepository;

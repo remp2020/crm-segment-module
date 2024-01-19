@@ -5,7 +5,7 @@ namespace Crm\SegmentModule\Api;
 use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\ApiModule\Models\Params\InputParam;
 use Crm\ApiModule\Models\Params\ParamsProcessor;
-use Crm\ApplicationModule\Criteria\CriteriaStorage;
+use Crm\ApplicationModule\Models\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Repositories\SegmentsRepository;

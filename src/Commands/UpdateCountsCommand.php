@@ -3,8 +3,8 @@
 namespace Crm\SegmentModule\Commands;
 
 use Crm\ApplicationModule\Commands\DecoratedCommandTrait;
-use Crm\ApplicationModule\RedisClientFactory;
-use Crm\ApplicationModule\RedisClientTrait;
+use Crm\ApplicationModule\Models\Redis\RedisClientFactory;
+use Crm\ApplicationModule\Models\Redis\RedisClientTrait;
 use Crm\SegmentModule\DI\SegmentRecalculationConfig;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Repositories\SegmentsRepository;

@@ -2,7 +2,7 @@
 
 namespace Crm\SegmentModule\Models\Params;
 
-use Crm\ApplicationModule\Criteria\CriteriaParam;
+use Crm\ApplicationModule\Models\Criteria\CriteriaParam;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Nette\Utils\DateTime;
 
