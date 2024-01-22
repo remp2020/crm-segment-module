@@ -4,6 +4,7 @@ namespace Crm\SegmentModule;
 
 use Crm\SegmentModule\Repository\SegmentsRepository;
 use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use Nette\UnexpectedValueException;
 
 class SegmentFactory implements SegmentFactoryInterface
@@ -18,12 +19,17 @@ class SegmentFactory implements SegmentFactoryInterface
         $this->segmentsRepository = $segmentsRepository;
     }
 
-    public function buildSegment(string $segmentIdentifier): SegmentInterface
+    public function buildSegment(string|ActiveRow $segment): SegmentInterface
     {
-        $segmentRow = $this->segmentsRepository->findByCode($segmentIdentifier);
-        if (!$segmentRow) {
-            throw new UnexpectedValueException("segment does not exist: {$segmentIdentifier}");
+        if ($segment instanceof ActiveRow) {
+            $segmentRow = $segment;
+        } else {
+            $segmentRow = $this->segmentsRepository->findByCode($segment);
+            if (!$segmentRow) {
+                throw new UnexpectedValueException("segment code [{$segment}] does not exist");
+            }
         }
+
         $query = new SegmentQuery($segmentRow->query_string, $segmentRow->table_name, $segmentRow->fields);
         return new Segment($this->database, $query);
     }
