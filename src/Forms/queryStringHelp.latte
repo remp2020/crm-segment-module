@@ -1,0 +1,11 @@
+<div class="help-block">
+    {_'segment.fields.query_string_help'}
+    <code class="muted">%table%</code>,
+    <code class="muted">%fields%</code>,
+    <code class="muted">%where%</code>,
+    <code class="muted">%group_by%</code>{if $segmentNestingEnabled}, <code class="muted">%segment.SEGMENT_CODE%</code>.{else}.{/if}
+    {if $segmentNestingEnabled}
+        <br />
+        {_segment.fields.query_string_help_segment_nesting, ['segment_placeholder' => '%segment.SEGMENT_CODE%']|noescape}
+    {/if}
+</div>

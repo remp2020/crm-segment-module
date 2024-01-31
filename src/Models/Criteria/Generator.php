@@ -9,11 +9,8 @@ use Nette\Utils\Strings;
 
 class Generator
 {
-    private $criteriaStorage;
-
-    public function __construct(CriteriaStorage $criteriaStorage)
+    public function __construct(private CriteriaStorage $criteriaStorage)
     {
-        $this->criteriaStorage = $criteriaStorage;
     }
 
     private function buildParamBag(CriteriaInterface $criteria, array $values): ParamsBag

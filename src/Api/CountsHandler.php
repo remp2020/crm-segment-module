@@ -7,8 +7,8 @@ use Crm\SegmentModule\Models\Criteria\EmptyCriteriaException;
 use Crm\SegmentModule\Models\Criteria\Generator;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Models\Segment;
-use Crm\SegmentModule\Models\SegmentQuery;
-use Nette\Database\Explorer;
+use Crm\SegmentModule\Models\SegmentConfig;
+use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Nette\Http\Response;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -17,16 +17,11 @@ use Tomaj\NetteApi\Response\ResponseInterface;
 
 class CountsHandler extends ApiHandler
 {
-    private $generator;
-
-    private $database;
-
     public function __construct(
-        Explorer  $database,
-        Generator $generator
+        private Generator $generator,
+        private SegmentFactoryInterface $segmentFactory,
     ) {
-        $this->database = $database;
-        $this->generator = $generator;
+        parent::__construct();
     }
 
     public function params(): array
@@ -36,7 +31,7 @@ class CountsHandler extends ApiHandler
 
     public function handle(array $params): ResponseInterface
     {
-        $request = file_get_contents("php://input");
+        $request = $this->rawPayload();
         if (empty($request)) {
             $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Empty request body, JSON expected']);
             return $response;
@@ -68,12 +63,26 @@ class CountsHandler extends ApiHandler
             return $response;
         }
 
-        $query = new SegmentQuery($queryString, $params['table_name'], $params['table_name'] . '.id');
-        $segment = new Segment($this->database, $query);
+        $segment = $this->segmentFactory
+            ->buildSegment(new SegmentConfig(
+                tableName: $params['table_name'],
+                queryString: $queryString,
+                fields: $params['table_name'] . '.id',
+            ));
+
+        $finalQuery = null;
+        if ($segment instanceof Segment) {
+            $finalQuery = $segment->query();
+        }
         $count = $segment->totalCount();
 
-        $response = new JsonApiResponse(Response::S200_OK, ['status' => 'ok', 'count' => $count]);
-
-        return $response;
+        $toReturn = [
+            'status' => 'ok',
+            'count' => $count,
+        ];
+        if ($finalQuery) {
+            $toReturn['query'] = $finalQuery;
+        }
+        return new JsonApiResponse(Response::S200_OK, $toReturn);
     }
 }

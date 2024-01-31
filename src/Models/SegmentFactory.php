@@ -4,33 +4,33 @@ namespace Crm\SegmentModule\Models;
 
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 use Nette\UnexpectedValueException;
 
 class SegmentFactory implements SegmentFactoryInterface
 {
-    private $segmentsRepository;
-
-    private $database;
-
-    public function __construct(Explorer $database, SegmentsRepository $segmentsRepository)
-    {
-        $this->database = $database;
-        $this->segmentsRepository = $segmentsRepository;
+    public function __construct(
+        private Explorer $database,
+        private SegmentsRepository $segmentsRepository
+    ) {
     }
 
-    public function buildSegment(string|ActiveRow $segment): SegmentInterface
+    public function buildSegment(string|SegmentConfig $segment): SegmentInterface
     {
-        if ($segment instanceof ActiveRow) {
-            $segmentRow = $segment;
-        } else {
-            $segmentRow = $this->segmentsRepository->findByCode($segment);
+        if (is_string($segment)) {
+            $segmentCode = $segment;
+            $segmentRow = $this->segmentsRepository->findByCode($segmentCode);
             if (!$segmentRow) {
-                throw new UnexpectedValueException("segment code [{$segment}] does not exist");
+                throw new UnexpectedValueException("segment code [{$segmentCode}] does not exist");
             }
+            $segment = SegmentConfig::fromSegmentActiveRow($segmentRow);
         }
 
-        $query = new SegmentQuery($segmentRow->query_string, $segmentRow->table_name, $segmentRow->fields);
+        $query = new SegmentQuery(
+            query: $segment->queryString,
+            tableName: $segment->tableName,
+            fields: $segment->fields,
+            nestedSegments: SegmentQuery::nestedSegments($this->segmentsRepository, $segment),
+        );
         return new Segment($this->database, $query);
     }
 }

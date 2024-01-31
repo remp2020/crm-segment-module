@@ -7,14 +7,10 @@ use Nette\Database\Explorer;
 
 class Segment implements SegmentInterface
 {
-    private $database;
-
-    private $query;
-
-    public function __construct(Explorer $database, QueryInterface $query)
-    {
-        $this->database = $database;
-        $this->query = $query;
+    public function __construct(
+        private Explorer $database,
+        private QueryInterface $query
+    ) {
     }
 
     public function totalCount()

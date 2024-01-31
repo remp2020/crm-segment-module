@@ -4,7 +4,9 @@ namespace Crm\SegmentModule\Repositories;
 
 use Crm\ApplicationModule\Models\Database\Repository;
 use Crm\ApplicationModule\Repositories\AuditLogRepository;
+use Crm\SegmentModule\Events\BeforeSegmentCodeUpdateEvent;
 use DateTime;
+use League\Event\Emitter;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\UniqueConstraintViolationException;
@@ -35,7 +37,8 @@ class SegmentsRepository extends Repository
 
     public function __construct(
         Explorer $database,
-        AuditLogRepository $auditLogRepository
+        AuditLogRepository $auditLogRepository,
+        private Emitter $emitter
     ) {
         parent::__construct($database);
         $this->auditLogRepository = $auditLogRepository;
@@ -77,6 +80,13 @@ class SegmentsRepository extends Repository
         }
     }
 
+    /**
+     * @param ActiveRow $row
+     * @param $data
+     *
+     * @return bool
+     * @throws SegmentCodeInUseException|\Exception
+     */
     final public function update(ActiveRow &$row, $data)
     {
         //if segment is locked, allow to change only whitelisted fields (eg. field holding cached count)
@@ -86,6 +96,10 @@ class SegmentsRepository extends Repository
                     throw new \Exception("Trying to update locked segment [{$row['code']}].");
                 }
             }
+        }
+
+        if (isset($data['code']) && $row->code !== $data['code']) {
+            $this->emitter->emit(new BeforeSegmentCodeUpdateEvent($row));
         }
 
         $data['updated_at'] = new DateTime();

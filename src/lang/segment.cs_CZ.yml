@@ -15,7 +15,9 @@ messages:
     segment_not_found: Segment nebyl nalezen.
     segment_count_recalculated: Segment byl přepočítan.
     segment_recalculation_settings_saved: Nastavení přepočtu segmentu byla úspěšně uložena.
-
+    errors:
+        delete_referenced_by_other_segment: Segment nemohl být smazán, protože se na něj odkazuje jiný segment '%code%'.
+        code_update_referenced_by_other_segment: Aktualizace segmentu se nezdařila, protože na kód segmentu odkazuje jiný segment '%code%'.
 fields:
     name: Název
     code: Identifikátor
@@ -31,6 +33,8 @@ fields:
     rows_help: Nezobrazuje přesná data. Číslo se aktualizuje v pravidelných intervalech.
     query_fields: Sloupce
     query_string: Databázový dotaz
+    query_string_help: "Dostupné operátory:"
+    query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%<code> bude nahrazen databázovým dotazem daného segmentu.'
     segment_group_id: Skupina
     criteria: Kriteria
     version: Verze

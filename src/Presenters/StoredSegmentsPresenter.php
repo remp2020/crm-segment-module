@@ -13,6 +13,7 @@ use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Models\SegmentWidgetInterface;
+use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
@@ -325,10 +326,16 @@ class StoredSegmentsPresenter extends AdminPresenter
     public function handleDelete($segmentId)
     {
         $segment = $this->segmentsRepository->find($segmentId);
-        $this->segmentsRepository->softDelete($segment);
-
-        $this->flashMessage($this->translator->translate('segment.messages.segment_was_deleted'));
-        $this->redirect('default');
+        try {
+            $this->segmentsRepository->softDelete($segment);
+            $this->flashMessage($this->translator->translate('segment.messages.segment_was_deleted'));
+            $this->redirect('default');
+        } catch (SegmentCodeInUseException $exception) {
+            $this->flashMessage($this->translator->translate('segment.messages.errors.delete_referenced_by_other_segment', [
+                'code' => $exception->getReferencingSegmentCode()
+            ]), 'error');
+            $this->redirect('this');
+        }
     }
 
     protected function createComponentCopySegmentForm(): Form

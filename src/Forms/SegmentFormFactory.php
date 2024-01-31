@@ -3,11 +3,18 @@
 namespace Crm\SegmentModule\Forms;
 
 use Contributte\Translation\Translator;
+use Crm\SegmentModule\Events\BeforeSegmentCodeUpdateEvent;
+use Crm\SegmentModule\Models\Config;
 use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
+use Latte\Engine;
+use Latte\Essential\TranslatorExtension;
+use League\Event\Emitter;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Tomaj\Form\Renderer\BootstrapRenderer;
@@ -22,7 +29,9 @@ class SegmentFormFactory
         private SegmentsRepository $segmentsRepository,
         private SegmentGroupsRepository $segmentGroupsRepository,
         private Generator $generator,
-        private Translator $translator
+        private Translator $translator,
+        private Config $segmentConfig,
+        private Emitter $emitter,
     ) {
     }
 
@@ -30,10 +39,17 @@ class SegmentFormFactory
     {
         $defaults = [];
         $locked = false;
+        $referencingSegmentCode = null;
         if (isset($id)) {
             $segment = $this->segmentsRepository->find($id);
             $defaults = $segment->toArray();
             $locked = $segment->locked;
+
+            try {
+                $this->emitter->emit(new BeforeSegmentCodeUpdateEvent($segment));
+            } catch (SegmentCodeInUseException $exception) {
+                $referencingSegmentCode = $exception->getReferencingSegmentCode();
+            }
         }
 
         $form = new Form;
@@ -51,10 +67,10 @@ class SegmentFormFactory
             ->setRequired('segment.required.name')
             ->setDisabled($locked);
 
-        $form->addText('code', 'segment.fields.code')
+        $codeInput = $form->addText('code', 'segment.fields.code')
             ->setRequired('segment.required.code')
             ->setHtmlAttribute('placeholder', 'segment.placeholder.code')
-            ->setDisabled($locked)
+            ->setDisabled($locked || $referencingSegmentCode)
             ->addRule(function (TextInput $control) use (&$segment) {
                 $newValue = $control->getValue();
                 if ($segment && $segment->code === $newValue) {
@@ -62,6 +78,11 @@ class SegmentFormFactory
                 }
                 return $this->segmentsRepository->findByCode($control->getValue()) === null;
             }, 'segment.copy.validation.code');
+
+        if ($referencingSegmentCode) {
+            $codeInput->setOption('description', "Cannot edit segment code, it's referenced by other segment '{$referencingSegmentCode}'");
+        }
+
 
         $form->addSelect('segment_group_id', 'segment.fields.segment_group_id', $this->segmentGroupsRepository->all()->fetchPairs('id', 'name'))
             ->setDisabled($locked);
@@ -71,11 +92,21 @@ class SegmentFormFactory
             ->setHtmlAttribute('placeholder', 'segment.placeholder.table_name')
             ->setDisabled($locked);
 
+
+        $engine = new Engine();
+        $engine->addExtension(new TranslatorExtension($this->translator));
+        $queryStringHelp = $engine->renderToString(
+            __DIR__ . DIRECTORY_SEPARATOR . 'queryStringHelp.latte',
+            [
+                'segmentNestingEnabled' => $this->segmentConfig->isSegmentNestingEnabled()
+            ]
+        );
+
         $form->addTextArea('query_string', 'segment.fields.query_string', 30, 10)
+            ->setOption('description', Html::fromHtml($queryStringHelp))
             ->setRequired()
-            ->setDisabled($locked)
-            ->getControlPrototype()
-                ->addAttributes(['class' => 'ace', 'data-lang' => 'sql']);
+            ->setHtmlAttribute('data-codeeditor', 'sql')
+            ->setDisabled($locked);
 
         $form->addTextArea('fields', 'segment.fields.query_fields', 30, 3)
             ->setRequired()
@@ -86,6 +117,7 @@ class SegmentFormFactory
         $form->addHidden('segment_id', $id);
 
         $form->addTextArea('criteria', 'segment.fields.criteria', 30, 8)
+            ->setHtmlAttribute('data-codeeditor', 'javascript')
             ->setDisabled($locked);
 
         $form->addTextArea('note', 'segment.fields.note', 30, 8)
@@ -125,7 +157,15 @@ class SegmentFormFactory
                 $form->addError($this->translator->translate('segment.edit.messages.segment_locked'));
                 return;
             }
-            $this->segmentsRepository->update($row, $values);
+            try {
+                $this->segmentsRepository->update($row, $values);
+            } catch (SegmentCodeInUseException $exception) {
+                $form->addError($this->translator->translate('segment.messages.errors.code_update_referenced_by_other_segment', [
+                    'code' => $exception->getReferencingSegmentCode()
+                ]));
+                return;
+            }
+
             $this->onUpdate->__invoke($row);
         } else {
             $group = $this->segmentGroupsRepository->find($values['segment_group_id']);

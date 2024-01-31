@@ -23,4 +23,36 @@ segmentRecalculationConfig:
         - setHourlyRecalculationMinute('30')
 ```
 
+### Segment nesting
+
+Segment nesting is a feature, that adds ability to use one segment in other segment definition.  
+
+This feature is disabled by default, since it's only supported by our default implementation of `SegmentInterface`. To enable it, add this to your neon configuration:
+
+```neon
+segments:
+    segment_nesting: true
+```
+
+After enabling, new `SegmentCriteria` criteria is registered and available to use in visual Segments editor. 
+
+#### Segments editor v1
+
+The feature is also available in segments text editor. To reference other segment in a segment query, use the code `%segment.ACTUAL_SEGMENT_CODE%`. 
+
+For example, let's have a segment `segment_a` specified by the query:
+
+```sql
+SELECT users.id, users.email FROM users WHERE id > 100 AND id < 120
+```
+
+With feature nesting enabled, we can define `segment_b` query like this:
+
+```sql
+SELECT * FROM users
+WHERE users.id IN (SELECT id FROM (%segment.segment_a%) a)
+```
+
+During `segment_b` execution, placeholder `%segment.segment_a%` will be replaced by the actual `segment_a` query.
+
 

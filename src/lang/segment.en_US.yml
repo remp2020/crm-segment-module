@@ -15,6 +15,9 @@ messages:
     segment_not_found: Segment not found.
     segment_count_recalculated: Segment count was recalculated.
     segment_recalculation_settings_saved: Segment recalculation settings were saved successfully.
+    errors:
+        delete_referenced_by_other_segment: Segment could not be deleted, since it is referenced by another segment '%code%'.
+        code_update_referenced_by_other_segment: Failed to update segment, since segment code is referenced by another segment '%code%'.
 
 fields:
     name: Name
@@ -31,6 +34,8 @@ fields:
     rows_help: "Doesn't contain accurate data. Actualized in periodical intervals."
     query_fields: Database fields
     query_string: Database query
+    query_string_help: "Available operators:"
+    query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%</code> will be replaced by the database query of the given segment.'
     segment_group_id: Group
     criteria: Criteria
     version: Version

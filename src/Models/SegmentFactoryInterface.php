@@ -2,9 +2,12 @@
 
 namespace Crm\SegmentModule\Models;
 
-use Nette\Database\Table\ActiveRow;
-
 interface SegmentFactoryInterface
 {
-    public function buildSegment(string|ActiveRow $segment): SegmentInterface;
+    /**
+     * @param string|SegmentConfig $segment either segment code or SegmentConfig object
+     *
+     * @return SegmentInterface
+     */
+    public function buildSegment(string|SegmentConfig $segment): SegmentInterface;
 }

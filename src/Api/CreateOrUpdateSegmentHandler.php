@@ -8,7 +8,7 @@ use Crm\SegmentModule\Models\Criteria\Generator;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nette\Utils\Strings;
@@ -35,19 +35,19 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
 
     public function handle(array $params): ResponseInterface
     {
-        $request = file_get_contents("php://input");
+        $request = $this->rawPayload();
         if (empty($request)) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Empty request body, JSON expected']);
+            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => 'Empty request body, JSON expected']);
             return $response;
         }
         try {
-            $json = Json::decode($request, Json::FORCE_ARRAY);
+            $json = Json::decode($request, forceArrays: true);
         } catch (JsonException $e) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => "Malformed JSON: " . $e->getMessage()]);
+            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => "Malformed JSON: " . $e->getMessage()]);
             return $response;
         }
         if ($err = $this->hasError($json)) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => 'Invalid params: ' . $err]);
+            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => 'Invalid params: ' . $err]);
             return $response;
         }
         $params = $json + $params;
@@ -61,7 +61,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             unset($params['group_id']);
         }
         if (!$group) {
-            $response = new JsonApiResponse(Response::S404_NOT_FOUND, ['status' => 'error', 'message' => 'Segment group not found']);
+            $response = new JsonApiResponse(IResponse::S404_NotFound, ['status' => 'error', 'message' => 'Segment group not found']);
             return $response;
         }
         $params['segment_group_id'] = $group->id;
@@ -75,10 +75,10 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             }
             $fields = $this->generator->getFields($params['table_name'], $params['fields'], $params['criteria']['nodes']);
         } catch (EmptyCriteriaException $emptyCriteriaException) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => $emptyCriteriaException->getMessage()]);
+            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $emptyCriteriaException->getMessage()]);
             return $response;
         } catch (InvalidCriteriaException $invalidCriteriaException) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, ['status' => 'error', 'message' => $invalidCriteriaException->getMessage()]);
+            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $invalidCriteriaException->getMessage()]);
             return $response;
         }
 
@@ -88,7 +88,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
         if (isset($params['id'])) {
             $segment = $this->segmentsRepository->findById($params['id']);
             if (!$segment) {
-                $response = new JsonApiResponse(Response::S404_NOT_FOUND, ['status' => 'error', 'message' => 'Segment not found']);
+                $response = new JsonApiResponse(IResponse::S404_NotFound, ['status' => 'error', 'message' => 'Segment not found']);
                 return $response;
             }
             $this->segmentsRepository->update($segment, $params);
@@ -101,7 +101,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             }
 
             if ($this->segmentsRepository->exists($code)) {
-                $response = new JsonApiResponse(Response::S409_CONFLICT, ['status' => 'error', 'message' => "Segment with code '{$code}' already exists"]);
+                $response = new JsonApiResponse(IResponse::S409_Conflict, ['status' => 'error', 'message' => "Segment with code '{$code}' already exists"]);
                 return $response;
             }
 
@@ -117,7 +117,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             );
         }
 
-        $response = new JsonApiResponse(Response::S200_OK, [
+        $response = new JsonApiResponse(IResponse::S200_OK, [
             'status' => 'ok',
             'id' => $segment->id,
             'code' => $segment->code,

@@ -3,8 +3,11 @@
 namespace Crm\SegmentModule\DI;
 
 use Contributte\Translation\DI\TranslationProviderInterface;
+
+use Crm\SegmentModule\Models\Config;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\CompilerExtension;
+use Nette\Schema\Expect;
 
 final class SegmentModuleExtension extends CompilerExtension implements TranslationProviderInterface
 {
@@ -16,12 +19,24 @@ final class SegmentModuleExtension extends CompilerExtension implements Translat
         );
     }
 
+    public function getConfigSchema(): \Nette\Schema\Schema
+    {
+        return Expect::structure([
+            // segment nesting feature requires default SegmentInterface implementation to be used
+            'segment_nesting' => Expect::bool()->default(false)->dynamic(),
+        ]);
+    }
+
     public function beforeCompile()
     {
         $builder = $this->getContainerBuilder();
         // load presenters from extension to Nette
         $builder->getDefinition($builder->getByType(IPresenterFactory::class))
             ->addSetup('setMapping', [['Segment' => 'Crm\SegmentModule\Presenters\*Presenter']]);
+
+        foreach ($builder->findByType(Config::class) as $definition) {
+            $definition->addSetup('setSegmentNestingEnabled', [$this->config->segment_nesting]);
+        }
     }
 
     /**
