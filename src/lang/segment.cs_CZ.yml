@@ -34,7 +34,7 @@ fields:
     query_fields: Sloupce
     query_string: Databázový dotaz
     query_string_help: "Dostupné operátory:"
-    query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%<code> bude nahrazen databázovým dotazem daného segmentu.'
+    query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%</code> bude nahrazen databázovým dotazem daného segmentu.'
     segment_group_id: Skupina
     criteria: Kriteria
     version: Verze
