@@ -10,6 +10,7 @@ use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Models\Segment;
 use Crm\SegmentModule\Models\SegmentConfig;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
+use Nette\Application\LinkGenerator;
 use Nette\Http\IResponse;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -22,8 +23,10 @@ class ItemsHandler extends ApiHandler
         private Generator $generator,
         private SegmentFactoryInterface $segmentFactory,
         private CriteriaStorage $criteriaStorage,
+        LinkGenerator $linkGenerator
     ) {
         parent::__construct();
+        $this->linkGenerator = $linkGenerator;
     }
 
     public function handle(array $params): ResponseInterface
@@ -91,6 +94,18 @@ class ItemsHandler extends ApiHandler
             'data' => $data,
             'memory' => round(memory_get_usage() / 1024 / 1024, 2) . ' MiB',
         ];
+
+        // TODO: this link should be provided by segment itself (or some dataprovider)?
+        $itemPath = match ($params['table_name']) {
+            'users' => 'Users:UsersAdmin:show',
+            'subscriptions' => 'Subscriptions:SubscriptionsAdmin:show',
+            'payments' => 'Payments:PaymentsAdmin:show',
+            default => null,
+        };
+        if ($itemPath) {
+            $toReturn['itemUrlTemplate'] = $this->linkGenerator->link($itemPath, ['id' => 'ITEM_ID']);
+        }
+
         if ($finalQuery) {
             $toReturn['query'] = $finalQuery;
         }
