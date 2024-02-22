@@ -7,6 +7,8 @@ back_to_detail: zpět na detail
 
 dashboard:
     warning: 'Pro zobrazení správné hodnoty musíte aktualizovat počet v detailu segmentu.'
+    errors:
+        missing_segment: 'CHYBA: chybějící segment'
 
 messages:
     segment_was_created: Segment byl vytvořen.

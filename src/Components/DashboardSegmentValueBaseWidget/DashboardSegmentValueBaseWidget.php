@@ -13,35 +13,27 @@ use ReflectionClass;
 
 /**
  * Widget class for rendering single segment value in dashboard
- * when extending, provide segment code value (and optionally segmentCodeToCompare)
- * widget also expects 'dashboard_segment_value_widget.latte' template in widget directory (can be overridden by extending getConfigOptions())
+ * when extending, provide segment code value (and optionally segmentCodeToCompare).
+ * Widget also expects 'dashboard_segment_value_widget.latte' template in widget directory. If not found,
+ * default template is used.
  */
 abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
 {
-    private $segmentsRepository;
+    private bool $onTheFly = false;
 
-    private $segmentsValuesRepository;
+    private int $onTheFlyCacheTimeoutMinutes = 0;
 
-    private $segmentFactory;
-
-    private $cacheRepository;
-
-    private $onTheFly = 0;
-
-    private $onTheFlyCacheTimeoutMinutes = 0;
+    protected ?string $titleText = null;
+    protected ?string $tooltipText = null;
 
     public function __construct(
-        SegmentsRepository $segmentsRepository,
-        SegmentsValuesRepository $segmentsValuesRepository,
-        SegmentFactoryInterface $segmentFactory,
-        CacheRepository $cacheRepository,
-        LazyWidgetManager $lazyWidgetManager
+        private SegmentsRepository $segmentsRepository,
+        private SegmentsValuesRepository $segmentsValuesRepository,
+        private SegmentFactoryInterface $segmentFactory,
+        private CacheRepository $cacheRepository,
+        LazyWidgetManager $lazyWidgetManager,
     ) {
         parent::__construct($lazyWidgetManager);
-        $this->segmentsRepository = $segmentsRepository;
-        $this->segmentsValuesRepository = $segmentsValuesRepository;
-        $this->segmentFactory = $segmentFactory;
-        $this->cacheRepository = $cacheRepository;
     }
 
     abstract public function segmentCode(): string;
@@ -83,36 +75,54 @@ abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
 
     public function render()
     {
-        [$segmentLink, $count, $wasCalculated] = $this->getSegmentLinkAndCount($this->segmentCode());
-        $this->template->segmentLink = $segmentLink;
-        $this->template->count = $count;
+        $segment = $this->segmentsRepository->findByCode($this->segmentCode());
+        $missingSegment = false;
+        if ($segment) {
+            [$count, $wasCalculated] = $this->getSegmentCount($this->segmentCode());
+            $segmentLink = $this->presenter->link(':Segment:StoredSegments:show', $segment->id);
+
+            $this->template->titleText = $this->titleText ?? $segment->name;
+            if ($this->tooltipText) {
+                $this->template->tooltipText = $this->tooltipText;
+            }
+            $this->template->count = $count;
+            $this->template->segmentLink = $segmentLink;
+        } else {
+            $wasCalculated = false;
+            $missingSegment = true;
+        }
+
+        $this->template->missingSegment = $missingSegment;
+        $this->template->segmentCode = $this->segmentCode();
         $this->template->wasCalculated = $wasCalculated;
 
         if ($this->segmentCodeToCompare()) {
-            [$segmentLinkToCompare, $countToCompare, $wasCalculated] = $this->getSegmentLinkAndCount($this->segmentCodeToCompare());
+            $segmentLinkToCompare = $this->presenter->link(
+                ':Segment:StoredSegments:show',
+                $this->segmentsRepository->findByCode($this->segmentCodeToCompare())->id
+            );
+            [$countToCompare, $wasCalculated] = $this->getSegmentCount($this->segmentCodeToCompare());
             $this->template->segmentLinkToCompare = $segmentLinkToCompare;
             $this->template->countToCompare = $countToCompare;
         }
 
-        $this->template->setFile($this->getDir() . DIRECTORY_SEPARATOR . $this->templateName());
+        $templatePath = $this->getDir() . DIRECTORY_SEPARATOR . $this->templateName();
+        if (!file_exists($templatePath)) {
+            // use default template
+            $templatePath = __DIR__ . DIRECTORY_SEPARATOR . $this->templateName();
+        }
+
+        $this->template->setFile($templatePath);
         $this->template->render();
     }
 
-    private function getSegmentLinkAndCount($segmentCode): array
+    private function getSegmentCount($segmentCode): array
     {
-        if (!$this->segmentsRepository->exists($segmentCode)) {
-            throw new \Exception('Trying to render ' . __CLASS__ . ' with non-existing segment: ' . $segmentCode . '. Did you need to run application:seed command?');
-        }
-
-        $link = $this->presenter->link(':Segment:StoredSegments:show', $this->segmentsRepository->findByCode($segmentCode)->id);
-
         $wasCalculated = true;
 
         if ($this->onTheFly) {
             $segment = $this->segmentFactory->buildSegment($segmentCode);
-            $callable = function () use ($segment) {
-                return $segment->totalCount();
-            };
+            $callable = static fn () => $segment->totalCount();
 
             if ($this->onTheFlyCacheTimeoutMinutes > 0) {
                 $cacheKey = 'segment_' . $segmentCode;
@@ -134,6 +144,6 @@ abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
             }
         }
 
-        return [$link, $count, $wasCalculated];
+        return [$count, $wasCalculated];
     }
 }

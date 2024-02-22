@@ -1,0 +1,13 @@
+{if $missingSegment}
+    <i class="fas fa-exclamation-triangle" style="color: red;" data-toggle="tooltip" data-original-title="{_segment.dashboard.errors.missing_segment}"></i>
+    {_segment.dashboard.errors.missing_segment} <code class="muted">{$segmentCode}</code>
+{else}
+    {if !$wasCalculated}
+        <i class="fas fa-exclamation-triangle" style="color: red;" data-toggle="tooltip" data-original-title="{_segment.dashboard.warning}"></i>
+    {/if}
+    <a n:tag-if="isset($segmentLink)" href="{$segmentLink}">
+        {_$titleText}
+    </a>
+    <i n:tag-if="isset($tooltipText)" class="fa fa-question-circle" data-toggle="tooltip" data-original-title="{_$tooltipText}"></i>
+    <span class="badge">{$count}</span>
+{/if}

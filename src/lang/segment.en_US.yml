@@ -7,6 +7,8 @@ back_to_detail: back to detail
 
 dashboard:
     warning: 'You have to refresh count in segment detail in order to show actual value.'
+    errors:
+        missing_segment: 'ERROR: missing segment'
 
 messages:
     segment_was_created: Segment was created.
