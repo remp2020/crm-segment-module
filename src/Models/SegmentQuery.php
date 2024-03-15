@@ -6,7 +6,7 @@ use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
-class SegmentQuery implements QueryInterface
+class SegmentQuery implements QueryInterface, SimulableQueryInterface
 {
     /**
      * @param string     $query
@@ -58,6 +58,11 @@ class SegmentQuery implements QueryInterface
 
         $key = $this->tableName . '.' . $this->pagerKey;
         return 'SELECT count(*) FROM (' . $this->buildQuery($key) . ") AS a WHERE a.{$field} = {$value}";
+    }
+
+    public function getSimulationQuery(): string
+    {
+        return sprintf("EXPLAIN %s", $this->getQuery());
     }
 
     public function getQuery()

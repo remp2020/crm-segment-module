@@ -16,10 +16,13 @@ messages:
     segment_was_deleted: Segment byl smazaný.
     segment_not_found: Segment nebyl nalezen.
     segment_count_recalculated: Segment byl přepočítan.
+    segment_count_recalculation_error: Segment se nepodařilo přepočítat.
     segment_recalculation_settings_saved: Nastavení přepočtu segmentu byla úspěšně uložena.
     errors:
         delete_referenced_by_other_segment: Segment nemohl být smazán, protože se na něj odkazuje jiný segment '%code%'.
+        segment_data_show_error: "Segment nemohl být zobrazen. Důvod: '%reason%'."
         code_update_referenced_by_other_segment: Aktualizace segmentu se nezdařila, protože na kód segmentu odkazuje jiný segment '%code%'.
+
 fields:
     name: Název
     code: Identifikátor
@@ -37,6 +40,7 @@ fields:
     query_string: Databázový dotaz
     query_string_help: "Dostupné operátory:"
     query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%</code> bude nahrazen databázovým dotazem daného segmentu.'
+    skip_query_validation: Vynechat validaci databázového dotazu
     segment_group_id: Skupina
     criteria: Kriteria
     version: Verze
@@ -88,6 +92,7 @@ edit:
     new_version_link: novou verzi
     messages:
         segment_locked: Segment je zamčený. Upravování není povoleno.
+        segment_invalid: "Segment nebo databázový dotaz je nevalidní. Důvod: '%reason%'."
 
 new:
     header: Nový segment

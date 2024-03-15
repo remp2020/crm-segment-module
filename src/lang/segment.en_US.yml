@@ -16,9 +16,11 @@ messages:
     segment_was_deleted: Segment was deleted.
     segment_not_found: Segment not found.
     segment_count_recalculated: Segment count was recalculated.
+    segment_count_recalculation_error: The segment could not be recalculated.
     segment_recalculation_settings_saved: Segment recalculation settings were saved successfully.
     errors:
         delete_referenced_by_other_segment: Segment could not be deleted, since it is referenced by another segment '%code%'.
+        segment_data_show_error: "The segment couldn't be displayed. Reason: '%reason%'."
         code_update_referenced_by_other_segment: Failed to update segment, since segment code is referenced by another segment '%code%'.
 
 fields:
@@ -38,6 +40,7 @@ fields:
     query_string: Database query
     query_string_help: "Available operators:"
     query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%</code> will be replaced by the database query of the given segment.'
+    skip_query_validation: Skip database query validation
     segment_group_id: Group
     criteria: Criteria
     version: Version
@@ -89,6 +92,7 @@ edit:
     new_version_link: new visual version
     messages:
         segment_locked: Segment is locked. Editing is not allowed.
+        segment_invalid: "Segment or database query is invalid. Dôvod: '%reason%'."
 
 new:
     header: New segment

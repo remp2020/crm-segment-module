@@ -51,9 +51,13 @@
           <a n:href="recalculate! $segment->id" class="ajax btn btn-sm btn-default" style="margin-left: auto">
             <i class="fa fa-sync-alt"></i>&nbsp;{_segment.show.recalculate_total_count}
           </a>
-        {else}
+        {elseif $recalculated === 'success'}
           <a class="ajax btn btn-sm btn-default pull-right" disabled="disabled" style="margin-left: auto">
             <i class="fa fa-sync-alt"></i>&nbsp;{_segment.messages.segment_count_recalculated}
+          </a>
+        {elseif $recalculated === 'error'}
+          <a class="ajax btn btn-sm btn-default btn-danger pull-right" disabled="disabled" style="margin-left: auto">
+            <i class="fa fa-sync-alt"></i>&nbsp;{_segment.messages.segment_count_recalculation_error}
           </a>
         {/if}
       </div>

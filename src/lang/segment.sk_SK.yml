@@ -16,9 +16,11 @@ messages:
     segment_was_deleted: Segment bol zmazaný.
     segment_not_found: Segment sa nenašiel.
     segment_count_recalculated: Segment bol prepočítaný.
+    segment_count_recalculation_error: Segment sa nepodarilo prepočítať.
     segment_recalculation_settings_saved: Nastavenia prepočtu segmentu boli úspešne uložené.
     errors:
         delete_referenced_by_other_segment: Segment nemohol byt zmazaný, pretože sa naň odkazuje iný segment '%code%'.
+        segment_data_show_error: "Segment nemohol byť zobrazený. Dôvod: '%reason%'."
         code_update_referenced_by_other_segment: Aktualizácia segmentu sa nepodarila, pretože na kód segmentu odkazuje iný segment '%code%'.
 
 fields:
@@ -38,6 +40,7 @@ fields:
     query_string: Databázový dotaz
     query_string_help: "Dostupné operátory:"
     query_string_help_segment_nesting: '<code class="muted">%segment_placeholder%</code> bude nahradený databázovým dotazom daného segmentu.'
+    skip_query_validation: Vynechať validáciu databázového dotazu
     segment_group_id: Skupina
     criteria: Kritériá
     version: Verzia
@@ -89,6 +92,7 @@ edit:
     new_version_link: novú verziu
     messages:
         segment_locked: Segment je zamknutý. Upravovanie nie je povolené.
+        segment_invalid: "Segment alebo databázový dotaz je nevalidný. Dôvod: '%reason%'."
 
 new:
     header: Nový segment

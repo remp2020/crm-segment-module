@@ -6,6 +6,10 @@ use Contributte\Translation\Translator;
 use Crm\SegmentModule\Events\BeforeSegmentCodeUpdateEvent;
 use Crm\SegmentModule\Models\Config;
 use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Models\SegmentConfig;
+use Crm\SegmentModule\Models\SegmentException;
+use Crm\SegmentModule\Models\SegmentFactoryInterface;
+use Crm\SegmentModule\Models\SimulableSegmentInterface;
 use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
@@ -14,6 +18,7 @@ use Latte\Essential\TranslatorExtension;
 use League\Event\Emitter;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -31,6 +36,7 @@ class SegmentFormFactory
         private Generator $generator,
         private Translator $translator,
         private Config $segmentConfig,
+        private SegmentFactoryInterface $segmentFactory,
         private Emitter $emitter,
     ) {
     }
@@ -123,6 +129,12 @@ class SegmentFormFactory
         $form->addTextArea('note', 'segment.fields.note', 30, 8)
             ->setDisabled($locked);
 
+        if ($this->hasQuerySimulationAbility()) {
+            $form->addCheckbox('skip_query_validation', 'segment.fields.skip_query_validation')
+                ->setDefaultValue(false)
+                ->setDisabled($locked);
+        }
+
         $form->setDefaults($defaults);
 
         $form->addSubmit('send', $this->translator->translate('system.save'))
@@ -131,14 +143,15 @@ class SegmentFormFactory
             ->setName('button')
             ->setHtml('<i class="fa fa-save"></i> ' . $this->translator->translate('system.save'));
 
+        $form->onValidate[] = [$this, 'validateSegmentQuery'];
         $form->onSuccess[] = [$this, 'formSucceeded'];
         return $form;
     }
 
-    public function formSucceeded($form, $values)
+    public function formSucceeded(Form $form, ArrayHash $values): void
     {
         $id = $values['segment_id'];
-        unset($values['segment_id']);
+        unset($values['segment_id'], $values['skip_query_validation']);
 
         if (isset($values['criteria']) && $values['criteria']) {
             try {
@@ -158,7 +171,7 @@ class SegmentFormFactory
                 return;
             }
             try {
-                $this->segmentsRepository->update($row, $values);
+                $this->segmentsRepository->update($row, (array) $values);
             } catch (SegmentCodeInUseException $exception) {
                 $form->addError($this->translator->translate('segment.messages.errors.code_update_referenced_by_other_segment', [
                     'code' => $exception->getReferencingSegmentCode()
@@ -172,5 +185,38 @@ class SegmentFormFactory
             $row = $this->segmentsRepository->add($values['name'], $values['version'], $values['code'], $values['table_name'], $values['fields'], $values['query_string'], $group, $values['criteria'] ? $values['criteria'] : null, $values['note']);
             $this->onSave->__invoke($row);
         }
+    }
+
+    public function validateSegmentQuery(Form $form, ArrayHash $values): void
+    {
+        $skipQueryValidation = isset($values['skip_query_validation']) && $values['skip_query_validation'] === true;
+        if ($skipQueryValidation) {
+            return;
+        }
+
+        $segmentConfig = new SegmentConfig(
+            $values['table_name'],
+            $values['query_string'],
+            $values['fields']
+        );
+
+        $segment = $this->segmentFactory->buildSegment($segmentConfig);
+        if (!($segment instanceof SimulableSegmentInterface)) {
+            return;
+        }
+
+        try {
+            $segment->simulate();
+        } catch (SegmentException $exception) {
+            $form->addError($this->translator->translate('segment.edit.messages.segment_invalid', [
+                'reason' => $exception->getMessage()
+            ]));
+        }
+    }
+
+    private function hasQuerySimulationAbility(): bool
+    {
+        $segment = $this->segmentFactory->buildSegment(new SegmentConfig('', '', '')); // dummy segment just to check if it's simulable
+        return $segment instanceof SimulableSegmentInterface;
     }
 }

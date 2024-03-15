@@ -11,6 +11,7 @@ use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
 use Crm\ApplicationModule\Models\Widget\WidgetManager;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
+use Crm\SegmentModule\Models\SegmentException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Models\SegmentWidgetInterface;
 use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
@@ -140,12 +141,19 @@ class StoredSegmentsPresenter extends AdminPresenter
         $displayFields = false;
 
         if ($data) {
-            $segment->process(function ($row) use (&$tableData, &$displayFields) {
-                if (!$displayFields) {
-                    $displayFields = array_keys((array)$row);
-                }
-                $tableData[] = (array) $row;
-            }, PHP_INT_MAX);
+            try {
+                $segment->process(function ($row) use (&$tableData, &$displayFields) {
+                    if (!$displayFields) {
+                        $displayFields = array_keys((array)$row);
+                    }
+                    $tableData[] = (array) $row;
+                }, PHP_INT_MAX);
+            } catch (SegmentException $exception) {
+                $errorMessage = $this->translator->translate('segment.messages.errors.segment_data_show_error', [
+                    'reason' => $exception->getMessage(),
+                ]);
+                $this->flashMessage($errorMessage, 'error');
+            }
         }
 
         $this->template->statsPanelWidgetPlaceholder = self::SHOW_STATS_PANEL_WIDGET_PLACEHOLDER;
@@ -164,7 +172,19 @@ class StoredSegmentsPresenter extends AdminPresenter
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 
         // store cached count
-        $ids = $segment->getIds();
+        try {
+            $ids = $segment->getIds();
+        } catch (SegmentException) {
+            if ($this->isAjax()) {
+                $this->template->recalculated = 'error';
+                $this->redrawControl('segmentCount');
+                return;
+            }
+
+            $this->flashMessage($this->translator->translate('segment.messages.segment_count_recalculation_error'), 'error');
+            $this->redirect('show', $id);
+        }
+
         $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
         $count = count($ids);
         $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count, $recalculateTime);
@@ -182,7 +202,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         // reload snippet / page
         if ($this->isAjax()) {
             $this->template->segment = $segmentRow;
-            $this->template->recalculated = true;
+            $this->template->recalculated = 'success';
             $this->redrawControl('segmentCount');
         } else {
             $this->redirect("show", $id);
