@@ -35,3 +35,4 @@ services:
 	- Crm\SegmentModule\Seeders\ConfigSeeder
 	- Crm\SegmentModule\Segment\SegmentCriteria
 	- Crm\SegmentModule\Events\BeforeSegmentCodeUpdateHandler
+	- Crm\SegmentModule\Models\Config\SegmentSlowRecalculateThresholdFactory

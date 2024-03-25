@@ -11,6 +11,7 @@ use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
 use Crm\ApplicationModule\Models\Widget\WidgetManager;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
+use Crm\SegmentModule\Models\Config\SegmentSlowRecalculateThresholdFactory;
 use Crm\SegmentModule\Models\SegmentException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Models\SegmentWidgetInterface;
@@ -60,7 +61,8 @@ class StoredSegmentsPresenter extends AdminPresenter
         SegmentGroupsRepository $segmentGroupsRepository,
         AccessToken $accessToken,
         WidgetManager $widgetManager,
-        LazyWidgetManager $lazyWidgetManager
+        LazyWidgetManager $lazyWidgetManager,
+        private SegmentSlowRecalculateThresholdFactory $segmentSlowRecalculateThresholdFactory,
     ) {
         parent::__construct();
 
@@ -83,16 +85,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $this->template->segmentGroups = $this->segmentGroupsRepository->all();
         $this->template->segments = $this->segmentsRepository->all();
         $this->template->deletedSegments = $this->segmentsRepository->deleted();
-
-        $segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
-        if (!is_numeric($segmentSlowRecalculateThreshold) || $segmentSlowRecalculateThreshold < 0) {
-            Debugger::log(
-                'Bad value in configuration for `segment_slow_recalculate_threshold`. Value must be positive number.',
-                Debugger::WARNING
-            );
-        } else {
-            $this->template->segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
-        }
+        $this->template->segmentSlowRecalculateThresholdInSeconds = $this->segmentSlowRecalculateThresholdFactory->build()->thresholdInSeconds;
     }
 
     /**
@@ -124,16 +117,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $segmentRow = $this->loadSegment($id);
         $this->template->segment = $segmentRow;
         $this->template->showData = $data;
-
-        $segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
-        if (!is_numeric($segmentSlowRecalculateThreshold) || $segmentSlowRecalculateThreshold < 0) {
-            Debugger::log(
-                'Bad value in configuration for `segment_slow_recalculate_threshold`. Value must be positive number.',
-                Debugger::WARNING
-            );
-        } else {
-            $this->template->segmentSlowRecalculateThreshold = $this->applicationConfig->get('segment_slow_recalculate_threshold');
-        }
+        $this->template->segmentSlowRecalculateThresholdInSeconds = $this->segmentSlowRecalculateThresholdFactory->build()->thresholdInSeconds;
 
         $segment = $this->segmentFactory->buildSegment($segmentRow->code);
 

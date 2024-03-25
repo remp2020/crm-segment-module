@@ -46,7 +46,7 @@
               <td>~{$segment->cache_count}</td>
               <td>
                 {if isset($segment->cache_count_time)}
-                  <span {if isset($segmentSlowRecalculateThreshold) && $segment->cache_count_time > $segmentSlowRecalculateThreshold}style="color: red;"{/if}>
+                  <span {if $segmentSlowRecalculateThresholdInSeconds !== null && $segment->cache_count_time > $segmentSlowRecalculateThresholdInSeconds}style="color: red;"{/if}>
                     {$segment->cache_count_time}&nbsp;s
                   </span>
                 {/if}

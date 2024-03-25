@@ -76,7 +76,7 @@
             {/if}
 
             {if $segment->cache_count_time}
-              <span {if isset($segmentSlowRecalculateThreshold) && $segment->cache_count_time > $segmentSlowRecalculateThreshold}style="color: red;"{/if}>
+              <span {if $segmentSlowRecalculateThresholdInSeconds !== null && $segment->cache_count_time > $segmentSlowRecalculateThresholdInSeconds}style="color: red;"{/if}>
                 {_segment.fields.time}: {$segment->cache_count_time}&nbsp;s
               </span>
             {/if})
