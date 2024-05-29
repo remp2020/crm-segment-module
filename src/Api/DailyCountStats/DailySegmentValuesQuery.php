@@ -22,8 +22,8 @@ class DailySegmentValuesQuery
         $selection = $this->segmentsValuesRepository->getTable()
             ->select('DATE_FORMAT(date, ?) AS formatted_date, MAX(value) AS `count`', ["%Y-%m-%d"])
             ->where('segment_id', $segmentId)
-            ->group('DATE(date)')
-            ->order('date ASC');
+            ->group('formatted_date')
+            ->order('formatted_date ASC');
 
         if ($dateTimeRange->dateFrom !== null) {
             $selection->where('date >= ?', $dateTimeRange->dateFrom);
