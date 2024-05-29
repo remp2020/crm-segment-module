@@ -20,6 +20,7 @@ use Crm\SegmentModule\Api\CheckApiHandler;
 use Crm\SegmentModule\Api\CountsHandler;
 use Crm\SegmentModule\Api\CreateOrUpdateSegmentHandler;
 use Crm\SegmentModule\Api\CriteriaHandler;
+use Crm\SegmentModule\Api\DailyCountStatsHandler;
 use Crm\SegmentModule\Api\ItemsHandler;
 use Crm\SegmentModule\Api\ListApiHandler;
 use Crm\SegmentModule\Api\ListGroupsHandler;
@@ -155,6 +156,14 @@ class SegmentModule extends CrmModule
                 new ApiIdentifier('1', 'segments', 'related'),
                 RelatedHandler::class,
                 AdminLoggedAuthorization::class
+            )
+        );
+
+        $apiRoutersContainer->attachRouter(
+            new ApiRoute(
+                new ApiIdentifier('1', 'segments', 'daily-count-stats'),
+                DailyCountStatsHandler::class,
+                BearerTokenAuthorization::class
             )
         );
     }

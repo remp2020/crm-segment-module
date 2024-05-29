@@ -56,3 +56,86 @@ WHERE users.id IN (SELECT id FROM (%segment.segment_a%) a)
 During `segment_b` execution, placeholder `%segment.segment_a%` will be replaced by the actual `segment_a` query.
 
 
+## API documentation
+
+All examples use `http://crm.press` as a base domain. Please change the host to the one you use
+before executing the examples.
+
+All examples use `XXX` as a default value for authorization token, please replace it with the
+real tokens:
+
+* *API tokens.* Standard API keys for server-server communication. It identifies the calling application as a whole.
+  They can be generated in CRM Admin (`/api/api-tokens-admin/`) and each API key has to be whitelisted to access
+  specific API endpoints. By default the API key has access to no endpoint.
+* *User tokens.* Generated for each user during the login process, token identify single user when communicating between
+  different parts of the system. The token can be read:
+  * From `n_token` cookie if the user was logged in via CRM.
+  * From the response of [`/api/v1/users/login` endpoint](https://github.com/remp2020/crm-users-module#post-apiv1userslogin) -
+    you're free to store the response into your own cookie/local storage/session.
+
+API responses can contain following HTTP codes:
+
+| Value                     | Description                                                         |
+|---------------------------|---------------------------------------------------------------------|
+| 200 OK                    | Successful response, default value                                  |
+| 400 Bad Request           | Invalid request (missing required parameters)                       |
+| 403 Forbidden             | The authorization failed (provided token was not valid)             |
+| 404 Not found             | Referenced resource wasn't found                                    |
+| 500 Internal server error | Server related errors. You'll find more details in application log. |
+
+If possible, the response includes `application/json` encoded payload with message explaining
+the error further.
+
+---
+
+#### GET `/api/v1/segments/daily-count-stats`
+
+Prints daily count of users/values in the segment with ability to filter by date range.
+
+Endpoint requires `segment_code` to be provided.
+
+##### *Headers:*
+
+| Name          | Value           | Required | Description |
+|---------------|-----------------|----------|-------------|
+| Authorization | Bearer *String* | yes      | User token. |
+
+##### *Params:*
+
+| Name         | Value    | Required | Description                                          |
+|--------------|----------|----------|------------------------------------------------------|
+| segment_code | *String* | yes      | Code of the segment.                                 |
+| date_from    | *String* | no       | Optional date 'from' (inclusive). Format: YYYY-MM-DD |
+| date_to      | *String* | no       | Optional date 'to' (inclusive). Format: YYYY-MM-DD   |
+
+##### *Examples:*
+
+```shell
+curl -X GET \
+  http://crm.press/api/v1/segments/daily-count-stats?segment_code=all_users \
+  -H 'Authorization: Bearer XXX'
+```
+
+```shell
+curl -X GET \
+  http://crm.press/api/v1/segments/daily-count-stats?segment_code=all_users&date_from=2023-12-25 \
+  -H 'Authorization: Bearer XXX'
+```
+
+Response:
+
+```json5
+{
+  "status": "ok",
+  "data": [
+    {
+      "date": "2024-03-24",
+      "count": 299
+    },
+    {
+      "date": "2024-03-25",
+      "count": 300
+    }
+  ]
+}
+```

@@ -19,6 +19,8 @@ services:
 	- Crm\SegmentModule\Forms\SegmentFormFactory
 	- Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory
 	- Crm\SegmentModule\Api\ListApiHandler
+	- Crm\SegmentModule\Api\DailyCountStats\DailySegmentValuesQuery
+	- Crm\SegmentModule\Api\DailyCountStatsHandler
 	- Crm\SegmentModule\Api\UsersApiHandler
 	- Crm\SegmentModule\Api\CheckApiHandler
 	- Crm\SegmentModule\Api\CriteriaHandler
