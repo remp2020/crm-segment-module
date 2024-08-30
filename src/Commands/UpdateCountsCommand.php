@@ -5,8 +5,11 @@ namespace Crm\SegmentModule\Commands;
 use Crm\ApplicationModule\Commands\DecoratedCommandTrait;
 use Crm\ApplicationModule\Models\Redis\RedisClientFactory;
 use Crm\ApplicationModule\Models\Redis\RedisClientTrait;
+use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
 use Crm\SegmentModule\DI\SegmentRecalculationConfig;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
+use Crm\SegmentModule\Models\SegmentWidgetInterface;
+use Crm\SegmentModule\Presenters\StoredSegmentsPresenter;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
 use Nette\Database\Table\ActiveRow;
@@ -14,6 +17,7 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -29,6 +33,7 @@ class UpdateCountsCommand extends Command
     private DateTime $now;
 
     public function __construct(
+        private LazyWidgetManager $lazyWidgetManager,
         private SegmentFactoryInterface $segmentFactory,
         private SegmentsRepository $segmentsRepository,
         private SegmentsValuesRepository $segmentsValuesRepository,
@@ -42,12 +47,19 @@ class UpdateCountsCommand extends Command
     protected function configure()
     {
         $this->setName('segment:actualize_counts')
-            ->setDescription('Actualize segment counts');
+            ->setDescription('Actualize segment counts')
+            ->addOption(
+                'no_widgets',
+                null,
+                InputOption::VALUE_NONE,
+                "Prevents recalculation of widget statistics available on the segment detail screen.",
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->now = new DateTime();
+        $preventWidgetRecalculation = $input->getOption('no_widgets');
 
         $segments = $this->getSegmentsToRecount();
         $this->sortSegmentsByPeriodicity($segments);
@@ -75,6 +87,18 @@ class UpdateCountsCommand extends Command
                 $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
 
                 $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count, $recalculateTime);
+
+                if (!$preventWidgetRecalculation) {
+                    // recalculation for widgets copied from StoredSegmentsPresenter::handleRecalculate
+                    $ids = $segment->getIds();
+                    $widgets = $this->lazyWidgetManager->getWidgets(StoredSegmentsPresenter::SHOW_STATS_PANEL_WIDGET_PLACEHOLDER);
+                    foreach ($widgets as $widget) {
+                        if (!($widget instanceof SegmentWidgetInterface)) {
+                            throw new \Exception(sprintf("registered widget instance doesn't implement SegmentWidgetInterface: %s", gettype($widget)));
+                        }
+                        $widget->recalculate($segmentRow, $ids);
+                    }
+                }
 
                 $output->writeln("OK (" . $recalculateTime . "s)");
             } catch (\Exception $e) {
