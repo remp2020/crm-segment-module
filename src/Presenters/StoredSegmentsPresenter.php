@@ -115,6 +115,11 @@ class StoredSegmentsPresenter extends AdminPresenter
     public function renderShow($id, $data = false)
     {
         $segmentRow = $this->loadSegment($id);
+
+        if ($segmentRow?->deleted_at) {
+            return $this->redirect('StoredSegments:edit', $id);
+        }
+
         $this->template->segment = $segmentRow;
         $this->template->showData = $data;
         $this->template->segmentSlowRecalculateThresholdInSeconds = $this->segmentSlowRecalculateThresholdFactory->build()->thresholdInSeconds;

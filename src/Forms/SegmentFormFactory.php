@@ -49,7 +49,7 @@ class SegmentFormFactory
         if (isset($id)) {
             $segment = $this->segmentsRepository->find($id);
             $defaults = $segment->toArray();
-            $locked = $segment->locked;
+            $locked = $segment->locked || $segment->deleted_at;
 
             try {
                 $this->emitter->emit(new BeforeSegmentCodeUpdateEvent($segment));

@@ -88,6 +88,7 @@
         <th>{_'segment.fields.version'}</th>
         <th>{_'segment.fields.created'}</th>
         <th>{_'segment.fields.deleted'}</th>
+        <th>{_'system.actions'}</th>
       </tr>
       </thead>
       <tbody>
@@ -99,6 +100,9 @@
           <td><span class="label label-default">{$segment->version}</span></td>
           <td>{$segment->created_at|userDate}</td>
           <td>{$segment->deleted_at|userDate}</td>
+          <td>
+              <a n:href="edit $segment->id" class="btn btn-sm btn-info" title="{_'system.show'}"><i class="fa fa-eye"></i></a>
+          </td>
         </tr>
       {/foreach}
       </tbody>
