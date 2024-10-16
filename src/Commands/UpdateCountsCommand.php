@@ -105,7 +105,11 @@ class UpdateCountsCommand extends Command
                 if (!isset($recalculateTime)) {
                     $recalculateTime = round(Debugger::timer('recalculate_segment'), 2);
                 }
-                Debugger::log($e, Debugger::EXCEPTION);
+                Debugger::log(new \Exception(
+                    message: "Unable to recalculate segment [$segmentRow->code]. Exception: " . $e->getMessage(),
+                    code: $e->getCode(),
+                    previous: $e,
+                ), Debugger::EXCEPTION);
                 $output->writeln("ERR (" . $recalculateTime . "s): " . $e->getMessage());
             } finally {
                 // make sure redis key is deleted when recount finishes/fails
