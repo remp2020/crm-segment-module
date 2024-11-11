@@ -80,13 +80,13 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
 
         if ($this->fields) {
             foreach (explode(",", $this->fields) as $f) {
-                $fieldsArr[] = trim($f);
+                $fieldsArr[] = $this->prefix($f);
                 $groupByArr[] = trim(explode(' as ', mb_strtolower($f))[0]);
             }
         }
         if ($select) {
             foreach (explode(",", $select) as $f) {
-                $selectArr[] = trim($f);
+                $selectArr[] = $this->prefix($f);
                 $groupByArr[] = trim(explode(' as ', mb_strtolower($f))[0]);
             }
         }
@@ -189,5 +189,14 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         }
 
         return $query;
+    }
+
+    private function prefix(string $column): string
+    {
+        if (!str_contains($column, '.')) {
+            return $this->tableName . '.' . trim($column);
+        }
+
+        return trim($column);
     }
 }
