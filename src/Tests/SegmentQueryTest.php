@@ -14,7 +14,7 @@ class SegmentQueryTest extends TestCase
             'Select_MultipleFieldAliases_ShouldBePreserved' => [
                 'fields' => 'id AS foo, id AS bar, email',
                 'query' => 'SELECT %fields%',
-                'result' => 'SELECT id AS foo, id AS bar, email',
+                'result' => 'SELECT _table.id AS foo, _table.id AS bar, _table.email',
             ],
             'GroupBy_MultipleFieldAliases_ShouldBeMergedAndUnique' => [
                 'fields' => 'id AS foo, id AS bar, email',
