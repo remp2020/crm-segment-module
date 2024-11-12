@@ -196,8 +196,8 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
 
     private function prefix(string $column): string
     {
-        if (!str_contains($column, '.') && !str_contains($column, '(')) {
-            return $this->tableName . '.' . trim($column);
+        if (trim($column) === 'id') {
+            return $this->tableName . '.id';
         }
 
         return trim($column);
