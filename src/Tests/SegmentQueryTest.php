@@ -12,9 +12,9 @@ class SegmentQueryTest extends TestCase
     {
         return [
             'Select_MultipleFieldAliases_ShouldBePreserved' => [
-                'fields' => 'id AS foo, id AS bar, email',
+                'fields' => "id AS foo, id AS bar, email, CONCAT(id, ' ', email) AS name",
                 'query' => 'SELECT %fields%',
-                'result' => 'SELECT _table.id AS foo, _table.id AS bar, _table.email',
+                'result' => "SELECT _table.id AS foo, _table.id AS bar, _table.email, CONCAT(id, ' ', email) AS name",
             ],
             'GroupBy_MultipleFieldAliases_ShouldBeMergedAndUnique' => [
                 'fields' => 'id AS foo, id AS bar, email',

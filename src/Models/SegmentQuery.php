@@ -79,7 +79,10 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         $groupByArr = [];
 
         if ($this->fields) {
-            foreach (explode(",", $this->fields) as $f) {
+            // Any sequence of characters that aren’t commas or parentheses,  or balanced
+            // parentheses for functions like CONCAT, handling nested expressions.
+            preg_match_all('/(?:[^,(]+|\((?:[^()]+|(?R))*\))+/', $this->fields, $matches);
+            foreach ($matches[0] as $f) {
                 $fieldsArr[] = $this->prefix($f);
                 $groupByArr[] = trim(explode(' as ', mb_strtolower($f))[0]);
             }
@@ -193,7 +196,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
 
     private function prefix(string $column): string
     {
-        if (!str_contains($column, '.')) {
+        if (!str_contains($column, '.') && !str_contains($column, '(')) {
             return $this->tableName . '.' . trim($column);
         }
 
