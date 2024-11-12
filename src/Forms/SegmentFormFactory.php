@@ -56,6 +56,8 @@ class SegmentFormFactory
             } catch (SegmentCodeInUseException $exception) {
                 $referencingSegmentCode = $exception->getReferencingSegmentCode();
             }
+        } else {
+            $segment = null;
         }
 
         $form = new Form;
@@ -77,7 +79,7 @@ class SegmentFormFactory
             ->setRequired('segment.required.code')
             ->setHtmlAttribute('placeholder', 'segment.placeholder.code')
             ->setDisabled($locked || $referencingSegmentCode)
-            ->addRule(function (TextInput $control) use (&$segment) {
+            ->addRule(function (TextInput $control) use ($segment) {
                 $newValue = $control->getValue();
                 if ($segment && $segment->code === $newValue) {
                     return true;
