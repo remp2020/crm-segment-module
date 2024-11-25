@@ -117,11 +117,13 @@ class SegmentFormFactory
         $form->addTextArea('query_string', 'segment.fields.query_string', 30, 10)
             ->setOption('description', Html::fromHtml($queryStringHelp))
             ->setRequired()
+            ->addRule(Form::PatternInsensitive, 'segment.validation.query_string.pattern', SegmentQueryValidator::QUERY_STRING_VALIDATION_PATTERN)
             ->setHtmlAttribute('data-codeeditor', 'sql')
             ->setDisabled($locked);
 
         $form->addTextArea('fields', 'segment.fields.query_fields', 30, 3)
             ->setRequired()
+            ->addRule(Form::PatternInsensitive, 'segment.validation.query_fields.pattern', SegmentQueryValidator::QUERY_FIELDS_VALIDATION_PATTERN)
             ->setDisabled($locked)
             ->getControlPrototype()
                 ->addAttributes(['class' => 'ace', 'data-lang' => 'sql']);

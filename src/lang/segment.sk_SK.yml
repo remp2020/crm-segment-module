@@ -56,6 +56,12 @@ required:
     code: Identifikátor je nutné vyplniť
     table_name: Zdrojovú tabuľku je nutné vyplniť
 
+validation:
+    query_fields:
+        pattern: "Výber všetkých stĺpcov tabuľky pomocou znaku hviezdičky (`*`) nie je povolený."
+    query_string:
+        pattern: 'Výber všetkých stĺpcov tabuľky pomocou znaku hviezdičky (`*`) nie je povolený.'
+
 placeholder:
     name: napríklad Používatelia s mesačným predplatným
     code: napríklad users_with_month_subscription

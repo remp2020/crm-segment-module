@@ -56,6 +56,12 @@ required:
     code: Identifier is required
     table_name: Table name is required
 
+validation:
+    query_fields:
+        pattern: "Selection of all table columns with asterisk wildcard (`*`) is not allowed."
+    query_string:
+        pattern: 'Selection of all table columns with asterisk wildcard (`*`) is not allowed.'
+
 placeholder:
     name: for example Users with month subscriptions
     code: for example users_with_month_subscription
