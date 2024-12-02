@@ -79,10 +79,10 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         $groupByArr = [];
 
         if ($this->fields) {
-            // Any sequence of characters that aren’t commas or parentheses,  or balanced
-            // parentheses for functions like CONCAT, handling nested expressions.
-            preg_match_all('/(?:[^,(]+|\((?:[^()]+|(?R))*\))+/', $this->fields, $matches);
-            foreach ($matches[0] as $f) {
+            // Split on comma, but not inside parentheses
+            $matches = preg_split("/,(?![^()]*+\))/", $this->fields);
+
+            foreach ($matches as $f) {
                 $fieldsArr[] = $this->prefix($f);
                 $groupByArr[] = trim(explode(' as ', mb_strtolower($f))[0]);
             }
