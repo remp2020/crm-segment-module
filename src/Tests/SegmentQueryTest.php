@@ -21,10 +21,10 @@ class SegmentQueryTest extends TestCase
                 'query' => 'GROUP BY %group_by%',
                 'result' => 'GROUP BY id, email',
             ],
-            'Select_SelectFieldsAfterSplit_ShouldBePreserved' => [
-                'fields' => "id, id AS foo, id AS bar, COALESCE(whatever, 'unknown') AS foo1, DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') AS foo2, CONCAT(id, ' ', email) AS foo3",
+            'Select_AllSelectFieldsAfterStringSplit_ShouldBePreserved' => [
+                'fields' => "id, foo1 AS foo, bar1 AS bar, COALESCE(whatever, 'unk,nown') AS foo2, DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') AS foo3, CONCAT(id, ' , ', email) AS foo4",
                 'query' => 'SELECT %fields%',
-                'result' => "SELECT _table.id, id AS foo, id AS bar, COALESCE(whatever, 'unknown') AS foo1, DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') AS foo2, CONCAT(id, ' ', email) AS foo3",
+                'result' => "SELECT _table.id, foo1 AS foo, bar1 AS bar, COALESCE(whatever, 'unk,nown') AS foo2, DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') AS foo3, CONCAT(id, ' , ', email) AS foo4",
             ]
         ];
     }
