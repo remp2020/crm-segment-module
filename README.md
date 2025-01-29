@@ -136,3 +136,36 @@ Response:
   }
 ]
 ```
+
+## Segments Size Overview Graph
+
+This extension contains a stacked graph that displays an overview of the segment sizes. This graph needs to be registered and reused as a simple widget with the corresponding segment codes you want to display. Segments should ideally be exclusive, as the graph displays the sum of their sizes.
+
+For example, when you have registered a simple widget placeholder like this:
+
+```latte
+{control simpleWidget 'admin.subscriptions.dashboard.content'}
+```
+
+Then, you can register the graph widget, for example, in your `SegmentModule` like this:
+
+```php
+<?php
+
+class SegmentModule extends CrmModule
+{
+    // ...
+    
+    public function registerLazyWidgets(LazyWidgetManagerInterface $lazyWidgetManager)
+    {
+        /** @var SegmentsSizeOverviewStackedGraphWidgetFactory $segmentsSizeOverviewStackedGraphWidgetFactory */
+        $segmentsSizeOverviewStackedGraphWidgetFactory = $this->getInstance(SegmentsSizeOverviewStackedGraphWidgetFactory::class);
+
+        $lazyWidgetManager->registerWidgetWithInstance(
+            'admin.subscriptions.dashboard.content',
+            $segmentsSizeOverviewStackedGraphWidgetFactory->create()->setSegmentCodes(['all_users']),
+        );
+    }
+
+    // ...
+```

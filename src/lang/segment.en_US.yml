@@ -10,6 +10,10 @@ dashboard:
     errors:
         missing_segment: 'ERROR: missing segment'
 
+components:
+    segments_size_overview_stacked_graph_widget:
+        title: Segments size overview
+
 messages:
     segment_was_created: Segment was created.
     segment_was_updated: Segment was updated.

@@ -10,6 +10,10 @@ dashboard:
     errors:
         missing_segment: 'CHYBA: chybějící segment'
 
+components:
+    segments_size_overview_stacked_graph_widget:
+        title: Přehled velikostí segmentů
+
 messages:
     segment_was_created: Segment byl vytvořen.
     segment_was_updated: Segment byl upraven.

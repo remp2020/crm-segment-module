@@ -13,6 +13,7 @@ services:
 	segmentRecalculationConfig:
 		factory: Crm\SegmentModule\DI\SegmentRecalculationConfig
 
+	- Crm\SegmentModule\Components\SegmentsSizeOverviewStackedGraphWidget\SegmentsSizeOverviewStackedGraphWidgetFactory
 	- Crm\SegmentModule\Commands\UpdateCountsCommand
 	- Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand
 	- Crm\SegmentModule\Commands\CompressSegmentsValues
