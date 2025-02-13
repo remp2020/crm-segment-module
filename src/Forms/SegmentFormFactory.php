@@ -3,6 +3,7 @@
 namespace Crm\SegmentModule\Forms;
 
 use Contributte\Translation\Translator;
+use Crm\ApplicationModule\UI\Form;
 use Crm\SegmentModule\Events\BeforeSegmentCodeUpdateEvent;
 use Crm\SegmentModule\Models\Config;
 use Crm\SegmentModule\Models\Criteria\Generator;
@@ -16,7 +17,6 @@ use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Latte\Engine;
 use Latte\Essential\TranslatorExtension;
 use League\Event\Emitter;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;

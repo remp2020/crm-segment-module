@@ -3,8 +3,8 @@
 namespace Crm\SegmentModule\Forms;
 
 use Contributte\Translation\Translator;
+use Crm\ApplicationModule\UI\Form;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
-use Nette\Application\UI\Form;
 use Nette\Utils\Json;
 use Tomaj\Form\Renderer\BootstrapRenderer;
 
