@@ -10,9 +10,12 @@ use Crm\ApplicationModule\Models\Graphs\GraphDataItem;
 use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
 use Crm\ApplicationModule\Models\Widget\WidgetManager;
 use Crm\ApplicationModule\UI\Form;
+use Crm\SegmentModule\Forms\AdminFilterFormFactory;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
 use Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory;
+use Crm\SegmentModule\Models\AdminFilterFormData;
 use Crm\SegmentModule\Models\Config\SegmentSlowRecalculateThresholdFactory;
+use Crm\SegmentModule\Models\Segment;
 use Crm\SegmentModule\Models\SegmentException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Models\SegmentWidgetInterface;
@@ -21,6 +24,7 @@ use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
 use Crm\UsersModule\Models\Auth\Access\AccessToken;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Strings;
@@ -34,47 +38,30 @@ class StoredSegmentsPresenter extends AdminPresenter
 {
     public const SHOW_STATS_PANEL_WIDGET_PLACEHOLDER = 'segment.detail.statspanel.row';
 
-    private $segmentsRepository;
-
-    private $segmentsValuesRepository;
-
-    private $segmentFactory;
-
-    private $segmentFormFactory;
-
-    private $excelFactory;
-
-    private $segmentGroupsRepository;
-
-    private $accessToken;
-
-    private WidgetManager $widgetManager;
-
-    private LazyWidgetManager $lazyWidgetManager;
+    #[Persistent]
+    public $formData = [];
 
     public function __construct(
-        SegmentsRepository $segmentsRepository,
-        SegmentsValuesRepository $segmentsValuesRepository,
-        SegmentFactoryInterface $segmentFactory,
-        SegmentFormFactory $segmentFormFactory,
-        ExcelFactory $excelFactory,
-        SegmentGroupsRepository $segmentGroupsRepository,
-        AccessToken $accessToken,
-        WidgetManager $widgetManager,
-        LazyWidgetManager $lazyWidgetManager,
+        private SegmentsRepository $segmentsRepository,
+        private SegmentsValuesRepository $segmentsValuesRepository,
+        private SegmentFactoryInterface $segmentFactory,
+        private SegmentFormFactory $segmentFormFactory,
+        private ExcelFactory $excelFactory,
+        private SegmentGroupsRepository $segmentGroupsRepository,
+        private AccessToken $accessToken,
+        private WidgetManager $widgetManager,
+        private LazyWidgetManager $lazyWidgetManager,
         private SegmentSlowRecalculateThresholdFactory $segmentSlowRecalculateThresholdFactory,
+        private AdminFilterFormFactory $adminFilterFormFactory,
+        private AdminFilterFormData $adminFilterFormData,
     ) {
         parent::__construct();
+    }
 
-        $this->segmentsRepository = $segmentsRepository;
-        $this->segmentsValuesRepository = $segmentsValuesRepository;
-        $this->segmentFactory = $segmentFactory;
-        $this->segmentFormFactory = $segmentFormFactory;
-        $this->excelFactory = $excelFactory;
-        $this->segmentGroupsRepository = $segmentGroupsRepository;
-        $this->accessToken = $accessToken;
-        $this->widgetManager = $widgetManager;
-        $this->lazyWidgetManager = $lazyWidgetManager;
+    public function startup()
+    {
+        parent::startup();
+        $this->adminFilterFormData->parse($this->formData);
     }
 
     /**
@@ -82,9 +69,23 @@ class StoredSegmentsPresenter extends AdminPresenter
      */
     public function renderDefault()
     {
-        $this->template->segmentGroups = $this->segmentGroupsRepository->all();
-        $this->template->segments = $this->segmentsRepository->all();
-        $this->template->deletedSegments = $this->segmentsRepository->deleted();
+        $segments = $this->adminFilterFormData->getFilteredSegments(deleted: false)->fetchAll();
+
+        $segmentGroups = [];
+        foreach ($this->segmentGroupsRepository->all() as $segmentGroup) {
+            $segmentGroups[$segmentGroup->code] = $segmentGroup;
+        }
+
+        $groupedSegments = [];
+        foreach ($segments as $segment) {
+            $groupedSegments[$segment->segment_group->code][] = $segment;
+        }
+
+        $deletedSegments = $this->adminFilterFormData->getFilteredSegments(deleted: true)->fetchAll();
+
+        $this->template->segmentGroups = $segmentGroups;
+        $this->template->groupedSegments = $groupedSegments;
+        $this->template->deletedSegments = $deletedSegments;
         $this->template->segmentSlowRecalculateThresholdInSeconds = $this->segmentSlowRecalculateThresholdFactory->build()->thresholdInSeconds;
     }
 
@@ -131,12 +132,18 @@ class StoredSegmentsPresenter extends AdminPresenter
 
         if ($data) {
             try {
-                $segment->process(function ($row) use (&$tableData, &$displayFields) {
+                $processingCallback = function ($row) use (&$tableData, &$displayFields) {
                     if (!$displayFields) {
                         $displayFields = array_keys((array)$row);
                     }
                     $tableData[] = (array) $row;
-                }, PHP_INT_MAX);
+                };
+
+                if ($segment instanceof Segment) {
+                    $segment->process($processingCallback, PHP_INT_MAX);
+                } else {
+                    $segment->process($processingCallback);
+                }
             } catch (SegmentException $exception) {
                 $errorMessage = $this->translator->translate('segment.messages.errors.segment_data_show_error', [
                     'reason' => $exception->getMessage(),
@@ -212,7 +219,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $excelSpreadSheet = $this->excelFactory->createExcel('Segment - ' . $segmentRow->name);
         $excelSpreadSheet->getActiveSheet()->setTitle('Segment ' . $segmentRow->id);
 
-        $segment->process(function ($row) use (&$excelSpreadSheet, &$keys, &$i) {
+        $processingCallback = function ($row) use (&$excelSpreadSheet, &$keys, &$i) {
             if (!$keys) {
                 $keys = true;
                 $tableData[] = array_keys((array) $row);
@@ -220,7 +227,13 @@ class StoredSegmentsPresenter extends AdminPresenter
             $tableData[] = array_values((array) $row);
             $excelSpreadSheet->getActiveSheet()->fromArray($tableData, null, 'A' . $i);
             $i += count($tableData);
-        }, 0);
+        };
+
+        if ($segment instanceof Segment) {
+            $segment->process($processingCallback, 0);
+        } else {
+            $segment->process($processingCallback);
+        }
 
         if ($format == 'CSV') {
             $writer = new Csv($excelSpreadSheet);
@@ -255,6 +268,26 @@ class StoredSegmentsPresenter extends AdminPresenter
             $this->redirect('default');
         }
         return $segment;
+    }
+
+    public function createComponentAdminFilterForm()
+    {
+        $form = $this->adminFilterFormFactory->create();
+        $form->setDefaults($this->adminFilterFormData->getFormValues());
+
+        $this->adminFilterFormFactory->onFilter = function (array $values) {
+            $this->redirect($this->action, ['formData' => array_map(function ($item) {
+                if ($item === '' || $item === []) {
+                    return null;
+                }
+                return $item;
+            }, $values)]);
+        };
+        $this->adminFilterFormFactory->onCancel = function (array $emptyValues) {
+            $this->redirect($this->action, ['formData' => $emptyValues]);
+        };
+
+        return $form;
     }
 
     public function createComponentSegmentForm()

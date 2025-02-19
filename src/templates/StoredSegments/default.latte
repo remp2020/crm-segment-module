@@ -12,7 +12,13 @@
     <hr>
   </div>
 
-  {foreach $segmentGroups as $group}
+  <div class="col-md-12">
+    {control adminFilterForm}
+    <hr>
+  </div>
+
+  {foreach $groupedSegments as $group => $segments}
+    {var $group = $segmentGroups[$group]}
     <div class="col-md-12">
       <h3>{$group->name}</h3>
       <table class="table table-striped table-hover table-bordered">

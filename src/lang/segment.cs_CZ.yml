@@ -116,3 +116,17 @@ config:
     segment_slow_recalculate_threshold:
         name: 'Časový limit přepočtení (vteřin)'
         description: 'Reprezentuje limit v sekundách který pokud přepočítávání překročí, systém upozorní administrátory.'
+
+admin:
+    admin_filter_form:
+        name:
+            label: Název
+        code:
+            label: Identifikátor
+        table_name:
+            label: Zdrojová tabulka
+        group:
+            label: Skupina
+        submit: Filtrovat
+        cancel_filter: Zrušit filtr
+        more: Více možností

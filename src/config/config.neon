@@ -19,6 +19,7 @@ services:
 	- Crm\SegmentModule\Commands\CompressSegmentsValues
 	- Crm\SegmentModule\Forms\SegmentFormFactory
 	- Crm\SegmentModule\Forms\SegmentRecalculationSettingsFormFactory
+	- Crm\SegmentModule\Forms\AdminFilterFormFactory
 	- Crm\SegmentModule\Api\ListApiHandler
 	- Crm\SegmentModule\Api\DailyCountStats\DailySegmentValuesQuery
 	- Crm\SegmentModule\Api\DailyCountStatsHandler
@@ -33,6 +34,7 @@ services:
 	- Crm\SegmentModule\Api\SegmentsListApiHandler
 	- Crm\SegmentModule\Models\Criteria\Generator
 	- Crm\SegmentModule\Models\Config
+	- Crm\SegmentModule\Models\AdminFilterFormData
 	- Crm\SegmentModule\Api\RelatedHandler
 	- Crm\SegmentModule\Seeders\SegmentsSeeder
 	- Crm\SegmentModule\Seeders\ConfigSeeder

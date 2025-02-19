@@ -116,3 +116,17 @@ config:
     segment_slow_recalculate_threshold:
         name: 'Recalculate time limit (seconds)'
         description: 'Represents the limit in seconds that if the recalculation exceeds, admins will be notified.'
+
+admin:
+    admin_filter_form:
+        name:
+            label: Name
+        code:
+            label: Code
+        table_name:
+            label: Source table
+        group:
+            label: Group
+        submit: Filter
+        cancel_filter: Cancel filter
+        more: More options
