@@ -4,7 +4,6 @@ namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\ApiModule\Models\Params\InputParam;
-use Crm\ApiModule\Models\Params\ParamsProcessor;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Table\ActiveRow;
 use Nette\Http\Response;
@@ -34,9 +33,6 @@ class ListApiHandler extends ApiHandler
 
     public function handle(array $params): ResponseInterface
     {
-        $paramsProcessor = new ParamsProcessor($this->params());
-        $params = $paramsProcessor->getValues();
-
         $query = $this->segmentsRepository->all();
         if (isset($params['group_code'])) {
             $query = $query->where(['segment_group.code' => $params['group_code']]);

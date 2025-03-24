@@ -4,7 +4,6 @@ namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\ApiModule\Models\Params\InputParam;
-use Crm\ApiModule\Models\Params\ParamsProcessor;
 use Crm\ApplicationModule\Models\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
@@ -44,9 +43,6 @@ class UsersApiHandler extends ApiHandler
 
     public function handle(array $params): ResponseInterface
     {
-        $paramsProcessor = new ParamsProcessor($this->params());
-        $params = $paramsProcessor->getValues();
-
         $segmentRow = $this->segmentsRepository->findByCode($params['code']);
         if (!$segmentRow) {
             $response = new JsonApiResponse(Response::S404_NOT_FOUND, [

@@ -4,7 +4,6 @@ namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
 use Crm\ApiModule\Models\Params\InputParam;
-use Crm\ApiModule\Models\Params\ParamsProcessor;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Http\Response;
 use Nette\Utils\Json;
@@ -30,9 +29,6 @@ class ShowSegmentHandler extends ApiHandler
 
     public function handle(array $params): ResponseInterface
     {
-        $paramsProcessor = new ParamsProcessor($this->params());
-        $params = $paramsProcessor->getValues();
-
         $segment = $this->segmentsRepository->find($params['id']);
         if (!$segment || $segment->deleted_at !== null) {
             $response = new JsonApiResponse(Response::S404_NOT_FOUND, ['status' => 'error', 'message' => 'Segment not found']);
