@@ -45,15 +45,6 @@ class UsersApiHandler extends ApiHandler
     public function handle(array $params): ResponseInterface
     {
         $paramsProcessor = new ParamsProcessor($this->params());
-        $error = $paramsProcessor->hasError();
-        if ($error) {
-            $response = new JsonApiResponse(Response::S400_BAD_REQUEST, [
-                'status' => 'error',
-                'code' => 'invalid_params',
-                'message' => 'Invalid params: ' . $error,
-            ]);
-            return $response;
-        }
         $params = $paramsProcessor->getValues();
 
         $segmentRow = $this->segmentsRepository->findByCode($params['code']);
