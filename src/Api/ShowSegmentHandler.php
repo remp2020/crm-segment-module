@@ -45,7 +45,6 @@ class ShowSegmentHandler extends ApiHandler
             'fields' => explode(',', $segment->fields),
             'locked' => $segment->locked,
             'criteria' => $segment->criteria ? Json::decode($segment->criteria, Json::PRETTY) : null,
-            'group_id' => $segment->segment_group_id, // deprecated
             'group_code' => $segment->segment_group->code,
         ]]);
         return $response;

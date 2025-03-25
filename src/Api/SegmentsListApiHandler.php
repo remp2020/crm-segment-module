@@ -21,7 +21,6 @@ class SegmentsListApiHandler extends ApiHandler
     public function params(): array
     {
         return [
-            new InputParam(InputParam::TYPE_GET, 'group_id', InputParam::OPTIONAL), // deprecated
             new InputParam(InputParam::TYPE_GET, 'group_code', InputParam::OPTIONAL),
         ];
     }
@@ -31,9 +30,6 @@ class SegmentsListApiHandler extends ApiHandler
         $groupSelection = $this->segmentsRepository->all();
         if (isset($params['group_code'])) {
             $groupSelection->where(['segment_group.code' => $params['group_code']]);
-        } elseif (isset($params['group_id'])) {
-            // deprecated
-            $groupSelection->where(['segment_group_id' => $params['group_id']]);
         }
 
         $segments = [];
@@ -42,7 +38,6 @@ class SegmentsListApiHandler extends ApiHandler
                 'code' => $segment->code,
                 'name' => $segment->name,
                 'group' => [
-                    'id' => $segment->segment_group->id, // deprecated
                     'name' => $segment->segment_group->name,
                     'code' => $segment->segment_group->code,
                     'sorting' => $segment->segment_group->sorting,
