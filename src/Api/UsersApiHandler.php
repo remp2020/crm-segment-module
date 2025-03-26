@@ -3,12 +3,12 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
-use Crm\ApiModule\Models\Params\InputParam;
 use Crm\ApplicationModule\Models\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Http\Response;
+use Tomaj\NetteApi\Params\GetInputParam;
 use Tomaj\NetteApi\Response\JsonApiResponse;
 use Tomaj\NetteApi\Response\ResponseInterface;
 
@@ -36,7 +36,7 @@ class UsersApiHandler extends ApiHandler
     public function params(): array
     {
         return [
-            new InputParam(InputParam::TYPE_GET, 'code', InputParam::REQUIRED),
+            (new GetInputParam('code'))->setRequired(),
         ];
     }
 

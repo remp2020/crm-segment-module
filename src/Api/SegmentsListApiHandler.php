@@ -3,9 +3,9 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
-use Crm\ApiModule\Models\Params\InputParam;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Http\Response;
+use Tomaj\NetteApi\Params\GetInputParam;
 use Tomaj\NetteApi\Response\JsonApiResponse;
 use Tomaj\NetteApi\Response\ResponseInterface;
 
@@ -21,7 +21,7 @@ class SegmentsListApiHandler extends ApiHandler
     public function params(): array
     {
         return [
-            new InputParam(InputParam::TYPE_GET, 'group_code', InputParam::OPTIONAL),
+            new GetInputParam('group_code'),
         ];
     }
 
