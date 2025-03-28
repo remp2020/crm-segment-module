@@ -8,7 +8,6 @@ use Crm\ApplicationModule\Models\Exports\ExcelFactory;
 use Crm\ApplicationModule\Models\Graphs\Criteria;
 use Crm\ApplicationModule\Models\Graphs\GraphDataItem;
 use Crm\ApplicationModule\Models\Widget\LazyWidgetManager;
-use Crm\ApplicationModule\Models\Widget\WidgetManager;
 use Crm\ApplicationModule\UI\Form;
 use Crm\SegmentModule\Forms\AdminFilterFormFactory;
 use Crm\SegmentModule\Forms\SegmentFormFactory;
@@ -49,7 +48,6 @@ class StoredSegmentsPresenter extends AdminPresenter
         private ExcelFactory $excelFactory,
         private SegmentGroupsRepository $segmentGroupsRepository,
         private AccessToken $accessToken,
-        private WidgetManager $widgetManager,
         private LazyWidgetManager $lazyWidgetManager,
         private SegmentSlowRecalculateThresholdFactory $segmentSlowRecalculateThresholdFactory,
         private AdminFilterFormFactory $adminFilterFormFactory,
@@ -185,7 +183,7 @@ class StoredSegmentsPresenter extends AdminPresenter
         $count = count($ids);
         $this->segmentsValuesRepository->cacheSegmentCount($segmentRow, $count, $recalculateTime);
 
-        $widgets = $this->widgetManager->getWidgets(self::SHOW_STATS_PANEL_WIDGET_PLACEHOLDER);
+        $widgets = $this->lazyWidgetManager->getWidgets(self::SHOW_STATS_PANEL_WIDGET_PLACEHOLDER);
         foreach ($widgets as $widget) {
             if (!($widget instanceof SegmentWidgetInterface)) {
                 throw new \Exception(sprintf("registered widget instance doesn't implement SegmentWidgetInterface: %s", gettype($widget)));
