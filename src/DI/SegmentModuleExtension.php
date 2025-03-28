@@ -3,11 +3,11 @@
 namespace Crm\SegmentModule\DI;
 
 use Contributte\Translation\DI\TranslationProviderInterface;
-
 use Crm\SegmentModule\Models\Config;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 
 final class SegmentModuleExtension extends CompilerExtension implements TranslationProviderInterface
 {
@@ -19,7 +19,7 @@ final class SegmentModuleExtension extends CompilerExtension implements Translat
         );
     }
 
-    public function getConfigSchema(): \Nette\Schema\Schema
+    public function getConfigSchema(): Schema
     {
         return Expect::structure([
             // segment nesting feature requires default SegmentInterface implementation to be used
