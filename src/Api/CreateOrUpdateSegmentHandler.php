@@ -52,11 +52,8 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
         }
         $params = $json + $params;
 
-        $group = null;
-        if (isset($params['group_code'])) {
-            $group = $this->segmentGroupsRepository->findByCode($params['group_code']);
-            unset($params['group_code']);
-        }
+        $group = $this->segmentGroupsRepository->findByCode($params['group_code']);
+        unset($params['group_code']);
 
         if (!$group) {
             $response = new JsonApiResponse(IResponse::S404_NotFound, ['status' => 'error', 'message' => 'Segment group not found']);
