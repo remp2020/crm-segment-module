@@ -3,11 +3,14 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
+use Crm\ApiModule\Models\Api\StreamedJsonApiResponse;
 use Crm\ApplicationModule\Models\Criteria\CriteriaStorage;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
+use Nette\Http\Request;
 use Nette\Http\Response;
+use Nette\Utils\Json;
 use Tomaj\NetteApi\Params\GetInputParam;
 use Tomaj\NetteApi\Response\JsonApiResponse;
 use Tomaj\NetteApi\Response\ResponseInterface;
@@ -54,22 +57,33 @@ class UsersApiHandler extends ApiHandler
         }
 
         $segment = $this->segmentFactory->buildSegment($params['code']);
+        $primaryField = $this->criteriaStorage->getPrimaryField($segmentRow['table_name']);
 
-        $users = [];
-        $segment->process(function ($row) use (&$users, $segmentRow) {
-            $primaryField = $this->criteriaStorage->getPrimaryField($segmentRow['table_name']);
-            if (!isset($row[$primaryField])) {
-                throw new InvalidCriteriaException(
-                    "Selected segment '{$segmentRow->code}' does not select the primary field '$primaryField' defined for table '{$segmentRow['table_name']}"
-                );
-            }
-            $users[] = [
-                 'id' => (string) $row[$primaryField],
-                 'email' => $row['email'],
-             ];
-        }, 0);
+        $response = new StreamedJsonApiResponse(Response::S200_OK, function (Request $request, Response $response) use ($segment, $segmentRow, $primaryField) {
+            echo '{"status":"ok","users":[';
 
-        $response = new JsonApiResponse(Response::S200_OK, ['status' => 'ok', 'users' => $users, 'memory' => memory_get_usage(true)]);
+            $isFirst = true;
+            $segment->process(function ($row) use (&$isFirst, $segmentRow, $primaryField) {
+                if (!isset($row[$primaryField])) {
+                    throw new InvalidCriteriaException(
+                        "Selected segment '{$segmentRow->code}' does not select the primary field '$primaryField' defined for table '{$segmentRow['table_name']}"
+                    );
+                }
+
+                if ($isFirst) {
+                    $isFirst = false;
+                } else {
+                    echo ",";
+                }
+
+                echo Json::encode([
+                     'id' => (string) $row[$primaryField],
+                     'email' => $row['email'],
+                ]);
+            }, 0);
+
+            echo '],"memory":' . memory_get_usage(true) . '}';
+        });
 
         return $response;
     }
