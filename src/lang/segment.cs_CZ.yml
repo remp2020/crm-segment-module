@@ -116,6 +116,9 @@ config:
     segment_slow_recalculate_threshold:
         name: 'Časový limit přepočtení (vteřin)'
         description: 'Reprezentuje limit v sekundách který pokud přepočítávání překročí, systém upozorní administrátory.'
+    segment_forbidden_tables:
+        name: 'Zakázané tabulky'
+        description: 'Tabulky (oddělené čárkou), které nesmí být použity v SQL segmentu.'
 
 admin:
     admin_filter_form:

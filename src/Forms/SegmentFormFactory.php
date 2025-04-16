@@ -5,11 +5,14 @@ namespace Crm\SegmentModule\Forms;
 use Contributte\Translation\Translator;
 use Crm\ApplicationModule\UI\Form;
 use Crm\SegmentModule\Events\BeforeSegmentCodeUpdateEvent;
+use Crm\SegmentModule\Exceptions\SegmentQueryValidationException;
 use Crm\SegmentModule\Models\Config;
 use Crm\SegmentModule\Models\Criteria\Generator;
+use Crm\SegmentModule\Models\Segment;
 use Crm\SegmentModule\Models\SegmentConfig;
 use Crm\SegmentModule\Models\SegmentException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
+use Crm\SegmentModule\Models\SegmentQueryValidator;
 use Crm\SegmentModule\Models\SimulableSegmentInterface;
 use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
@@ -38,6 +41,7 @@ class SegmentFormFactory
         private Config $segmentConfig,
         private SegmentFactoryInterface $segmentFactory,
         private Emitter $emitter,
+        private SegmentQueryValidator $segmentQueryValidator,
     ) {
     }
 
@@ -203,6 +207,17 @@ class SegmentFormFactory
         );
 
         $segment = $this->segmentFactory->buildSegment($segmentConfig);
+
+        try {
+            $query = $segment instanceof Segment ? $segment->query() : $values['query_string'];
+            $this->segmentQueryValidator->validate($query);
+            return;
+        } catch (SegmentQueryValidationException $exception) {
+            $form->addError($this->translator->translate('segment.edit.messages.segment_invalid', [
+                'reason' => $exception->getMessage()
+            ]));
+        }
+
         if (!($segment instanceof SimulableSegmentInterface)) {
             return;
         }

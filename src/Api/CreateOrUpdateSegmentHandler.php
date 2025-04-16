@@ -3,9 +3,14 @@
 namespace Crm\SegmentModule\Api;
 
 use Crm\ApiModule\Models\Api\ApiHandler;
+use Crm\SegmentModule\Exceptions\SegmentQueryValidationException;
 use Crm\SegmentModule\Models\Criteria\EmptyCriteriaException;
 use Crm\SegmentModule\Models\Criteria\Generator;
 use Crm\SegmentModule\Models\Criteria\InvalidCriteriaException;
+use Crm\SegmentModule\Models\Segment;
+use Crm\SegmentModule\Models\SegmentConfig;
+use Crm\SegmentModule\Models\SegmentFactory;
+use Crm\SegmentModule\Models\SegmentQueryValidator;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Http\IResponse;
@@ -21,7 +26,9 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
     public function __construct(
         private SegmentsRepository $segmentsRepository,
         private SegmentGroupsRepository $segmentGroupsRepository,
-        private Generator $generator
+        private Generator $generator,
+        private SegmentQueryValidator $segmentQueryValidator,
+        private SegmentFactory $segmentFactory,
     ) {
         parent::__construct();
     }
@@ -70,15 +77,27 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             }
             $fields = $this->generator->getFields($params['table_name'], $params['fields'], $params['criteria']['nodes']);
         } catch (EmptyCriteriaException $emptyCriteriaException) {
-            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $emptyCriteriaException->getMessage()]);
-            return $response;
+            return new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $emptyCriteriaException->getMessage()]);
         } catch (InvalidCriteriaException $invalidCriteriaException) {
-            $response = new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $invalidCriteriaException->getMessage()]);
-            return $response;
+            return new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $invalidCriteriaException->getMessage()]);
         }
 
         $params['fields'] = implode(',', $fields);
         $params['criteria'] = Json::encode($params['criteria']);
+
+        try {
+            $segmentConfig = new SegmentConfig(
+                $params['table_name'],
+                $params['query_string'],
+                $params['fields']
+            );
+
+            $segment = $this->segmentFactory->buildSegment($segmentConfig);
+            $query = $segment instanceof Segment ? $segment->query() : $params['query_string'];
+            $this->segmentQueryValidator->validate($query);
+        } catch (SegmentQueryValidationException $exception) {
+            return new JsonApiResponse(IResponse::S400_BadRequest, ['status' => 'error', 'message' => $exception->getMessage()]);
+        }
 
         if (isset($params['id'])) {
             $segment = $this->segmentsRepository->findById($params['id']);

@@ -55,6 +55,18 @@ WHERE users.id IN (SELECT id FROM (%segment.segment_a%) a)
 
 During `segment_b` execution, placeholder `%segment.segment_a%` will be replaced by the actual `segment_a` query.
 
+## Segment query forbidden tables
+
+Forbidden tables are database tables that users are not allowed to reference when creating or updating segment queries.
+If a query tries to use a forbidden table — even just reading from it (SELECT), joining it, or modifying it — the validator will reject the query.
+This validation happens when the query is being created or edited, not at runtime execution.
+
+You can configure forbidden tables through your configuration file:
+```neon
+segmentQueryValidator:
+    setup:
+        - addForbiddenTables('table_name')
+```
 
 ## API documentation
 

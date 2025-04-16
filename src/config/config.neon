@@ -13,6 +13,15 @@ services:
 	segmentRecalculationConfig:
 		factory: Crm\SegmentModule\DI\SegmentRecalculationConfig
 
+	segmentQueryValidator:
+		factory: Crm\SegmentModule\Models\SegmentQueryValidator
+		setup:
+		    - addForbiddenTables('access_tokens')
+		    - addForbiddenTables('admin_access')
+		    - addForbiddenTables('admin_groups')
+		    - addForbiddenTables('admin_groups_access')
+		    - addForbiddenTables('admin_user_groups')
+
 	- Crm\SegmentModule\Components\SegmentsSizeOverviewStackedGraphWidget\SegmentsSizeOverviewStackedGraphWidgetFactory
 	- Crm\SegmentModule\Commands\UpdateCountsCommand
 	- Crm\SegmentModule\Commands\ProcessCriteriaSegmentsCommand

@@ -116,7 +116,9 @@ config:
     segment_slow_recalculate_threshold:
         name: 'Recalculate time limit (seconds)'
         description: 'Represents the limit in seconds that if the recalculation exceeds, admins will be notified.'
-
+    segment_forbidden_tables:
+        name: 'Forbidden Tables'
+        description: 'Tables (comma-separated) that are not allowed to be used in the segment SQL.'
 admin:
     admin_filter_form:
         name:
