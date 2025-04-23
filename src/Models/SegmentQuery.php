@@ -57,7 +57,8 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         }
 
         $key = $this->tableName . '.' . $this->pagerKey;
-        return 'SELECT count(*) FROM (' . $this->buildQuery($key) . ") AS a WHERE a.{$field} = {$value}";
+        $where = "{$this->tableName}.{$field} = {$value}";
+        return 'SELECT count(*) FROM (' . $this->buildQuery($key, $where) . ") AS a WHERE a.{$field} = {$value}";
     }
 
     public function getSimulationQuery(): string
