@@ -10,7 +10,7 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
 {
     public function __construct(
         private Explorer $database,
-        private QueryInterface $query
+        private QueryInterface $query,
     ) {
     }
 

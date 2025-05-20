@@ -27,7 +27,7 @@ trait SegmentsTrait
             $group = $this->segmentGroupsRepository->add(
                 $groupName,
                 $groupCode,
-                $sorting
+                $sorting,
             );
             $output->writeln("  <comment>* segment group <info>{$group->name}</info> created</comment>");
         }
@@ -45,7 +45,7 @@ trait SegmentsTrait
         string $query,
         ?ActiveRow $group = null,
         string $table = 'users',
-        string $fields = 'users.id,users.email'
+        string $fields = 'users.id,users.email',
     ): ActiveRow {
         // try to load segment before adding it
         $segment = $this->segmentsRepository->findBy('code', $code);
@@ -77,7 +77,7 @@ trait SegmentsTrait
         string $queryString,
         ?ActiveRow $group = null,
         string $tableName = 'users',
-        string $fields = 'users.id,users.email'
+        string $fields = 'users.id,users.email',
     ): ActiveRow {
         // if no group was specified, default will be used
         if ($group === null) {

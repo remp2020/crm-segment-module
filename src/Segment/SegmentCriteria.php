@@ -12,7 +12,7 @@ class SegmentCriteria implements CriteriaInterface
     public const KEY = 'segment';
 
     public function __construct(
-        private SegmentsRepository $segmentsRepository
+        private SegmentsRepository $segmentsRepository,
     ) {
     }
 
@@ -34,7 +34,7 @@ class SegmentCriteria implements CriteriaInterface
                 label: "Segments",
                 help: "Relation to other segments",
                 required: true,
-                options: $this->availableSegments()
+                options: $this->availableSegments(),
             ),
         ];
     }

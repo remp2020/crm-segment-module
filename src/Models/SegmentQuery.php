@@ -97,7 +97,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
 
         $fields = implode(", ", array_unique(array_merge(
             $fieldsArr,
-            $selectArr
+            $selectArr,
         )));
         $groupBy = implode(', ', array_unique($groupByArr));
 
@@ -115,7 +115,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
 
     public static function nestedSegmentReferences(
         SegmentsRepository $segmentsRepository,
-        ActiveRow $segmentRow
+        ActiveRow $segmentRow,
     ): array {
         $codeToSearch = "%segment.{$segmentRow->code}%";
         return $segmentsRepository->getTable()
@@ -125,7 +125,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
 
     public static function nestedSegments(
         SegmentsRepository $segmentsRepository,
-        SegmentConfig $segment
+        SegmentConfig $segment,
     ): array {
         preg_match_all('/%segment\.(.+?)%/', $segment->queryString, $matches);
 
@@ -140,7 +140,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         if (count($directlyNestedSegments) !== count($matches[1])) {
             $missingCodes = implode(',', array_diff(
                 $matches[1],
-                array_column($directlyNestedSegments, 'code')
+                array_column($directlyNestedSegments, 'code'),
             ));
             throw new RuntimeException("Unable to load segments with codes: [$missingCodes]");
         }
@@ -186,7 +186,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
                 tableName: $nestedSegmentRow->table_name,
                 fields: $nestedSegmentRow->fields,
                 pagerKey: $this->pagerKey,
-                nestedSegments: $this->nestedSegments
+                nestedSegments: $this->nestedSegments,
             );
 
             $query = str_replace($pattern, $nestedSegmentQuery->getQuery(), $query);

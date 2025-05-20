@@ -25,7 +25,7 @@ class SegmentQueryTest extends TestCase
                 'fields' => "id, foo1 AS foo, bar1 AS bar, COALESCE(whatever, 'unk,nown') AS foo2, DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') AS foo3, CONCAT(id, ' , ', email) AS foo4",
                 'query' => 'SELECT %fields%',
                 'result' => "SELECT _table.id, foo1 AS foo, bar1 AS bar, COALESCE(whatever, 'unk,nown') AS foo2, DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') AS foo3, CONCAT(id, ' , ', email) AS foo4",
-            ]
+            ],
         ];
     }
 

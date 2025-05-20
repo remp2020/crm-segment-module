@@ -74,7 +74,7 @@ BLUEPRINT;
         // array of [email => active_status, ...]
         $usersAndActiveStatus = [
            ...array_combine($e('a', 'b', 'c', 'd', 'e', 'f'), [true, true, true, true, true, true]),
-           ...array_combine($e('x', 'y', 'z'), [false, false, false])
+           ...array_combine($e('x', 'y', 'z'), [false, false, false]),
         ];
 
         yield 'test_three_intersecting_segments' => [
@@ -86,9 +86,9 @@ BLUEPRINT;
             ],
             'criteria' => [
                 ['segments' => ['segment_a', 'segment_b'], 'negate' => false],
-                ['segments' => ['segment_c'], 'negate' => false]
+                ['segments' => ['segment_c'], 'negate' => false],
             ],
-            'expectedEmailsInResult' => $e('a', 'c', 'd')
+            'expectedEmailsInResult' => $e('a', 'c', 'd'),
         ];
 
         yield 'test_three_segments_and_negate_condition' => [
@@ -100,9 +100,9 @@ BLUEPRINT;
             ],
             'criteria' => [
                 ['segments' => ['segment_b', 'segment_c'], 'negate' => true],
-                ['segments' => ['segment_a'], 'negate' => false]
+                ['segments' => ['segment_a'], 'negate' => false],
             ],
-            'expectedEmailsInResult' => $e('a')
+            'expectedEmailsInResult' => $e('a'),
         ];
 
         yield 'test_negate_condition' => [
@@ -113,7 +113,7 @@ BLUEPRINT;
             'criteria' => [
                 ['segments' => ['segment_a'], 'negate' => true],
             ],
-            'expectedEmailsInResult' => $e('e', 'f')
+            'expectedEmailsInResult' => $e('e', 'f'),
         ];
 
         yield 'test_condition' => [
@@ -124,7 +124,7 @@ BLUEPRINT;
             'criteria' => [
                 ['segments' => ['segment_a'], 'negate' => false],
             ],
-            'expectedEmailsInResult' => $e('a')
+            'expectedEmailsInResult' => $e('a'),
         ];
 
         yield 'test_empty_segment' => [
@@ -135,7 +135,7 @@ BLUEPRINT;
             'criteria' => [
                 ['segments' => ['segment_a'], 'negate' => false],
             ],
-            'expectedEmailsInResult' => [] // result is empty
+            'expectedEmailsInResult' => [], // result is empty
         ];
 
         yield 'test_inactive_user_segment' => [
@@ -146,7 +146,7 @@ BLUEPRINT;
             'criteria' => [
                 ['segments' => ['segment_a'], 'negate' => false],
             ],
-            'expectedEmailsInResult' => [] // result is empty ('z' is not active)
+            'expectedEmailsInResult' => [], // result is empty ('z' is not active)
         ];
     }
 
@@ -238,7 +238,7 @@ SQL;
         $jsonCriteria = str_replace(
             '__SEGMENTS_CRITERIA_PLACEHOLDER__',
             implode(',', $segmentCriteria),
-            self::CRITERIA_BLUEPRINT
+            self::CRITERIA_BLUEPRINT,
         );
         return $jsonCriteria;
     }
@@ -253,7 +253,7 @@ SQL;
             // segments
             SegmentsRepository::class,
             SegmentsValuesRepository::class,
-            SegmentGroupsRepository::class
+            SegmentGroupsRepository::class,
         ];
     }
 

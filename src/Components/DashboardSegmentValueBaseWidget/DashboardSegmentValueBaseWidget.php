@@ -99,7 +99,7 @@ abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
         if ($this->segmentCodeToCompare()) {
             $segmentLinkToCompare = $this->presenter->link(
                 ':Segment:StoredSegments:show',
-                $this->segmentsRepository->findByCode($this->segmentCodeToCompare())->id
+                $this->segmentsRepository->findByCode($this->segmentCodeToCompare())->id,
             );
             [$countToCompare, $wasCalculated] = $this->getSegmentCount($this->segmentCodeToCompare());
             $this->template->segmentLinkToCompare = $segmentLinkToCompare;
@@ -129,7 +129,7 @@ abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
                 $count = $this->cacheRepository->loadAndUpdate(
                     $cacheKey,
                     $callable,
-                    DateTime::from("-  {$this->onTheFlyCacheTimeoutMinutes} minutes")
+                    DateTime::from("-  {$this->onTheFlyCacheTimeoutMinutes} minutes"),
                 );
             } else {
                 $count = $callable();

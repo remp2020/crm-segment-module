@@ -30,7 +30,7 @@ class SegmentRecalculationConfig
     public function getDefaultRecalculationPeriodicityInterval(): \DateInterval
     {
         return \DateInterval::createFromDateString(
-            self::DEFAULT_RECALCULATION_PERIODICITY['amount'] . ' ' . self::DEFAULT_RECALCULATION_PERIODICITY['unit']
+            self::DEFAULT_RECALCULATION_PERIODICITY['amount'] . ' ' . self::DEFAULT_RECALCULATION_PERIODICITY['unit'],
         );
     }
 

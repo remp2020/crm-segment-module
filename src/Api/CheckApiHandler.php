@@ -16,7 +16,7 @@ class CheckApiHandler extends ApiHandler
 {
     public function __construct(
         private SegmentFactoryInterface $segmentFactory,
-        private UsersRepository $usersRepository
+        private UsersRepository $usersRepository,
     ) {
         parent::__construct();
     }

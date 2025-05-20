@@ -23,7 +23,7 @@ class ItemsHandler extends ApiHandler
         private Generator $generator,
         private SegmentFactoryInterface $segmentFactory,
         private CriteriaStorage $criteriaStorage,
-        LinkGenerator $linkGenerator
+        LinkGenerator $linkGenerator,
     ) {
         parent::__construct();
         $this->linkGenerator = $linkGenerator;

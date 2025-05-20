@@ -56,7 +56,7 @@ class SegmentModule extends CrmModule
             ':Segment:StoredSegments:default',
             'fa fa-sliders-h',
             650,
-            true
+            true,
         );
 
         $menuContainer->attachMenuItem($mainMenu);
@@ -75,96 +75,96 @@ class SegmentModule extends CrmModule
             new ApiRoute(
                 new ApiIdentifier('1', 'user-segments', 'list'),
                 ListApiHandler::class,
-                BearerTokenAuthorization::class
-            )
+                BearerTokenAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'user-segments', 'users'),
                 UsersApiHandler::class,
-                BearerTokenAuthorization::class
-            )
+                BearerTokenAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'user-segments', 'check'),
                 CheckApiHandler::class,
-                BearerTokenAuthorization::class
-            )
+                BearerTokenAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'list'),
                 SegmentsListApiHandler::class,
-                BearerTokenAuthorization::class
-            )
+                BearerTokenAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'groups'),
                 ListGroupsHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'criteria'),
                 CriteriaHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'detail'),
                 CreateOrUpdateSegmentHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'show'),
                 ShowSegmentHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'counts'),
                 CountsHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'items'),
                 ItemsHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'related'),
                 RelatedHandler::class,
-                AdminLoggedAuthorization::class
-            )
+                AdminLoggedAuthorization::class,
+            ),
         );
 
         $apiRoutersContainer->attachRouter(
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'daily-count-stats'),
                 DailyCountStatsHandler::class,
-                BearerTokenAuthorization::class
-            )
+                BearerTokenAuthorization::class,
+            ),
         );
     }
 
@@ -190,7 +190,7 @@ class SegmentModule extends CrmModule
     {
         $lazyEventEmitter->addListener(
             BeforeSegmentCodeUpdateEvent::class,
-            BeforeSegmentCodeUpdateHandler::class
+            BeforeSegmentCodeUpdateHandler::class,
         );
     }
 }

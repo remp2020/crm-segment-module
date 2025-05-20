@@ -69,7 +69,7 @@ class DailyCountStatsHandlerTest extends DatabaseTestCase
             [
                 'date' => '2024-01-30',
                 'count' => 30,
-            ]
+            ],
         ], $payload);
     }
 
@@ -100,7 +100,7 @@ class DailyCountStatsHandlerTest extends DatabaseTestCase
             [
                 'date' => '2024-01-30',
                 'count' => 30,
-            ]
+            ],
         ], $payload);
     }
 
@@ -131,7 +131,7 @@ class DailyCountStatsHandlerTest extends DatabaseTestCase
             [
                 'date' => '2024-01-20',
                 'count' => 20,
-            ]
+            ],
         ], $payload);
     }
 
@@ -159,7 +159,7 @@ class DailyCountStatsHandlerTest extends DatabaseTestCase
             [
                 'date' => '2024-01-20',
                 'count' => 20,
-            ]
+            ],
         ], $payload);
     }
 

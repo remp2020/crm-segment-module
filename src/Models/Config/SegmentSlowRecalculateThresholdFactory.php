@@ -29,7 +29,7 @@ class SegmentSlowRecalculateThresholdFactory
             $errorMessage = sprintf(
                 'Bad value in configuration for `%s`. %s',
                 self::SLOW_RECALCULATE_THRESHOLD_CONFIG_KEY,
-                $exception->getMessage()
+                $exception->getMessage(),
             );
             Debugger::log($errorMessage, Debugger::WARNING);
 

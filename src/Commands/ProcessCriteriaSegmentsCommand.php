@@ -20,7 +20,7 @@ class ProcessCriteriaSegmentsCommand extends Command
 
     public function __construct(
         SegmentsRepository $segmentsRepository,
-        Generator $generator
+        Generator $generator,
     ) {
         parent::__construct();
         $this->segmentsRepository = $segmentsRepository;

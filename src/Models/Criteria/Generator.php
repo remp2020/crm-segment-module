@@ -159,7 +159,7 @@ class Generator
 
         return array_merge(
             $prefixedFields,
-            $output['fields']
+            $output['fields'],
         );
     }
 

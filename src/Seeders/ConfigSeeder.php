@@ -23,7 +23,7 @@ class ConfigSeeder implements ISeeder
     public function __construct(
         ConfigCategoriesRepository $configCategoriesRepository,
         ConfigsRepository $configsRepository,
-        ConfigBuilder $configBuilder
+        ConfigBuilder $configBuilder,
     ) {
         $this->configCategoriesRepository = $configCategoriesRepository;
         $this->configsRepository = $configsRepository;
@@ -42,7 +42,7 @@ class ConfigSeeder implements ISeeder
             'segment.config.segment_slow_recalculate_threshold.name',
             'segment.config.segment_slow_recalculate_threshold.description',
             '5',
-            100
+            100,
         );
     }
 }

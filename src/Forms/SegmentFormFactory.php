@@ -110,8 +110,8 @@ class SegmentFormFactory
         $queryStringHelp = $engine->renderToString(
             __DIR__ . DIRECTORY_SEPARATOR . 'queryStringHelp.latte',
             [
-                'segmentNestingEnabled' => $this->segmentConfig->isSegmentNestingEnabled()
-            ]
+                'segmentNestingEnabled' => $this->segmentConfig->isSegmentNestingEnabled(),
+            ],
         );
 
         $form->addTextArea('query_string', 'segment.fields.query_string', 30, 10)
@@ -180,7 +180,7 @@ class SegmentFormFactory
                 $this->segmentsRepository->update($row, (array) $values);
             } catch (SegmentCodeInUseException $exception) {
                 $form->addError($this->translator->translate('segment.messages.errors.code_update_referenced_by_other_segment', [
-                    'code' => $exception->getReferencingSegmentCode()
+                    'code' => $exception->getReferencingSegmentCode(),
                 ]));
                 return;
             }
@@ -203,7 +203,7 @@ class SegmentFormFactory
         $segmentConfig = new SegmentConfig(
             $values['table_name'],
             $values['query_string'],
-            $values['fields']
+            $values['fields'],
         );
 
         $segment = $this->segmentFactory->buildSegment($segmentConfig);
@@ -214,7 +214,7 @@ class SegmentFormFactory
             return;
         } catch (SegmentQueryValidationException $exception) {
             $form->addError($this->translator->translate('segment.edit.messages.segment_invalid', [
-                'reason' => $exception->getMessage()
+                'reason' => $exception->getMessage(),
             ]));
         }
 
@@ -226,7 +226,7 @@ class SegmentFormFactory
             $segment->simulate();
         } catch (SegmentException $exception) {
             $form->addError($this->translator->translate('segment.edit.messages.segment_invalid', [
-                'reason' => $exception->getMessage()
+                'reason' => $exception->getMessage(),
             ]));
         }
     }

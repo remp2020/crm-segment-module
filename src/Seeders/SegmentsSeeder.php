@@ -17,7 +17,7 @@ class SegmentsSeeder implements ISeeder
 
     public function __construct(
         SegmentGroupsRepository $segmentGroupsRepository,
-        SegmentsRepository $segmentsRepository
+        SegmentsRepository $segmentsRepository,
     ) {
         $this->segmentGroupsRepository = $segmentGroupsRepository;
         $this->segmentsRepository = $segmentsRepository;
@@ -29,7 +29,7 @@ class SegmentsSeeder implements ISeeder
             $output,
             'All users',
             'all_users',
-            'SELECT %fields% FROM %table% WHERE %where%'
+            'SELECT %fields% FROM %table% WHERE %where%',
         );
 
         $this->seedSegment(
@@ -44,7 +44,7 @@ INNER JOIN subscriptions
 WHERE
     %where%
 GROUP BY %table%.id
-SQL
+SQL,
         );
 
         $this->seedSegment(
@@ -61,7 +61,7 @@ WHERE
     AND subscriptions.start_time<=NOW()
     AND subscriptions.end_time>NOW()
 GROUP BY %table%.id
-SQL
+SQL,
         );
 
         $this->seedSegment(
@@ -78,7 +78,7 @@ WHERE
     %where%
     AND subscriptions.id IS NULL
 GROUP BY %table%.id
-SQL
+SQL,
         );
 
         $this->seedSegment(
@@ -94,7 +94,7 @@ WHERE
     %where%
     AND subscriptions.id IS NULL
 GROUP BY %table%.id
-SQL
+SQL,
         );
 
         $this->seedSegment(
@@ -114,7 +114,7 @@ WHERE
     %where%
     AND actual_subscriptions.id IS NULL
 GROUP BY %table%.id
-SQL
+SQL,
         );
     }
 }

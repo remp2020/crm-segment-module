@@ -38,7 +38,7 @@ class UpdateCountsCommand extends Command
         private SegmentsRepository $segmentsRepository,
         private SegmentsValuesRepository $segmentsValuesRepository,
         private SegmentRecalculationConfig $segmentRecalculationConfig,
-        RedisClientFactory $redisClientFactory
+        RedisClientFactory $redisClientFactory,
     ) {
         parent::__construct();
         $this->redisClientFactory = $redisClientFactory;
@@ -237,7 +237,7 @@ class UpdateCountsCommand extends Command
                         ", but the command last run was at " .
                         (new DateTime($commandRunTime))->format(DATE_RFC3339) .
                         " ( " . $this->dateIntervalString($commandsRunDiffInterval) . " ago).",
-                        ILogger::WARNING
+                        ILogger::WARNING,
                     );
                 } else {
                     Debugger::log(
@@ -246,7 +246,7 @@ class UpdateCountsCommand extends Command
                         ", but the command last run was at " .
                         (new DateTime($commandRunTime))->format(DATE_RFC3339) .
                         " ( " . $this->dateIntervalString($commandsRunDiffInterval) . " ago).",
-                        ILogger::WARNING
+                        ILogger::WARNING,
                     );
                 }
             }

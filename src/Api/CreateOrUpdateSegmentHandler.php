@@ -89,7 +89,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             $segmentConfig = new SegmentConfig(
                 $params['table_name'],
                 $params['query_string'],
-                $params['fields']
+                $params['fields'],
             );
 
             $segment = $this->segmentFactory->buildSegment($segmentConfig);
@@ -127,7 +127,7 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
                 $params['fields'],
                 $params['query_string'],
                 $group,
-                $params['criteria']
+                $params['criteria'],
             );
         }
 

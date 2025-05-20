@@ -15,7 +15,7 @@ class ShowSegmentHandler extends ApiHandler
     private $segmentsRepository;
 
     public function __construct(
-        SegmentsRepository $segmentsRepository
+        SegmentsRepository $segmentsRepository,
     ) {
         $this->segmentsRepository = $segmentsRepository;
     }

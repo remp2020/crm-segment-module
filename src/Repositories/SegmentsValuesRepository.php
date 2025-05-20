@@ -15,7 +15,7 @@ class SegmentsValuesRepository extends Repository
 
     public function __construct(
         Explorer $database,
-        SegmentsRepository $segmentsRepository
+        SegmentsRepository $segmentsRepository,
     ) {
         parent::__construct($database);
         $this->segmentsRepository = $segmentsRepository;

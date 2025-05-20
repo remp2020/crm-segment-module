@@ -25,7 +25,7 @@ class RelatedHandler extends ApiHandler
     public function __construct(
         SegmentsRepository $segmentsRepository,
         LinkGenerator $linkGenerator,
-        Generator $generator
+        Generator $generator,
     ) {
         $this->segmentsRepository = $segmentsRepository;
         $this->linkGenerator = $linkGenerator;

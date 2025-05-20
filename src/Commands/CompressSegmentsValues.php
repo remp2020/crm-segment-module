@@ -15,7 +15,7 @@ class CompressSegmentsValues extends Command
     private $segmentsValuesRepository;
 
     public function __construct(
-        SegmentsValuesRepository $segmentsValuesRepository
+        SegmentsValuesRepository $segmentsValuesRepository,
     ) {
         parent::__construct();
         $this->segmentsValuesRepository = $segmentsValuesRepository;
@@ -27,12 +27,12 @@ class CompressSegmentsValues extends Command
             ->addOption(
                 'from',
                 null,
-                InputOption::VALUE_REQUIRED
+                InputOption::VALUE_REQUIRED,
             )
             ->addOption(
                 'to',
                 null,
-                InputOption::VALUE_REQUIRED
+                InputOption::VALUE_REQUIRED,
             )
             ->setDescription('Compress segments values (in given dates interval) by keeping only one value per hour for each segment.');
     }

@@ -10,7 +10,7 @@ class SegmentFactory implements SegmentFactoryInterface
 {
     public function __construct(
         private Explorer $database,
-        private SegmentsRepository $segmentsRepository
+        private SegmentsRepository $segmentsRepository,
     ) {
     }
 

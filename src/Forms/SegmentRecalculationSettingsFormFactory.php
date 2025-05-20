@@ -20,7 +20,7 @@ class SegmentRecalculationSettingsFormFactory
 
     public function __construct(
         SegmentsRepository $segmentsRepository,
-        Translator $translator
+        Translator $translator,
     ) {
         $this->segmentsRepository = $segmentsRepository;
         $this->translator = $translator;

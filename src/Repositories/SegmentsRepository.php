@@ -38,7 +38,7 @@ class SegmentsRepository extends Repository
     public function __construct(
         Explorer $database,
         AuditLogRepository $auditLogRepository,
-        private Emitter $emitter
+        private Emitter $emitter,
     ) {
         parent::__construct($database);
         $this->auditLogRepository = $auditLogRepository;
@@ -72,7 +72,7 @@ class SegmentsRepository extends Repository
                 'cache_count' => 0,
                 'segment_group_id' => $group->id,
                 'criteria' => $criteria,
-                'note' => $note
+                'note' => $note,
             ]);
             return $this->find($id);
         } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {
@@ -112,7 +112,7 @@ class SegmentsRepository extends Repository
         string $queryString,
         string $tableName,
         string $fields,
-        ActiveRow $group
+        ActiveRow $group,
     ): ActiveRow {
         $segment = $this->findByCode($code);
         if (!$segment) {

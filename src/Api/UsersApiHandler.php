@@ -26,7 +26,7 @@ class UsersApiHandler extends ApiHandler
     public function __construct(
         SegmentFactoryInterface $segmentFactory,
         CriteriaStorage $criteriaStorage,
-        SegmentsRepository $segmentsRepository
+        SegmentsRepository $segmentsRepository,
     ) {
         $this->segmentFactory = $segmentFactory;
         $this->criteriaStorage = $criteriaStorage;
@@ -66,7 +66,7 @@ class UsersApiHandler extends ApiHandler
             $segment->process(function ($row) use (&$isFirst, $segmentRow, $primaryField) {
                 if (!isset($row[$primaryField])) {
                     throw new InvalidCriteriaException(
-                        "Selected segment '{$segmentRow->code}' does not select the primary field '$primaryField' defined for table '{$segmentRow['table_name']}"
+                        "Selected segment '{$segmentRow->code}' does not select the primary field '$primaryField' defined for table '{$segmentRow['table_name']}",
                     );
                 }
 

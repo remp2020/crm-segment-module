@@ -340,7 +340,7 @@ class StoredSegmentsPresenter extends AdminPresenter
     }
 
     protected function createComponentSegmentRecalculationSettingsForm(
-        SegmentRecalculationSettingsFormFactory $segmentPeriodicityFormFactory
+        SegmentRecalculationSettingsFormFactory $segmentPeriodicityFormFactory,
     ) {
         $id = null;
         if (isset($this->params['id'])) {
@@ -372,7 +372,7 @@ class StoredSegmentsPresenter extends AdminPresenter
             $this->redirect('default');
         } catch (SegmentCodeInUseException $exception) {
             $this->flashMessage($this->translator->translate('segment.messages.errors.delete_referenced_by_other_segment', [
-                'code' => $exception->getReferencingSegmentCode()
+                'code' => $exception->getReferencingSegmentCode(),
             ]), 'error');
             $this->redirect('this');
         }

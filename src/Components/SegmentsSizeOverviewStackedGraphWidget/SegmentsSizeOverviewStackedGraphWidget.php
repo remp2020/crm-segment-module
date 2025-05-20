@@ -56,7 +56,7 @@ class SegmentsSizeOverviewStackedGraphWidget extends BaseLazyWidget
             ->setJoin('LEFT JOIN segments ON segments.id = segments_values.segment_id')
             ->setWhere(sprintf(
                 'AND segment_id IN (%s)',
-                implode(',', $segmentIds)
+                implode(',', $segmentIds),
             ))
             ->setTimeField('date')
             ->setValueField('MAX(value)');
