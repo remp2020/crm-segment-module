@@ -119,6 +119,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
     ): array {
         $codeToSearch = "%segment.{$segmentRow->code}%";
         return $segmentsRepository->getTable()
+            ->where('deleted_at IS NULL')
             ->where('query_string LIKE ?', $codeToSearch)
             ->fetchAll();
     }
