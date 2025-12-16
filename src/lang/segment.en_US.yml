@@ -131,4 +131,3 @@ admin:
             label: Group
         submit: Filter
         cancel_filter: Cancel filter
-        more: More options
