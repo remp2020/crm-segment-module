@@ -33,7 +33,7 @@ class ProcessCriteriaSegmentsCommand extends Command
             ->setDescription('Process segment criteria');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $segments = $this->segmentsRepository->all()->where(['version' => 2]);
         foreach ($segments as $segment) {

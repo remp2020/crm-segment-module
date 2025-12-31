@@ -37,7 +37,7 @@ class CompressSegmentsValues extends Command
             ->setDescription('Compress segments values (in given dates interval) by keeping only one value per hour for each segment.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('');
         $output->writeln('<info>***** COMPRESSING SEGMENTS VALUES *****</info>');
