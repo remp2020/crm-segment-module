@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Crm\SegmentModule\Seeders;
 
@@ -46,6 +47,9 @@ trait SegmentsTrait
         ?ActiveRow $group = null,
         string $table = 'users',
         string $fields = 'users.id,users.email',
+        int $version = 1,
+        ?string $criteria = null,
+        ?string $note = null,
     ): ActiveRow {
         // try to load segment before adding it
         $segment = $this->segmentsRepository->findBy('code', $code);
@@ -59,7 +63,7 @@ trait SegmentsTrait
             $group = $this->loadDefaultSegmentGroup($output);
         }
 
-        $segment = $this->segmentsRepository->add($name, 1, $code, $table, $fields, $query, $group);
+        $segment = $this->segmentsRepository->add($name, $version, $code, $table, $fields, $query, $group, $criteria, $note);
         $output->writeln("  <comment>* segment <info>{$code}</info> created</comment>");
 
         return $segment;
