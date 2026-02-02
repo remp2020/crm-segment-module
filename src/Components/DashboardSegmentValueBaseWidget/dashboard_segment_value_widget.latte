@@ -8,6 +8,6 @@
     <a n:tag-if="isset($segmentLink)" href="{$segmentLink}">
         {_$titleText}
     </a>
-    <i n:tag-if="isset($tooltipText)" class="fa fa-question-circle" data-toggle="tooltip" data-original-title="{_$tooltipText}"></i>
+    <i n:tag-if="isset($tooltipText)" class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" data-original-title="{_$tooltipText}"></i>
     <span class="badge">{$count}</span>
 {/if}
