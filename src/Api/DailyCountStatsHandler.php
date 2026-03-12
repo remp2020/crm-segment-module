@@ -23,7 +23,7 @@ class DailyCountStatsHandler extends ApiHandler
     public function __construct(
         private readonly SegmentsRepository $segmentsRepository,
         private readonly DailySegmentValuesQuery $dailySegmentValuesQuery,
-        ScopeFactoryInterface $scopeFactory = null,
+        ?ScopeFactoryInterface $scopeFactory = null,
     ) {
         parent::__construct($scopeFactory);
     }

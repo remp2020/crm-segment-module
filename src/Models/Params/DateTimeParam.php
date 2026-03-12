@@ -12,7 +12,7 @@ class DateTimeParam extends BaseParam
     const TYPE_ABSOLUTE = 'absolute';
     const TYPE_INTERVAL = 'interval';
 
-    public function escapedConditions(string $key1, string $key2 = null): array
+    public function escapedConditions(string $key1, ?string $key2 = null): array
     {
         $key1 = $this->escapeKey($key1);
         if ($key2) {
@@ -30,7 +30,7 @@ class DateTimeParam extends BaseParam
         return [];
     }
 
-    private function absoluteWhere(string $key1, string $key2 = null): array
+    private function absoluteWhere(string $key1, ?string $key2 = null): array
     {
         $where = [];
         foreach ($this->data[self::TYPE_ABSOLUTE] as $operator => $datetime) {
@@ -81,7 +81,7 @@ class DateTimeParam extends BaseParam
         return '';
     }
 
-    public function intervalWhere(string $key1, string $key2 = null): array
+    public function intervalWhere(string $key1, ?string $key2 = null): array
     {
         $where = [];
         foreach ($this->data[self::TYPE_INTERVAL] as $operator => $interval) {
@@ -222,7 +222,7 @@ class DateTimeParam extends BaseParam
         return $this->escapedConditions('test') == $param->escapedConditions('test');
     }
 
-    public function title(string $key1, string $key2 = null): string
+    public function title(string $key1, ?string $key2 = null): string
     {
         if ($this->data['type'] == self::TYPE_ABSOLUTE) {
             return $this->absoluteTitle($key1, $key2);
@@ -235,7 +235,7 @@ class DateTimeParam extends BaseParam
         return '';
     }
 
-    private function absoluteTitle(string $key1, string $key2 = null): string
+    private function absoluteTitle(string $key1, ?string $key2 = null): string
     {
         $title = '';
         foreach ($this->data[self::TYPE_ABSOLUTE] as $operator => $datetime) {
@@ -246,7 +246,7 @@ class DateTimeParam extends BaseParam
         return $title;
     }
 
-    public function intervalTitle(string $key, string $key2 = null): string
+    public function intervalTitle(string $key, ?string $key2 = null): string
     {
         $title = '';
         foreach ($this->data[self::TYPE_INTERVAL] as $operator => $interval) {

@@ -24,7 +24,7 @@ abstract class BaseParam implements CriteriaParam
 
     protected $data = null;
 
-    public function __construct(string $key, string $label, string $help, bool $required = false, $default = null, string $group = null)
+    public function __construct(string $key, string $label, string $help, bool $required = false, $default = null, ?string $group = null)
     {
         $this->key = $key;
         $this->required = $required;

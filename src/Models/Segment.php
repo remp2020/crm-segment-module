@@ -87,7 +87,7 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
         }
     }
 
-    public function process(Closure $rowCallback, int $step = null)
+    public function process(Closure $rowCallback, ?int $step = null)
     {
         if ($step === null) {
             $step = 1000;

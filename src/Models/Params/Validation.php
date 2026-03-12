@@ -6,7 +6,7 @@ class Validation
 {
     private $error = false;
 
-    public function __construct(string $error = null)
+    public function __construct(?string $error = null)
     {
         if ($error !== null) {
             $this->error = $error;
