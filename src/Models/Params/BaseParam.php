@@ -90,7 +90,7 @@ abstract class BaseParam implements CriteriaParam
 
     public function setData($data): self
     {
-        if (!$this->isValid($data)) {
+        if (!$this->isValid($data)->ok()) {
             throw new InvalidCriteriaException("Trying to set invalid data");
         }
         $this->data = $data;
