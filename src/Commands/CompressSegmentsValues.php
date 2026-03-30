@@ -48,22 +48,24 @@ class CompressSegmentsValues extends Command
             $output->writeln('Required option --from=DATE is missing');
             return Command::FAILURE;
         }
-        $from = DateTime::createFromFormat('Y-m-d', $fromString)->setTime(0, 0, 0, 0);
+        $from = DateTime::createFromFormat('Y-m-d', $fromString);
         if (!$from) {
             $output->writeln("$fromString is not a valid date, accepted format is YYYY-MM-DD.");
             return Command::FAILURE;
         }
+        $from->setTime(0, 0, 0, 0);
 
         $toString = $input->getOption('to');
         if (!$toString) {
             $output->writeln('Required option --to=DATE is missing');
             return Command::FAILURE;
         }
-        $to = DateTime::createFromFormat('Y-m-d', $toString)->setTime(0, 0, 0, 0);
+        $to = DateTime::createFromFormat('Y-m-d', $toString);
         if (!$to) {
             $output->writeln("$toString is not a valid date, accepted format is YYYY-MM-DD.");
             return Command::FAILURE;
         }
+        $to->setTime(0, 0, 0, 0);
 
         $oneDay = DateInterval::createFromDateString('1 day');
 
