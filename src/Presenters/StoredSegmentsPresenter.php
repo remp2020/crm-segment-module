@@ -409,14 +409,15 @@ class StoredSegmentsPresenter extends AdminPresenter
             $segment = $this->segmentsRepository->find($values['segment_id']);
 
             $newSegment = $this->segmentsRepository->add(
-                $values['name'],
-                $segment->version,
-                Strings::webalize($values['name']),
-                $segment->table_name,
-                $segment->fields,
-                $segment->query_string,
-                $segment->segment_group,
-                $segment->criteria,
+                name: $values['name'],
+                version: $segment->version,
+                code: Strings::webalize($values['name']),
+                tableName: $segment->table_name,
+                fields: $segment->fields,
+                queryString: $segment->query_string,
+                group: $segment->segment_group,
+                criteria: $segment->criteria,
+                copiedFromSegmentId: $segment->id,
             );
 
             $this->redirect('edit', $newSegment->id);

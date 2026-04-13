@@ -57,7 +57,7 @@ class SegmentsRepository extends Repository
     /**
      * @throws SegmentAlreadyExistsException
      */
-    final public function add($name, $version, $code, $tableName, $fields, $queryString, ActiveRow $group, $criteria = null, $note = null)
+    final public function add($name, $version, $code, $tableName, $fields, $queryString, ActiveRow $group, $criteria = null, $note = null, ?int $copiedFromSegmentId = null)
     {
         try {
             $id = $this->insert([
@@ -73,6 +73,7 @@ class SegmentsRepository extends Repository
                 'segment_group_id' => $group->id,
                 'criteria' => $criteria,
                 'note' => $note,
+                'copied_from_segment_id' => $copiedFromSegmentId,
             ]);
             return $this->find($id);
         } catch (UniqueConstraintViolationException $uniqueConstraintViolationException) {

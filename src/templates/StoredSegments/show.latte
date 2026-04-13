@@ -37,6 +37,7 @@
         <li class="list-group-item"><b>{_segment.fields.table_name}:</b> {$segment->table_name}</li>
         <li class="list-group-item"><b>{_segment.fields.created}:</b> <span class="text-muted">{$segment->created_at|userDate}</span></li>
         <li n:if="$segment->created_at != $segment->updated_at" class="list-group-item"><b>{_segment.fields.updated}:</b> <span class="text-muted">{$segment->updated_at|userDate}</span></li>
+        <li n:if="$segment->copied_from_segment_id" class="list-group-item"><b>{_segment.fields.copied_from_segment_id}:</b> <a n:href="show $segment->copied_from_segment_id">{$segment->copied_from_segment->name}</a></li>
 
       </ul>
      </div>
