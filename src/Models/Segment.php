@@ -6,7 +6,7 @@ use Closure;
 use Nette\Database\DriverException;
 use Nette\Database\Explorer;
 
-class Segment implements SegmentInterface, SimulableSegmentInterface
+class Segment implements SegmentInterface, SimulableSegmentInterface, ValidatableSegmentInterface
 {
     public function __construct(
         private Explorer $database,
@@ -14,7 +14,7 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
     ) {
     }
 
-    public function totalCount()
+    public function totalCount(): int
     {
         $countQuery = $this->query->getCountQuery();
         try {
@@ -31,7 +31,7 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
         return $count;
     }
 
-    public function getIds()
+    public function getIds(): array
     {
         $idsQuery = $this->query->getIdsQuery();
         try {
@@ -47,7 +47,7 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
         return $ids;
     }
 
-    public function isIn($field, $value)
+    public function isIn($field, $value): bool
     {
         $isInQuery = $this->query->getIsInQuery($field, $value);
         try {
@@ -71,6 +71,13 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
         return $this->query->getQuery();
     }
 
+    public function validate(): void
+    {
+        if ($this->query instanceof ValidatableQueryInterface) {
+            $this->query->validate();
+        }
+    }
+
     public function simulate(): void
     {
         if ($this->query instanceof SimulableQueryInterface) {
@@ -87,7 +94,7 @@ class Segment implements SegmentInterface, SimulableSegmentInterface
         }
     }
 
-    public function process(Closure $rowCallback, ?int $step = null)
+    public function process(Closure $rowCallback, ?int $step = null): void
     {
         if ($step === null) {
             $step = 1000;

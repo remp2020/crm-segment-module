@@ -2,6 +2,7 @@
 
 namespace Crm\SegmentModule\Tests;
 
+use Crm\SegmentModule\Exceptions\SegmentQueryValidationException;
 use Crm\SegmentModule\Models\SegmentQuery;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -34,5 +35,19 @@ class SegmentQueryTest extends TestCase
     {
         $segment = new SegmentQuery($query, '_table', $fields);
         $this->assertEquals($result, $segment->getQuery());
+    }
+
+    public function testValidateWithWherePlaceholderPasses()
+    {
+        $segment = new SegmentQuery('SELECT %fields% FROM %table% WHERE %where%', '_table', 'id');
+        $segment->validate();
+        $this->assertTrue(true);
+    }
+
+    public function testValidateWithoutWherePlaceholderThrowsException()
+    {
+        $segment = new SegmentQuery('SELECT %fields% FROM %table%', '_table', 'id');
+        $this->expectException(SegmentQueryValidationException::class);
+        $segment->validate();
     }
 }

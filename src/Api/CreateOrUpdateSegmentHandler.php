@@ -11,6 +11,7 @@ use Crm\SegmentModule\Models\Segment;
 use Crm\SegmentModule\Models\SegmentConfig;
 use Crm\SegmentModule\Models\SegmentFactory;
 use Crm\SegmentModule\Models\SegmentQueryValidator;
+use Crm\SegmentModule\Models\ValidatableSegmentInterface;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Http\IResponse;
@@ -93,6 +94,9 @@ class CreateOrUpdateSegmentHandler extends ApiHandler
             );
 
             $segment = $this->segmentFactory->buildSegment($segmentConfig);
+            if ($segment instanceof ValidatableSegmentInterface) {
+                $segment->validate();
+            }
             $query = $segment instanceof Segment ? $segment->query() : $params['query_string'];
             $this->segmentQueryValidator->validate($query);
         } catch (SegmentQueryValidationException $exception) {

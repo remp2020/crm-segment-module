@@ -12,8 +12,10 @@ use Crm\SegmentModule\Models\Segment;
 use Crm\SegmentModule\Models\SegmentConfig;
 use Crm\SegmentModule\Models\SegmentException;
 use Crm\SegmentModule\Models\SegmentFactoryInterface;
+use Crm\SegmentModule\Models\SegmentQuery;
 use Crm\SegmentModule\Models\SegmentQueryValidator;
 use Crm\SegmentModule\Models\SimulableSegmentInterface;
+use Crm\SegmentModule\Models\ValidatableSegmentInterface;
 use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
@@ -62,6 +64,7 @@ class SegmentFormFactory
             }
         } else {
             $segment = null;
+            $defaults['query_string'] = SegmentQuery::NEW_SEGMENT_QUERY_STRING;
         }
 
         $form = new Form;
@@ -211,6 +214,9 @@ class SegmentFormFactory
         $segment = $this->segmentFactory->buildSegment($segmentConfig);
 
         try {
+            if ($segment instanceof ValidatableSegmentInterface) {
+                $segment->validate();
+            }
             $query = $segment instanceof Segment ? $segment->query() : $values['query_string'];
             $this->segmentQueryValidator->validate($query);
             return;

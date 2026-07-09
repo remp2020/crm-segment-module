@@ -2,12 +2,15 @@
 
 namespace Crm\SegmentModule\Models;
 
+use Crm\SegmentModule\Exceptions\SegmentQueryValidationException;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
-class SegmentQuery implements QueryInterface, SimulableQueryInterface
+class SegmentQuery implements QueryInterface, SimulableQueryInterface, ValidatableQueryInterface
 {
+    public const string NEW_SEGMENT_QUERY_STRING = "SELECT %fields%\nFROM %table%\nWHERE %where%\nGROUP BY %group_by%";
+
     /**
      * @param string     $query
      * @param string     $tableName
@@ -28,7 +31,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
     ) {
     }
 
-    public function getCountQuery()
+    public function getCountQuery(): string
     {
         $key = $this->tableName . '.' . $this->pagerKey;
         return 'SELECT count(*) FROM (' . $this->buildQuery($key . ' AS _crm_pager_key') . ') AS a';
@@ -39,7 +42,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         return 'SELECT a._crm_id as id FROM (' . $this->buildQuery("{$this->tableName}.id AS _crm_id") . ') AS a';
     }
 
-    public function getNextPageQuery($lastPagerId, $count)
+    public function getNextPageQuery($lastPagerId, $count): string
     {
         $key = $this->tableName . '.' . $this->pagerKey;
         $query = $this->buildQuery('', $key . ' > ' . $lastPagerId) . ' ORDER BY ' . $key;
@@ -50,7 +53,7 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         return $query;
     }
 
-    public function getIsInQuery($field, $value)
+    public function getIsInQuery($field, $value): string
     {
         if (!is_numeric($value)) {
             $value = "'{$value}'";
@@ -66,12 +69,19 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         return sprintf("EXPLAIN %s", $this->getQuery());
     }
 
-    public function getQuery()
+    public function getQuery(): array|string
     {
         return $this->buildQuery();
     }
 
-    private function buildQuery($select = '', $where = '')
+    public function validate(): void
+    {
+        if (!str_contains($this->query, '%where%')) {
+            throw new SegmentQueryValidationException('Query must contain the %where% placeholder.');
+        }
+    }
+
+    private function buildQuery($select = '', $where = ''): array|string
     {
         $query = $this->query;
 
@@ -171,13 +181,13 @@ class SegmentQuery implements QueryInterface, SimulableQueryInterface
         preg_match_all('/%segment\.(.+?)%/', $query, $matches);
 
         if (!$this->nestedSegments && count($matches[0]) > 0) {
-            throw new \RuntimeException("No nested segments are provided in constructor although they are required, since segment query references other segment");
+            throw new RuntimeException("No nested segments are provided in constructor although they are required, since segment query references other segment");
         }
 
         foreach ($matches[0] as $i => $pattern) {
             $segmentCode = $matches[1][$i];
             if (!isset($this->nestedSegments[$segmentCode])) {
-                throw new \RuntimeException("Missing segment code [$segmentCode] in provided nested segments. Have you called static method nestedSegments()?");
+                throw new RuntimeException("Missing segment code [$segmentCode] in provided nested segments. Have you called static method nestedSegments()?");
             }
 
             // Recursively replace pattern with nested segment query
