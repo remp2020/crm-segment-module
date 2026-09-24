@@ -191,7 +191,7 @@ class StoredSegmentsPresenter extends AdminPresenter
             $widget->recalculate($segmentRow, $ids);
         }
 
-        $this->presenter->flashMessage($this->translator->translate('segment.messages.segment_count_recalculated'));
+        $this->getPresenter()->flashMessage($this->translator->translate('segment.messages.segment_count_recalculated'));
 
         // reload snippet / page
         if ($this->isAjax()) {

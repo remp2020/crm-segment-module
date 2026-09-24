@@ -79,7 +79,7 @@ abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
         $missingSegment = false;
         if ($segment) {
             [$count, $wasCalculated] = $this->getSegmentCount($this->segmentCode());
-            $segmentLink = $this->presenter->link(':Segment:StoredSegments:show', $segment->id);
+            $segmentLink = $this->getPresenter()->link(':Segment:StoredSegments:show', $segment->id);
 
             $this->template->titleText = $this->titleText ?? $segment->name;
             if ($this->tooltipText) {
@@ -97,7 +97,7 @@ abstract class DashboardSegmentValueBaseWidget extends BaseLazyWidget
         $this->template->wasCalculated = $wasCalculated;
 
         if ($this->segmentCodeToCompare()) {
-            $segmentLinkToCompare = $this->presenter->link(
+            $segmentLinkToCompare = $this->getPresenter()->link(
                 ':Segment:StoredSegments:show',
                 $this->segmentsRepository->findByCode($this->segmentCodeToCompare())->id,
             );
