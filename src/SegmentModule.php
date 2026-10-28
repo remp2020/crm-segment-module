@@ -5,6 +5,7 @@ namespace Crm\SegmentModule;
 use Contributte\Translation\Translator;
 use Crm\ApiModule\Models\Api\ApiRoutersContainerInterface;
 use Crm\ApiModule\Models\Authorization\AdminLoggedAuthorization;
+use Crm\ApiModule\Models\Authorization\AdminLoggedOrBearerTokenAuthorization;
 use Crm\ApiModule\Models\Authorization\BearerTokenAuthorization;
 use Crm\ApiModule\Models\Router\ApiIdentifier;
 use Crm\ApiModule\Models\Router\ApiRoute;
@@ -99,7 +100,7 @@ class SegmentModule extends CrmModule
             new ApiRoute(
                 new ApiIdentifier('1', 'segments', 'list'),
                 SegmentsListApiHandler::class,
-                BearerTokenAuthorization::class,
+                AdminLoggedOrBearerTokenAuthorization::class,
             ),
         );
 

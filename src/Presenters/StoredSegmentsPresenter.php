@@ -22,7 +22,6 @@ use Crm\SegmentModule\Repositories\SegmentCodeInUseException;
 use Crm\SegmentModule\Repositories\SegmentGroupsRepository;
 use Crm\SegmentModule\Repositories\SegmentsRepository;
 use Crm\SegmentModule\Repositories\SegmentsValuesRepository;
-use Crm\UsersModule\Models\Auth\Access\AccessToken;
 use Nette\Application\Attributes\Persistent;
 use Nette\Application\Responses\CallbackResponse;
 use Nette\Forms\Controls\TextInput;
@@ -47,7 +46,6 @@ class StoredSegmentsPresenter extends AdminPresenter
         private SegmentFormFactory $segmentFormFactory,
         private ExcelFactory $excelFactory,
         private SegmentGroupsRepository $segmentGroupsRepository,
-        private AccessToken $accessToken,
         private LazyWidgetManager $lazyWidgetManager,
         private SegmentSlowRecalculateThresholdFactory $segmentSlowRecalculateThresholdFactory,
         private AdminFilterFormFactory $adminFilterFormFactory,
@@ -333,7 +331,6 @@ class StoredSegmentsPresenter extends AdminPresenter
     public function renderEmbed($id)
     {
         $this->template->crmHost = $this->getHttpRequest()->getUrl()->getBaseUrl() . "api/v1";
-        $this->template->segmentAuth = 'Bearer ' . $this->accessToken->getToken($this->getHttpRequest());
 
         $segment = $this->segmentsRepository->find($id);
         $this->template->segment = $segment;
